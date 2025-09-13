@@ -79,7 +79,7 @@ export default function TrustedBy() {
         
         {/* Subtitle */}
         <div className="flex flex-col font-['Inter'] font-normal justify-center w-full max-w-2xl text-[#d5dbe6] text-sm sm:text-base lg:text-[16px] text-center tracking-[-0.32px] leading-relaxed lg:leading-[25.6px] mt-6">
-          Hear from real users who achieved success with our automation
+          Hear from real users who achieved success with from our designs
         </div>
       </div>
 

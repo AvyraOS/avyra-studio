@@ -54,7 +54,7 @@ const Footer = () => {
           <div className="flex items-center justify-center gap-5 mb-6">
             <div className="h-px w-[69px] bg-gradient-to-r from-[#04070d] to-[#ffffff] opacity-50" />
             <div className="text-[#d5dbe6] text-[14px] font-medium font-['Inter'] leading-[22px] tracking-[-0.14px]">
-              REACH OUT ANYTIME
+              READY TO SCALE
             </div>
             <div className="h-px w-[69px] bg-gradient-to-l from-[#04070d] to-[#ffffff] opacity-50" />
           </div>
@@ -77,7 +77,7 @@ const Footer = () => {
                   fontWeight: '500'
                 }}
               >
-                Ready to Unlock Founder{' '}
+                Your Creative Unfair {' '}
               </span>
               <span 
                 style={{
@@ -86,7 +86,7 @@ const Footer = () => {
                   fontWeight: '400'
                 }}
               >
-                Freedom
+               Advantage
               </span>
             </h2>
           </div>
@@ -94,8 +94,7 @@ const Footer = () => {
           {/* Subtitle */}
           <div className="max-w-2xl mx-auto mb-8">
             <p className="text-[#d5dbe6] text-[16px] leading-[25.6px] tracking-[-0.32px]">
-              Get your time back with a plug-and-play AI team.<br />
-              Join hundreds of ambitious founders building with freedom.
+            Stop chasing freelancers. Start scaling with a creative partner built for founders.
             </p>
           </div>
 
@@ -112,10 +111,10 @@ const Footer = () => {
               >
                 {/* Button (Top Layer) */}
                 <Link 
-                  href="/intake" 
+                  href="/pricing" 
                   className="relative z-50 inline-flex items-center justify-center bg-gradient-to-b from-[#f2c6a6] to-[#bb835a] text-[#3a3a3a] px-8 rounded-lg text-base font-medium font-['Inter'] transition-all duration-300 hover:opacity-90 cursor-pointer h-[46px]"
                 >
-                  <span>Get my Freedom Plan</span>
+                  <span>See Pricing</span>
                   <svg 
                     className="ml-2 w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" 
                     fill="currentColor" 
@@ -193,7 +192,7 @@ const Footer = () => {
             {/* Newsletter Description */}
             <div className="text-center lg:text-right mb-6">
               <p className="text-[#d5dbe6] text-[12px] sm:text-[15px] lg:text-[16px] leading-[22px] sm:leading-[28px] lg:leading-[33.6px] tracking-[-0.28px]">
-                Get <span className="font-bold">weekly</span> insights on AI Automation and scaling strategies
+                Get <span className="font-bold">weekly</span> insights on design & development strategies
               </p>
             </div>
 

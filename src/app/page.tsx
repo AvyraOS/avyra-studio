@@ -10,7 +10,6 @@ import Hero from '@/components/landing/hero';
 import FounderQuote from '@/components/landing/founder-quote';
 import OpsTeam from '@/components/landing/ops-team';
 import Agents from '@/components/landing/agents';
-import Integrations from '@/components/landing/integrations';
 import HowItWorks from '@/components/landing/how-it-works';
 import TrustedBy from '@/components/landing/trusted-by';
 import ScaleSolutions from '@/components/landing/scale-solutions';
@@ -133,7 +132,6 @@ export default function Home() {
         <FounderQuote />
         <OpsTeam />
         <Agents />
-        <Integrations />
         <HowItWorks />
         <TrustedBy />
         <ScaleSolutions />

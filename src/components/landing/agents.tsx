@@ -1,9 +1,7 @@
 import AgentCard from './agent-card';
 import { agentsData } from './agents-data';
-import EarlyAccessWaitlist from './early-access-waitlist';
 
 const Agents = () => {
-
   return (
     <section 
       className="relative w-full min-h-[1100px] bg-[#080808] overflow-hidden"
@@ -26,7 +24,7 @@ const Agents = () => {
               </div>
               {/* Text */}
               <div className="absolute left-[27.6px] top-[4.6px] bg-gradient-to-b from-[#f2c6a6] to-[#bc845b] bg-clip-text text-transparent font-medium text-[14px] leading-[22px] tracking-[-0.14px]">
-                THE AVIARY
+                SERVICES
               </div>
             </div>
           </div>
@@ -49,7 +47,7 @@ const Agents = () => {
                   fontWeight: '500'
                 }}
               >
-                Meet Your Complete{' '}
+                Meet Your All-In-One{' '}
               </span>
               <br />
               <span 
@@ -59,7 +57,7 @@ const Agents = () => {
                   fontWeight: '400'
                 }}
               >
-                AI Workforce
+                Design Team
               </span>
             </h2>
           </div>
@@ -67,7 +65,7 @@ const Agents = () => {
           {/* Subtitle */}
           <div className="max-w-[640px] mx-auto">
             <p className="text-[#d5dbe6] text-[16px] leading-[25.6px] tracking-[-0.32px]">
-              Your AI-powered dream team. Each agent is built to buy back your time and scale what matters most.
+              From branding to product, websites to content. Studio is your unfair advantage.
             </p>
           </div>
         </div>
@@ -75,23 +73,19 @@ const Agents = () => {
         {/* Agent Cards Section */}
         <div className="flex justify-center">
           <div className="flex flex-col gap-[42px] lg:gap-6 max-w-[1224px] w-full">
-          {agentsData.map((agent, index) => (
-            <AgentCard
-              key={index}
-              category={agent.category}
-              title={agent.title}
-              description={agent.description}
-              features={agent.features}
-              ctaText={agent.ctaText}
-              videoSrc={agent.videoSrc}
-            />
-          ))}
+            {agentsData.map((agent, index) => (
+              <AgentCard
+                key={index}
+                title={agent.title}
+                description={agent.description}
+                features={agent.features}
+                ctaText={agent.ctaText}
+                videoSrc={agent.videoSrc}
+              />
+            ))}
           </div>
         </div>
       </div>
-
-      {/* Early Access Waitlist Section */}
-      <EarlyAccessWaitlist />
     </section>
   );
 };

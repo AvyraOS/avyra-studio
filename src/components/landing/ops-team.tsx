@@ -143,19 +143,13 @@ const OpsTeam = () => {
                     fontWeight: '400'
                   }}
                 >
-                  Ops Team
+                  Creative Team
                 </span>
               </span>
             </h2>
           </div>
 
-          {/* Subtitle */}
-          <div className="ops-subtitle max-w-[640px] mx-auto">
-            <p className="text-[#d5dbe6] text-[16px] leading-[25.6px] tracking-[-0.32px]">
-              Stop duct-taping apps together. Avyra replaces disjointed workflows with a seamless, 
-              intelligent system that runs your business in the background while you stay in flow.
-            </p>
-          </div>
+      
         </div>
 
         {/* Cards Section */}
@@ -177,10 +171,10 @@ const OpsTeam = () => {
               {/* Card Text - Bottom portion */}
               <div className="flex-shrink-0 px-8 py-4 pb-8">
                 <h3 className="text-[#000000] text-[20px] leading-[24px] font-medium tracking-[-0.2px] mb-2 font-['Inter']">
-                  Before
+                  All-In-One Creative Team
                 </h3>
                 <p className="text-[rgba(0,0,0,0.6)] text-[16px] leading-[25.6px] tracking-[-0.32px] font-['Inter']">
-                  Fragmented tools. Manual work. Missed opportunities.
+                  Everything in one place.
                 </p>
               </div>
             </div>
@@ -208,10 +202,104 @@ const OpsTeam = () => {
               {/* Card Text - Bottom portion */}
               <div className="flex-shrink-0 px-8 py-4 pb-8 relative z-20">
                 <h3 className="text-[#ffffff] text-[20px] leading-[24px] font-medium tracking-[-0.2px] mb-2 font-['Inter']">
-                  After <span className="text-[#d3ab8a]">Avyra</span>
+                  Award-Winning Designers
                 </h3>
                 <p className="text-[rgba(213,219,230,0.6)] text-[16px] leading-[25.6px] tracking-[-0.32px] font-['Inter']">
-                  One system. One interface. One AI-powered team.
+                  Access top-tier talent globally.
+                </p>
+              </div>
+            </div>
+            
+            
+            
+            <div className="flex-1 bg-[#080808] rounded-[20px] relative overflow-hidden border border-[rgba(216,231,242,0.07)] shadow-[0px_2px_1px_0px_inset_rgba(207,231,255,0.2)] flex flex-col max-w-[604px] lg:max-w-none min-h-[428px]">
+              {/* Light gradient overlay */}
+              <div 
+                className="absolute right-0 top-0 w-[604px] h-full opacity-10 pointer-events-none z-10"
+                style={{
+                  background: 'radial-gradient(ellipse 302px 241px at 95% 8%, rgba(184,199,217,0.5) 0%, rgba(184,199,217,0) 100%)'
+                }}
+              />
+              
+              {/* After Image - Top portion */}
+              <div className="flex-1 relative w-full z-20">
+                <Image
+                  src=""
+                  alt="After - Unified Avyra system"
+                  fill
+                  className="object-cover object-center"
+                />
+              </div>
+              
+              {/* Card Text - Bottom portion */}
+              <div className="flex-shrink-0 px-8 py-4 pb-8 relative z-20">
+                <h3 className="text-[#ffffff] text-[20px] leading-[24px] font-medium tracking-[-0.2px] mb-2 font-['Inter']">
+                  Preditable Pricing
+                </h3>
+                <p className="text-[rgba(213,219,230,0.6)] text-[16px] leading-[25.6px] tracking-[-0.32px] font-['Inter']">
+                  Flat monthly rate. No surprises.
+                </p>
+              </div>
+            </div>
+            
+            
+            <div className="flex-1 bg-[#080808] rounded-[20px] relative overflow-hidden border border-[rgba(216,231,242,0.07)] shadow-[0px_2px_1px_0px_inset_rgba(207,231,255,0.2)] flex flex-col max-w-[604px] lg:max-w-none min-h-[428px]">
+              {/* Light gradient overlay */}
+              <div 
+                className="absolute right-0 top-0 w-[604px] h-full opacity-10 pointer-events-none z-10"
+                style={{
+                  background: 'radial-gradient(ellipse 302px 241px at 95% 8%, rgba(184,199,217,0.5) 0%, rgba(184,199,217,0) 100%)'
+                }}
+              />
+              
+              {/* After Image - Top portion */}
+              <div className="flex-1 relative w-full z-20">
+                <Image
+                  src="/images/after-image.svg"
+                  alt="After - Unified Avyra system"
+                  fill
+                  className="object-cover object-center"
+                />
+              </div>
+              
+              {/* Card Text - Bottom portion */}
+              <div className="flex-shrink-0 px-8 py-4 pb-8 relative z-20">
+                <h3 className="text-[#ffffff] text-[20px] leading-[24px] font-medium tracking-[-0.2px] mb-2 font-['Inter']">
+                  Dreamgate System
+                </h3>
+                <p className="text-[rgba(213,219,230,0.6)] text-[16px] leading-[25.6px] tracking-[-0.32px] font-['Inter']">
+                  A seamless portal to manage projects
+                </p>
+              </div>
+            </div>
+            
+            
+            <div className="flex-1 bg-[#080808] rounded-[20px] relative overflow-hidden border border-[rgba(216,231,242,0.07)] shadow-[0px_2px_1px_0px_inset_rgba(207,231,255,0.2)] flex flex-col max-w-[604px] lg:max-w-none min-h-[428px]">
+              {/* Light gradient overlay */}
+              <div 
+                className="absolute right-0 top-0 w-[604px] h-full opacity-10 pointer-events-none z-10"
+                style={{
+                  background: 'radial-gradient(ellipse 302px 241px at 95% 8%, rgba(184,199,217,0.5) 0%, rgba(184,199,217,0) 100%)'
+                }}
+              />
+              
+              {/* After Image - Top portion */}
+              <div className="flex-1 relative w-full z-20">
+                <Image
+                  src="/images/after-image.svg"
+                  alt="After - Unified Avyra system"
+                  fill
+                  className="object-cover object-center"
+                />
+              </div>
+              
+              {/* Card Text - Bottom portion */}
+              <div className="flex-shrink-0 px-8 py-4 pb-8 relative z-20">
+                <h3 className="text-[#ffffff] text-[20px] leading-[24px] font-medium tracking-[-0.2px] mb-2 font-['Inter']">
+                 Web3 & AI Native
+                </h3>
+                <p className="text-[rgba(213,219,230,0.6)] text-[16px] leading-[25.6px] tracking-[-0.32px] font-['Inter']">
+                  We use the latest tech tools to get the job done.
                 </p>
               </div>
             </div>

@@ -171,11 +171,11 @@ const Hero = () => {
       {/* Top Pill - Separate layer behind gradient */}
       <div className="absolute top-[120px] md:top-[17vh] left-1/2 transform -translate-x-1/2 z-10 text-center px-4 w-full">
         <div className="mb-3 sm:mb-4 md:mb-6">
-          <div className="TopPill w-[21rem] sm:w-[327px] md:w-[327px] h-[1.875rem] sm:h-[31.20px] md:h-[31.20px] relative bg-[#1a1b20] rounded-3xl overflow-hidden mx-auto">
+          <div className="TopPill w-[17rem] sm:w-[327px] md:w-[327px] h-[1.875rem] sm:h-[31.20px] md:h-[31.20px] relative bg-[#1a1b20] rounded-3xl overflow-hidden mx-auto">
             <div className="Container size-[1.0625rem] sm:size-[18.40px] md:size-[18.40px] left-[0.5rem] sm:left-[8.60px] md:left-[8.60px] top-[0.40625rem] sm:top-[6.60px] md:top-[6.60px] absolute overflow-hidden">
               <div className="GradientShadow size-[0.40625rem] sm:size-[6.90px] md:size-[6.90px] left-[0.328125rem] sm:left-[5.75px] md:left-[5.75px] top-[0.328125rem] sm:top-[5.75px] md:top-[5.75px] absolute bg-gradient-to-b from-[#f2c6a6] to-[#bb835a] rounded-[0.40625rem] sm:rounded-[6.90px] md:rounded-[6.90px] shadow-[inset_0px_1.15px_1.15px_0px_rgba(255,255,255,0.09),inset_0px_1.15px_18.4px_0px_rgba(255,255,255,0.12)]" />
             </div>
-            <div className="Label left-[1.625rem] sm:left-[27.60px] md:left-[27.60px] right-[0.5rem] sm:right-[8px] md:right-[8px] top-[0.265625rem] sm:top-[4.60px] md:top-[4.60px] absolute justify-start text-[#f2c6a6] text-[0.875rem] sm:text-sm font-medium font-['Inter'] leading-snug whitespace-nowrap">Design for people</div>
+            <div className="Label left-[1.625rem] sm:left-[20px] md:left-[27.60px] right-[0.5rem] sm:right-[8px] md:right-[8px] top-[0.265625rem] sm:top-[4.60px] md:top-[4.60px] absolute justify-start text-[#f2c6a6] text-[0.875rem] sm:text-sm font-medium font-['Inter'] leading-snug whitespace-nowrap">DESIGN PARTNER FOR FOUNDERS</div>
           </div>
         </div>
       </div>
@@ -198,8 +198,8 @@ const Hero = () => {
                 }}
                 className="text-center text-[2.5rem] sm:text-[3.5rem] md:text-[4.5rem] lg:text-[5rem] font-medium leading-[3rem] sm:leading-[4rem] md:leading-[5rem] lg:leading-[5.5rem] tracking-[-0.05rem] sm:tracking-[-0.07rem] md:tracking-[-0.09rem] lg:tracking-[-0.11rem] capitalize max-w-full h-full"
               >
-                World Class<br />
-                Design
+                World Class Designs.<br />
+                Delivered in 48 Hours.
               </h1>
             </div>
             
@@ -207,7 +207,7 @@ const Hero = () => {
             <p 
               className="w-full max-w-[20rem] sm:max-w-[400px] md:max-w-[506px] mx-auto text-[#D5DBE6] text-center text-[1rem] sm:text-sm md:text-base font-normal font-['Inter'] leading-[1.425rem] sm:leading-[22px] md:leading-[25.6px] tracking-[-0.015rem] sm:tracking-[-0.28px] md:tracking-[-0.32px] mb-[1rem] sm:mb-6 md:mb-8 sm:px-4"
             >
-              Deploy intelligent AI agents that run sales, support, and operations 24/7. Focus on vision while your business grows itself.
+              Get premium branding, websites, and product UI/UX — delivered in as little as 48 hours, without the headaches of hiring.
             </p>
             {/* Button Container with Animated Border Glow */}
             <div className="relative inline-block mb-8 group">
@@ -243,7 +243,7 @@ const Hero = () => {
                   href="/intake" 
                   className="relative z-50 inline-flex items-center justify-center bg-gradient-to-b from-[#f2c6a6] to-[#bb835a] text-[#3a3a3a] px-8 rounded-lg text-base font-medium font-['Inter'] transition-all duration-300 hover:opacity-90 cursor-pointer h-[46px]"
                 >
-                  <span>Get My Design Plan</span>
+                  <span>Start My Project</span>
                   <svg 
                     className="ml-2 w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" 
                     fill="currentColor" 

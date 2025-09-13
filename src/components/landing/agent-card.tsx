@@ -6,7 +6,6 @@ interface Feature {
 }
 
 interface AgentCardProps {
-  category: string;
   title: string;
   description: string;
   features: Feature[];
@@ -15,7 +14,6 @@ interface AgentCardProps {
 }
 
 const AgentCard = ({
-  category,
   title,
   description,
   features,
@@ -23,22 +21,9 @@ const AgentCard = ({
   videoSrc
 }: AgentCardProps) => {
 
-  // Function to get mobile-specific CTA text based on category
-  const getMobileCTAText = (category: string) => {
-    switch (category) {
-      case "PRAETOR - SALES LEAD":
-        return "Start getting leads";
-      case "SPHINX - DEAL CLOSER":
-        return "Help me close deals";
-      case "MATRIX - CONTENT MANAGER":
-        return "Scale my content";
-      case "ARGO - FINANCE MANAGER":
-        return "Automate my finances";
-      case "CHRONOS - EXECUTIVE ASSISTANT":
-        return "Set up my assistant";
-      default:
-        return ctaText;
-    }
+  // Function to get mobile-specific CTA text
+  const getMobileCTAText = () => {
+    return ctaText;
   };
 
   return (
@@ -62,9 +47,6 @@ const AgentCard = ({
             
             {/* Card Header */}
             <div className="flex flex-col gap-1 sm:gap-2">
-              <div className="text-[#d5dbe6] text-[11px] sm:text-[14px] font-medium tracking-[1.8px] sm:tracking-[2.5px] leading-[16px] sm:leading-[22px]">
-                {category}
-              </div>
               <h3 
                 className="text-[22px] sm:text-[28px] lg:text-[32px] leading-[28px] sm:leading-[36px] lg:leading-[44.8px] tracking-[-0.66px] sm:tracking-[-0.84px] lg:tracking-[-0.96px] font-medium"
                 style={{
@@ -149,7 +131,7 @@ const AgentCard = ({
               }}
             >
               <span className="text-white text-[16px] font-semibold leading-[20px] tracking-[-0.16px]">
-                {getMobileCTAText(category)}
+                {getMobileCTAText()}
               </span>
               <div className="w-4 h-4 relative">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">

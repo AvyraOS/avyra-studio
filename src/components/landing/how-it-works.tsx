@@ -10,30 +10,54 @@ interface WorkStep {
   isClickable: boolean;
 }
 
+interface StepContent {
+  id: number;
+  title: string;
+  description: string;
+}
+
 const workSteps: WorkStep[] = [
   {
     id: 1,
-    title: "Choose Your Agents",
+    title: "Subscribe to a Perfect Plan",
     icon: "/icons/works-1-icon.svg",
     isClickable: true
   },
   {
     id: 2,
-    title: "We Set Everything Up", 
+    title: "Request Unlimited Designs", 
     icon: "/icons/works-2-icon.svg",
     isClickable: true
   },
   {
     id: 3,
-    title: "Scale On Autopilot",
+    title: "Receive Deliverables Fast",
     icon: "/icons/works-3-icon.svg",
     isClickable: true
   },
   {
     id: 4,
-    title: "Start for Free",
+    title: "Lets Get Started",
     icon: "/icons/right-arrow.svg",
     isClickable: false
+  }
+];
+
+const stepContent: StepContent[] = [
+  {
+    id: 1,
+    title: "Subscribe",
+    description: "Get started with the plan that fits you best. No contracts. Cancel anytime."
+  },
+  {
+    id: 2,
+    title: "Request",
+    description: "Submit unlimited design requests. From apps to decks, websites to brands."
+  },
+  {
+    id: 3,
+    title: "Receive",
+    description: "Get polished designs delivered back in as little as 48 hours."
   }
 ];
 
@@ -45,6 +69,11 @@ export default function HowItWorks() {
     1: "/images/agents-screen-image.svg",
     2: "/images/set-screen-image.svg", 
     3: "/images/scale-screen-image.svg"
+  };
+
+  // Get current step content
+  const getCurrentStepContent = () => {
+    return stepContent.find(content => content.id === selectedStep) || stepContent[0];
   };
 
   return (
@@ -69,13 +98,13 @@ export default function HowItWorks() {
                style={{
                  backgroundImage: "url('data:image/svg+xml;utf8,<svg viewBox=\"0 0 459 53\" xmlns=\"http://www.w3.org/2000/svg\" preserveAspectRatio=\"none\"><rect x=\"0\" y=\"0\" height=\"100%\" width=\"100%\" fill=\"url(%23grad)\" opacity=\"1\"/><defs><radialGradient id=\"grad\" gradientUnits=\"userSpaceOnUse\" cx=\"0\" cy=\"0\" r=\"10\" gradientTransform=\"matrix(45.441 0 0 4.558 229.5 26.5)\"><stop stop-color=\"rgba(213,219,230,1)\" offset=\"0.28387\"/><stop stop-color=\"rgba(161,166,176,1)\" offset=\"0.46291\"/><stop stop-color=\"rgba(135,140,149,1)\" offset=\"0.55242\"/><stop stop-color=\"rgba(109,113,122,1)\" offset=\"0.64194\"/><stop stop-color=\"rgba(82,87,94,1)\" offset=\"0.73145\"/><stop stop-color=\"rgba(56,60,67,1)\" offset=\"0.82097\"/><stop stop-color=\"rgba(30,34,40,1)\" offset=\"0.91048\"/><stop stop-color=\"rgba(17,20,27,1)\" offset=\"0.95524\"/><stop stop-color=\"rgba(4,7,13,1)\" offset=\"1\"/></radialGradient></defs></svg>')"
                }}>
-            Done-for-you <span className="font-['Instrument_Serif'] italic">AI Systems</span>
+            Done-for-you <span className="font-['Instrument_Serif'] italic">Design</span>
           </h2>
         </div>
         
         {/* Subtitle */}
         <div className="flex flex-col font-['Inter'] font-normal justify-center w-full max-w-2xl text-[#d5dbe6] text-sm sm:text-base lg:text-[16px] text-center tracking-[-0.32px] leading-relaxed lg:leading-[25.6px] mt-6">
-          We build and manage intelligent workflows that work while you sleep.
+        Your creative engine in three effortless steps.
         </div>
       </div>
 
@@ -128,10 +157,10 @@ export default function HowItWorks() {
                   <div className="space-y-8 flex-1 pl-10 pr-10" style={{ width: '45%' }}>
                     <div>
                       <h3 className="font-['Inter'] font-medium text-[#ffffff] text-[20px] leading-[24px] tracking-[-0.2px] mb-4">
-                        Pick Your AI Co-Pilots
+                        {getCurrentStepContent().title}
                       </h3>
                       <p className="font-['Inter'] font-normal text-[16px] leading-[25.6px] tracking-[-0.32px] text-[rgba(213,219,230,0.6)]">
-                        Pick AI agents that handle what drains you most - lead gen, content, support, finances, and more.
+                        {getCurrentStepContent().description}
                       </p>
                     </div>
                     
@@ -211,10 +240,10 @@ export default function HowItWorks() {
           {/* 1. Information */}
           <div className="text-center space-y-4">
             <h3 className="font-['Inter'] font-medium text-[#ffffff] text-xl leading-6 tracking-[-0.2px]">
-              Pick Your AI Co-Pilots
+              {getCurrentStepContent().title}
             </h3>
             <p className="font-['Inter'] font-normal text-sm leading-[22.4px] tracking-[-0.28px] text-[rgba(213,219,230,0.6)]">
-              Pick AI agents that handle what drains you most - lead gen, content, support, finances, and more.
+              {getCurrentStepContent().description}
             </p>
           </div>
 

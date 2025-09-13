@@ -12,7 +12,7 @@ const ScaleSolutions = () => {
   const [animatedValues, setAnimatedValues] = useState({
     sales: 0,
     costs: 0,
-    hours: 0
+    revenue: 0
   });
 
   useEffect(() => {
@@ -41,14 +41,14 @@ const ScaleSolutions = () => {
         }
       });
 
-      // Animate hours counter (100+)
+      // Animate revenue counter ($80M+)
       gsap.to(animatedValues, {
-        hours: 100,
+        revenue: 80,
         duration: 2,
         delay: 0.4,
         ease: "power2.out",
         onUpdate: function() {
-          setAnimatedValues(prev => ({ ...prev, hours: this.targets()[0].hours }));
+          setAnimatedValues(prev => ({ ...prev, revenue: this.targets()[0].revenue }));
         }
       });
     };
@@ -81,7 +81,7 @@ const ScaleSolutions = () => {
             },
             onLeaveBack: () => {
               // Reset counters when scrolling back up
-              setAnimatedValues({ sales: 0, costs: 0, hours: 0 });
+              setAnimatedValues({ sales: 0, costs: 0, revenue: 0 });
             }
           }
         }
@@ -163,7 +163,7 @@ const ScaleSolutions = () => {
                   fontWeight: '500'
                 }}
               >
-                Scale Without{' '}
+                Unfair Creative{' '}
               </span>
               <span 
                 style={{
@@ -172,14 +172,14 @@ const ScaleSolutions = () => {
                   fontWeight: '400'
                 }}
               >
-                Burnout
+                Advantage
               </span>
             </h2>
           </div>
 
           {/* Subtitle */}
           <div className="text-center text-[#d5dbe6] text-[14px] sm:text-[15px] md:text-base font-normal font-['Inter'] leading-[22px] sm:leading-relaxed tracking-[-0.32px] max-w-2xl mx-auto px-4">
-            Everything you need to automate and grow your business
+          Everything you need to create without the overhead.
           </div>
         </div>
 
@@ -215,11 +215,11 @@ const ScaleSolutions = () => {
                   color: "transparent"
                 }}
               >
-                More Sales
+                Faster Delivery
               </h4>
             </div>
             <p className="text-[rgba(213,219,230,0.6)] text-[14px] sm:text-[15px] md:text-[16px] font-normal font-['Inter'] leading-[22px] sm:leading-[24px] md:leading-[25.6px] tracking-[-0.32px] max-w-[259px] mx-auto md:mx-0">
-              Skyrocket sales with AI agents prospecting and closing 24/7.
+            Get design & development work completed in days, not weeks.
             </p>
           </div>
 
@@ -252,7 +252,7 @@ const ScaleSolutions = () => {
               </h4>
             </div>
             <p className="text-[rgba(213,219,230,0.6)] text-[14px] sm:text-[15px] md:text-[16px] font-normal font-['Inter'] leading-[22px] sm:leading-[24px] md:leading-[25.6px] tracking-[-0.32px] max-w-[259px] mx-auto md:mx-0">
-              Streamlined automation replaces expensive overhead.
+            Save compared to hiring full-time teams or paying bloated retainers.
             </p>
           </div>
 
@@ -269,7 +269,7 @@ const ScaleSolutions = () => {
                   color: "transparent"
                 }}
               >
-                {Math.round(animatedValues.hours)}+
+                ${Math.round(animatedValues.revenue)}M+
               </h3>
               <h4 
                 className="text-[18px] sm:text-[19px] md:text-[20px] font-medium font-['Inter'] leading-[28px] sm:leading-[38px] md:leading-[48px] tracking-[-0.2px]"
@@ -281,11 +281,11 @@ const ScaleSolutions = () => {
                   color: "transparent"
                 }}
               >
-                Hours Saved
+                Funds Raised
               </h4>
             </div>
             <p className="text-[rgba(213,219,230,0.6)] text-[14px] sm:text-[15px] md:text-[16px] font-normal font-['Inter'] leading-[22px] sm:leading-[24px] md:leading-[25.6px] tracking-[-0.32px] max-w-[259px] mx-auto md:mx-0">
-              Founders reclaim valuable hours every month by offloading tasks.
+            In venture funding for startups powered by Avyra’s designs.
             </p>
           </div>
             </div>

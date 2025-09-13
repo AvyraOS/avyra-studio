@@ -142,10 +142,10 @@ const FounderQuote = () => {
         <div className="quote-text w-full max-w-[732px] px-4 sm:px-6 md:px-8 lg:px-0 mb-8 md:mb-12">
           <p className="text-[#b8c7d9] text-[32px] md:text-[34px] lg:text-[36px] leading-[44.8px] md:leading-[47.6px] lg:leading-[50.4px] tracking-[-0.36px] md:tracking-[-0.38px] lg:tracking-[-0.4px] text-center font-normal">
             <span className="quote-part text-[#b8c7d9]/50">We studied how top 1% </span>
-            <em className="quote-part font-instrument-serif not-italic" style={{fontFamily: 'var(--font-instrument-serif)', fontStyle: 'italic'}}>founders</em>
-            <span className="quote-part text-[#b8c7d9]/50"> escape operational chaos. Then we built their </span>
-            <em className="quote-part font-instrument-serif not-italic" style={{fontFamily: 'var(--font-instrument-serif)', fontStyle: 'italic'}}>system. </em>
-            <span className="quote-part text-[#b8c7d9]/50">Best part? It thinks, learns, and performs like your best hire only it never sleeps.</span>
+            <em className="quote-part font-instrument-serif not-italic" style={{fontFamily: 'var(--font-instrument-serif)', fontStyle: 'italic'}}>brands</em>
+            <span className="quote-part text-[#b8c7d9]/50"> scale their creativity. Then we built their \</span>
+            <em className="quote-part font-instrument-serif not-italic" style={{fontFamily: 'var(--font-instrument-serif)', fontStyle: 'italic'}}>studio. </em>
+            <span className="quote-part text-[#b8c7d9]/50">The best part? It creates, iterates, and performs like your best design hire only it never sleeps.</span>
           </p>
         </div>
 
