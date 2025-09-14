@@ -1,4 +1,4 @@
-export interface AgentData {
+export interface ServiceData {
   title: string;
   description: string;
   features: {
@@ -10,7 +10,7 @@ export interface AgentData {
   videoSrc: string;
 }
 
-export const agentsData: AgentData[] = [
+export const servicesData: ServiceData[] = [
   {
     title: "Brand Identity + Positioning",
     description: "Make your brand unforgettable",

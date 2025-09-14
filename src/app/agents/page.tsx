@@ -67,8 +67,8 @@ export default function Agents() {
             transition={{ delay: 0.3, duration: 0.6 }}
           >
             <div className="inline-flex items-center space-x-1.5 md:space-x-2 bg-[#1a1b20] rounded-full px-3 md:px-4 py-1.5 md:py-2">
-              <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-gradient-to-b from-[#f2c6a6] to-[#bb835a] rounded-full" />
-              <span className="text-[#f2c6a6] text-xs md:text-sm font-medium">AI WORKFORCE</span>
+              <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-gradient-to-b from-[#89FFFF] to-[#00D7D7] rounded-full" />
+              <span className="text-[#89FFFF] text-xs md:text-sm font-medium">AI WORKFORCE</span>
             </div>
           </motion.div>
           
@@ -186,19 +186,19 @@ export default function Agents() {
           <div 
             className="p-[2px] rounded-lg w-full md:w-[524px] mx-auto h-[50px] flex items-center justify-center overflow-hidden relative z-10"
             style={{
-              background: 'radial-gradient(50% 20.7% at 50% 100%, #FFE1C6 0%, rgba(255, 225, 198, 0.00) 100%)'
+              background: 'radial-gradient(50% 20.7% at 50% 100%, #C6FFFF 0%, rgba(198, 255, 255, 0.00) 100%)'
             }}
           >
             <Link 
               href="/demo"
-              className="w-full h-full bg-gradient-to-b from-[#f2c6a6] to-[#bc845b] rounded-[8px] flex items-center justify-center gap-1.5 px-8 py-3 relative z-10"
+              className="w-full h-full bg-gradient-to-b from-[#89FFFF] to-[#00D7D7] rounded-[8px] flex items-center justify-center gap-1.5 px-8 py-3 relative z-10"
             >
-              <span className="text-[#3a3a3a] text-[16px] font-semibold font-['Inter'] tracking-[-0.16px] leading-[20px]">
+              <span className="text-[#000000] text-[16px] font-semibold font-inter tracking-[-0.16px] leading-[20px]">
                 Choose this Agent
               </span>
               <div className="w-[22px] h-[22px]">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                  <path d="M4.58333 11H17.4167M17.4167 11L11.9167 5.5M17.4167 11L11.9167 16.5" stroke="#3a3a3a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M4.58333 11H17.4167M17.4167 11L11.9167 5.5M17.4167 11L11.9167 16.5" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
             </Link>

@@ -1,11 +1,11 @@
-import AgentCard from './agent-card';
-import { agentsData } from './agents-data';
+import ServiceCard from './service-card';
+import { servicesData } from './services-data';
 
-const Agents = () => {
+const Services = () => {
   return (
     <section 
       className="relative w-full min-h-[1100px] bg-[#080808] overflow-hidden"
-      id="agents"
+      id="services"
     >
       {/* Container to center content */}
       <div className="container mx-auto px-4 py-24">
@@ -13,19 +13,22 @@ const Agents = () => {
         {/* Header Section - Centered */}
         <div className="text-center mb-8">
           
-          {/* Section Pill */}
+          {/* Section Tag */}
           <div className="mb-6 flex justify-center">
-            <div className="bg-[#1b1c20] h-[31px] w-[125px] rounded-[24px] relative overflow-hidden">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-[24px] bg-[#1b1c20]">
               {/* Gradient dot */}
-              <div className="absolute left-[8.6px] top-[6.6px] w-[18.4px] h-[18.4px]">
-                <div className="absolute left-1/2 top-[31.25%] bottom-[31.25%] w-[6.9px] rounded-[6.9px] bg-gradient-to-b from-[#f2c6a6] to-[#bc845b] transform -translate-x-1/2">
-                  <div className="absolute inset-0 pointer-events-none shadow-[0px_1.15px_18.4px_0px_inset_rgba(255,255,255,0.12),0px_1.15px_1.15px_0px_inset_rgba(255,255,255,0.09)]" />
-                </div>
-              </div>
-              {/* Text */}
-              <div className="absolute left-[27.6px] top-[4.6px] bg-gradient-to-b from-[#f2c6a6] to-[#bc845b] bg-clip-text text-transparent font-medium text-[14px] leading-[22px] tracking-[-0.14px]">
+              <div className="w-[6.9px] h-[6.9px] rounded-full bg-gradient-to-b from-[#89FFFF] to-[#00D7D7]"></div>
+              <span 
+                className="font-['Inter'] font-medium text-[14px] leading-[22px] tracking-[-0.14px]"
+                style={{
+                  background: 'linear-gradient(180deg, #89FFFF 0%, #00D7D7 100%)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}
+              >
                 SERVICES
-              </div>
+              </span>
             </div>
           </div>
 
@@ -50,13 +53,7 @@ const Agents = () => {
                 Meet Your All-In-One{' '}
               </span>
               <br />
-              <span 
-                style={{
-                  fontFamily: '"Instrument Serif"',
-                  fontStyle: 'italic',
-                  fontWeight: '400'
-                }}
-              >
+              <span className="font-instrument-serif italic font-normal">
                 Design Team
               </span>
             </h2>
@@ -70,17 +67,17 @@ const Agents = () => {
           </div>
         </div>
 
-        {/* Agent Cards Section */}
+        {/* Service Cards Section */}
         <div className="flex justify-center">
           <div className="flex flex-col gap-[42px] lg:gap-6 max-w-[1224px] w-full">
-            {agentsData.map((agent, index) => (
-              <AgentCard
+            {servicesData.map((service, index) => (
+              <ServiceCard
                 key={index}
-                title={agent.title}
-                description={agent.description}
-                features={agent.features}
-                ctaText={agent.ctaText}
-                videoSrc={agent.videoSrc}
+                title={service.title}
+                description={service.description}
+                features={service.features}
+                ctaText={service.ctaText}
+                videoSrc={service.videoSrc}
               />
             ))}
           </div>
@@ -90,4 +87,4 @@ const Agents = () => {
   );
 };
 
-export default Agents;
+export default Services;

@@ -5,7 +5,7 @@ interface Feature {
   text: string;
 }
 
-interface AgentCardProps {
+interface ServiceCardProps {
   title: string;
   description: string;
   features: Feature[];
@@ -13,13 +13,13 @@ interface AgentCardProps {
   videoSrc: string;
 }
 
-const AgentCard = ({
+const ServiceCard = ({
   title,
   description,
   features,
   ctaText,
   videoSrc
-}: AgentCardProps) => {
+}: ServiceCardProps) => {
 
   // Function to get mobile-specific CTA text
   const getMobileCTAText = () => {
@@ -146,4 +146,4 @@ const AgentCard = ({
   );
 };
 
-export default AgentCard;
+export default ServiceCard;

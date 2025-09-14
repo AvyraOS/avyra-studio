@@ -320,7 +320,7 @@ export default function LeadCaptureGate() {
             className="p-[2px] rounded-[8px] transition-all duration-300"
             style={{
               background: !isSubmitting && email.trim() && name.trim() 
-                ? "radial-gradient(50% 20.7% at 50% 100%, #FFE1C6 0%, rgba(255, 225, 198, 0.00) 100%)" 
+                ? "radial-gradient(50% 20.7% at 50% 100%, #C6FFFF 0%, rgba(198, 255, 255, 0.00) 100%)" 
                 : "transparent"
             }}
           >
@@ -330,7 +330,7 @@ export default function LeadCaptureGate() {
               className={`w-full px-6 md:px-8 py-3 rounded-[8px] text-[14px] md:text-[16px] font-semibold tracking-[-0.16px] transition-all duration-300 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 group ${
                 isSubmitting || !email.trim() || !name.trim() 
                   ? 'bg-gradient-to-b from-[#8a7259] to-[#6b5040] text-[#2a2a2a]' 
-                  : 'bg-gradient-to-b from-[#f2c6a6] to-[#bc845b] text-[#3a3a3a] hover:opacity-90 hover:scale-[1.01] cursor-pointer'
+                  : 'bg-gradient-to-b from-[#89FFFF] to-[#00D7D7] text-[#000000] hover:opacity-90 hover:scale-[1.01] cursor-pointer'
               }`}
               style={{ fontFamily: "Inter" }}
             >

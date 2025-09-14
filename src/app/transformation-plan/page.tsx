@@ -106,7 +106,7 @@ export default function TransformationPlan() {
           
           {/* YOUR PLAN INCLUDES pill */}
           <div className="bg-[#1b1c20] box-border flex gap-[3px] h-[36px] md:h-[42px] items-center justify-start overflow-hidden px-4 md:px-6 py-2 md:py-3.5 rounded-[24.15px] shrink-0 w-fit">
-            <div className="bg-clip-text bg-gradient-to-b font-['Inter'] font-medium from-[#f2c6a6] leading-[0] text-[14px] md:text-[16px] text-nowrap to-[#bc845b] tracking-[-0.14px]" style={{ WebkitTextFillColor: "transparent" }}>
+            <div className="bg-clip-text bg-gradient-to-b font-inter font-medium from-[#89FFFF] leading-[0] text-[14px] md:text-[16px] text-nowrap to-[#00D7D7] tracking-[-0.14px]" style={{ WebkitTextFillColor: "transparent" }}>
               <p className="leading-[22px] whitespace-pre">YOUR PLAN INCLUDES:</p>
             </div>
           </div>
@@ -220,19 +220,19 @@ export default function TransformationPlan() {
           <div 
             className="p-[2px] rounded-lg w-[calc(100vw-32px)] md:w-[550px] h-[50px] flex items-center justify-center overflow-hidden relative z-10"
             style={{
-              background: 'radial-gradient(50% 20.7% at 50% 100%, #FFE1C6 0%, rgba(255, 225, 198, 0.00) 100%)'
+              background: 'radial-gradient(50% 20.7% at 50% 100%, #C6FFFF 0%, rgba(198, 255, 255, 0.00) 100%)'
             }}
           >
             <Link 
               href="/demo"
-              className="w-full h-full bg-gradient-to-b from-[#f2c6a6] to-[#bc845b] rounded-[8px] flex items-center justify-center gap-1.5 px-4 md:px-8 py-3 relative z-10"
+              className="w-full h-full bg-gradient-to-b from-[#89FFFF] to-[#00D7D7] rounded-[8px] flex items-center justify-center gap-1.5 px-4 md:px-8 py-3 relative z-10"
             >
-              <span className="text-[#3a3a3a] text-[16px] font-semibold font-['Inter'] tracking-[-0.16px] leading-[20px]">
+              <span className="text-[#000000] text-[16px] font-semibold font-inter tracking-[-0.16px] leading-[20px]">
                 Get my Freedom Blueprint
               </span>
               <div className="w-[22px] h-[22px]">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                  <path d="M4.58333 11H17.4167M17.4167 11L11.9167 5.5M17.4167 11L11.9167 16.5" stroke="#3a3a3a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M4.58333 11H17.4167M17.4167 11L11.9167 5.5M17.4167 11L11.9167 16.5" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
             </Link>

@@ -36,13 +36,15 @@ const Footer = () => {
 
   return (
     <footer className="relative w-full bg-[#080808] pt-16 md:pt-18 lg:pt-20 pb-8 overflow-hidden">
-      {/* Background gradient effect */}
-      <div 
-        className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[600px] h-[200px] opacity-5 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse 300px 100px at 50% 50%, rgba(199,199,199,0.05) 0%, rgba(0,0,0,0) 70%)'
-        }}
-      />
+      {/* Footer Background Image - Full Section */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none">
+        <Image
+          src="/images/footer-background-image.png"
+          alt=""
+          fill
+          className="object-cover opacity-50"
+        />
+      </div>
 
       {/* Container */}
       <div className="container mx-auto px-4 relative z-10 max-w-[1200px]">
@@ -53,7 +55,7 @@ const Footer = () => {
           {/* Pill with faded lines */}
           <div className="flex items-center justify-center gap-5 mb-6">
             <div className="h-px w-[69px] bg-gradient-to-r from-[#04070d] to-[#ffffff] opacity-50" />
-            <div className="text-[#d5dbe6] text-[14px] font-medium font-['Inter'] leading-[22px] tracking-[-0.14px]">
+            <div className="text-[#d5dbe6] text-[14px] font-medium font-inter leading-[22px] tracking-[-0.14px]">
               READY TO SCALE
             </div>
             <div className="h-px w-[69px] bg-gradient-to-l from-[#04070d] to-[#ffffff] opacity-50" />
@@ -79,13 +81,7 @@ const Footer = () => {
               >
                 Your Creative Unfair {' '}
               </span>
-              <span 
-                style={{
-                  fontFamily: '"Instrument Serif"',
-                  fontStyle: 'italic',
-                  fontWeight: '400'
-                }}
-              >
+              <span className="font-instrument-serif italic font-normal">
                Advantage
               </span>
             </h2>
@@ -106,13 +102,13 @@ const Footer = () => {
               <div 
                 className="relative z-10 p-[2px] rounded-lg h-[50px] overflow-hidden"
                 style={{
-                  background: "radial-gradient(50% 20.7% at 50% 100%, #FFE1C6 0%, rgba(255, 225, 198, 0.00) 100%)"
+                  background: "radial-gradient(50% 20.7% at 50% 100%, #ffffff 0%, rgba(255, 225, 198, 0.00) 100%)"
                 }}
               >
                 {/* Button (Top Layer) */}
                 <Link 
                   href="/pricing" 
-                  className="relative z-50 inline-flex items-center justify-center bg-gradient-to-b from-[#f2c6a6] to-[#bb835a] text-[#3a3a3a] px-8 rounded-lg text-base font-medium font-['Inter'] transition-all duration-300 hover:opacity-90 cursor-pointer h-[46px]"
+                  className="relative z-50 inline-flex items-center justify-center bg-[#f8f9fa] text-[#000000] px-8 rounded-lg text-base font-medium font-inter transition-all duration-300 hover:opacity-90 cursor-pointer h-[46px]"
                 >
                   <span>See Pricing</span>
                   <svg 
@@ -245,8 +241,8 @@ const Footer = () => {
                       disabled={!isFormValid || isSubmitting}
                       className={`rounded-[9px] w-[42px] h-[42px] mr-[9px] flex items-center justify-center transition-all duration-300 ${
                         isFormValid && !isSubmitting
-                          ? 'bg-gradient-to-b from-[#f2c6a6] to-[#bb835a] hover:opacity-90 cursor-pointer shadow-md'
-                          : 'bg-[rgba(217,217,217,0.05)] hover:bg-[rgba(217,217,217,0.1)] disabled:opacity-50 disabled:cursor-not-allowed'
+                          ? 'bg-gradient-to-b from-[#89FFFF] to-[#00D7D7] hover:opacity-90 cursor-pointer shadow-md'
+                          : 'bg-[rgba(217,217,217,0.05)] hover:bg-[#e9ecef] disabled:opacity-50 disabled:cursor-not-allowed'
                       }`}
                     >
                       <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
@@ -254,7 +250,7 @@ const Footer = () => {
                           fillRule="evenodd" 
                           clipRule="evenodd" 
                           d="M10.293 5.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 12H4a1 1 0 110-2h10.586l-4.293-4.293a1 1 0 010-1.414z" 
-                          fill={isFormValid && !isSubmitting ? "#3a3a3a" : "white"}
+                          fill={isFormValid && !isSubmitting ? "#000000" : "#666666"}
                           className="transition-colors duration-300"
                         />
                       </svg>
@@ -316,14 +312,6 @@ const Footer = () => {
 
         {/* Large Background SVG - Separate section below main content */}
         <div className="text-center relative mt-8">
-          {/* Gradient Glow Effect */}
-          <div 
-            className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1400px] h-[400px] pointer-events-none"
-            style={{
-              background: 'radial-gradient(ellipse 800px 400px at 50% 50%, rgba(199, 199, 199, 0.03) 0%, rgba(255, 225, 198, 0.02) 30%, rgba(253, 150, 46, 0.01) 70%, transparent 100%)',
-              filter: 'blur(60px)'
-            }}
-          />
           
           <div 
             className="relative pointer-events-none flex items-center justify-center"

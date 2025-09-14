@@ -497,19 +497,19 @@ export default function ResultsPage({ formData }: ResultsPageProps) {
                   <div 
                     className="p-[2px] rounded-lg w-full md:w-[524px] mx-auto h-[50px] flex items-center justify-center overflow-hidden relative z-10"
                     style={{
-                      background: 'radial-gradient(50% 20.7% at 50% 100%, #FFE1C6 0%, rgba(255, 225, 198, 0.00) 100%)'
+                      background: 'radial-gradient(50% 20.7% at 50% 100%, #C6FFFF 0%, rgba(198, 255, 255, 0.00) 100%)'
                     }}
                   >
                     <Link 
                       href={button.href}
-                      className="w-full h-full bg-gradient-to-b from-[#f2c6a6] to-[#bc845b] rounded-[8px] flex items-center justify-center gap-1.5 px-8 py-3 relative z-10"
+                      className="w-full h-full bg-gradient-to-b from-[#89FFFF] to-[#00D7D7] rounded-[8px] flex items-center justify-center gap-1.5 px-8 py-3 relative z-10"
                     >
-                      <span className="text-[#3a3a3a] text-[16px] font-semibold font-['Inter'] tracking-[-0.16px] leading-[20px]">
+                      <span className="text-[#000000] text-[16px] font-semibold font-inter tracking-[-0.16px] leading-[20px]">
                         {button.text}
                       </span>
                       <div className="w-[22px] h-[22px]">
                         <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                          <path d="M4.58333 11H17.4167M17.4167 11L11.9167 5.5M17.4167 11L11.9167 16.5" stroke="#3a3a3a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M4.58333 11H17.4167M17.4167 11L11.9167 5.5M17.4167 11L11.9167 16.5" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                       </div>
                     </Link>
