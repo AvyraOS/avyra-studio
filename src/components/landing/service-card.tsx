@@ -10,7 +10,7 @@ interface ServiceCardProps {
   description: string;
   features: Feature[];
   ctaText: string;
-  videoSrc: string;
+  imageSrc: string;
 }
 
 const ServiceCard = ({
@@ -18,7 +18,7 @@ const ServiceCard = ({
   description,
   features,
   ctaText,
-  videoSrc
+  imageSrc
 }: ServiceCardProps) => {
 
   // Function to get mobile-specific CTA text
@@ -99,28 +99,24 @@ const ServiceCard = ({
           </div>
         </div>
 
-        {/* Video Side - Right on desktop, bottom on mobile */}
-        <div className="flex-shrink-0 min-[1200px]:w-[580px] xl:w-[640px] 2xl:w-[700px] flex flex-col bg-black rounded-b-[20px] min-[1200px]:rounded-b-none min-[1200px]:rounded-r-[20px] min-[1200px]:rounded-bl-none">
-          {/* Video Container with proper aspect ratio */}
-          <div className="w-full h-full relative flex-1">
-            {/* Aspect ratio container for responsive behavior - adjusted for ~481px video height */}
-            <div className="w-full aspect-video min-[1200px]:aspect-[580/481] bg-black rounded-b-[20px] min-[1200px]:rounded-b-none min-[1200px]:rounded-r-[20px] min-[1200px]:rounded-bl-none flex items-center justify-center min-h-[240px] min-[1200px]:h-[481px] overflow-hidden">
-              {/* Video Element */}
-              <video
-                className="w-full h-full object-cover"
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-              >
-                <source src={videoSrc} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+        {/* Image Side - Right on desktop, bottom on mobile */}
+        <div className="flex-shrink-0 min-[1200px]:w-[580px] xl:w-[640px] 2xl:w-[700px] flex flex-col rounded-b-[20px] min-[1200px]:rounded-b-none min-[1200px]:rounded-r-[20px] min-[1200px]:rounded-bl-none">
+          {/* Image Container with 46px padding from top, right, and bottom */}
+          <div className="w-full h-full relative flex-1 p-[46px] pr-[46px] pb-[46px] pt-[46px] pl-0 min-[1200px]:pl-[46px]">
+            {/* Image Container */}
+            <div className="w-full h-full relative min-h-[240px] min-[1200px]:h-[389px] overflow-hidden rounded-lg">
+              {/* Image Element */}
+              <Image
+                src={imageSrc}
+                alt="Design team showcase"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1200px) 100vw, 580px"
+              />
             </div>
           </div>
           
-          {/* Mobile CTA Button - Only visible on mobile, underneath video */}
+          {/* Mobile CTA Button - Only visible on mobile, underneath image */}
           <div className="min-[1200px]:hidden">
             <button 
               className="bg-[#1f1f1f] flex items-center justify-center gap-2.5"

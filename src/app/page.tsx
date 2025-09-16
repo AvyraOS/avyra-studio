@@ -11,6 +11,7 @@ import FounderQuote from '@/components/landing/founder-quote';
 import CreativeTeam from '@/components/landing/creative-team';
 import Services from '@/components/landing/services';
 import HowItWorks from '@/components/landing/how-it-works';
+import Pricing from '@/components/landing/pricing';
 import TrustedBy from '@/components/landing/trusted-by';
 import ScaleSolutions from '@/components/landing/scale-solutions';
 import Footer from '@/components/landing/footer';
@@ -133,6 +134,7 @@ export default function Home() {
         <CreativeTeam />
         <Services />
         <HowItWorks />
+        <Pricing />
         <TrustedBy />
         <ScaleSolutions />
         <Footer />

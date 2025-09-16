@@ -7,7 +7,7 @@ export interface ServiceData {
   }[];
   ctaText: string;
   ctaLink: string;
-  videoSrc: string;
+  imageSrc: string;
 }
 
 export const servicesData: ServiceData[] = [
@@ -21,7 +21,7 @@ export const servicesData: ServiceData[] = [
     ],
     ctaText: "Get Started",
     ctaLink: "/agents/praetor",
-    videoSrc: "/videos/qualifier.mp4"
+    imageSrc: "/images/design-team1.png"
   },
   {
     title: "Web & Product Design",
@@ -33,7 +33,7 @@ export const servicesData: ServiceData[] = [
     ],
     ctaText: "Get Started",
     ctaLink: "/agents/sphinx",
-    videoSrc: "/videos/meet.mp4"
+    imageSrc: "/images/design-team2.png"
   },
   {
     title: "Full Product Development",
@@ -45,7 +45,7 @@ export const servicesData: ServiceData[] = [
     ],
     ctaText: "Get Started",
     ctaLink: "/agents/matrix",
-    videoSrc: "/videos/socials.mp4"
+    imageSrc: "/images/design-team3.png"
   },
   {
     title: "Pitch Decks & Presentations",
@@ -57,7 +57,7 @@ export const servicesData: ServiceData[] = [
     ],
     ctaText: "Get Started",
     ctaLink: "/agents/argo",
-    videoSrc: "/videos/daily.mp4"
+    imageSrc: "/images/design-team4.png"
   },
   {
     title: "Content & Video Production",
@@ -69,6 +69,6 @@ export const servicesData: ServiceData[] = [
     ],
     ctaText: "Get Started",
     ctaLink: "/agents/chronos",
-    videoSrc: "/videos/email.mp4"
+    imageSrc: "/images/design-team5.png"
   }
 ];

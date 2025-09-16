@@ -77,7 +77,7 @@ const Services = () => {
                 description={service.description}
                 features={service.features}
                 ctaText={service.ctaText}
-                videoSrc={service.videoSrc}
+                imageSrc={service.imageSrc}
               />
             ))}
           </div>
