@@ -14,6 +14,7 @@ import HowItWorks from '@/components/landing/how-it-works';
 import Pricing from '@/components/landing/pricing';
 import TrustedBy from '@/components/landing/trusted-by';
 import ScaleSolutions from '@/components/landing/scale-solutions';
+import FAQ from '@/components/landing/faq';
 import Footer from '@/components/landing/footer';
 
 
@@ -137,6 +138,7 @@ export default function Home() {
         <Pricing />
         <TrustedBy />
         <ScaleSolutions />
+        <FAQ />
         <Footer />
       </div>
     </main>
