@@ -71,51 +71,51 @@ export default function ResultsPage({ formData }: ResultsPageProps) {
   };
 
   // Function to get prioritized agents based on tool selections
-  const getPrioritizedAgents = (currentStack: string[]) => {
-    const agentPriorities: string[] = [];
+  // const getPrioritizedAgents = (currentStack: string[]) => {
+  //   const agentPriorities: string[] = [];
     
-    // CRM & sales → prioritize AI Sales Director
-    if (currentStack.includes('hubspot-salesforce-pipedrive')) {
-      agentPriorities.push('AI Sales Director');
-    }
+  //   // CRM & sales → prioritize AI Sales Director
+  //   if (currentStack.includes('hubspot-salesforce-pipedrive')) {
+  //     agentPriorities.push('AI Sales Director');
+  //   }
     
-    // Support → prioritize AI Success Captain
-    if (currentStack.includes('intercom-zendesk-helpscout')) {
-      agentPriorities.push('AI Success Captain');
-    }
+  //   // Support → prioritize AI Success Captain
+  //   if (currentStack.includes('intercom-zendesk-helpscout')) {
+  //     agentPriorities.push('AI Success Captain');
+  //   }
     
-    // Docs/Projects/Files/Automation → AI Ops Commander
-    if (currentStack.some(tool => [
-      'notion-airtable-clickup',
-      'asana-monday-trello', 
-      'google-drive-dropbox-onedrive',
-      'zapier-make'
-    ].includes(tool))) {
-      agentPriorities.push('AI Ops Commander');
-    }
+  //   // Docs/Projects/Files/Automation → AI Ops Commander
+  //   if (currentStack.some(tool => [
+  //     'notion-airtable-clickup',
+  //     'asana-monday-trello', 
+  //     'google-drive-dropbox-onedrive',
+  //     'zapier-make'
+  //   ].includes(tool))) {
+  //     agentPriorities.push('AI Ops Commander');
+  //   }
     
-    // Content/Email marketing/Ads → AI Content Creator (assuming this maps to Matrix agent)
-    if (currentStack.includes('gmail-outlook')) {
-      agentPriorities.push('AI Content Creator');
-    }
+  //   // Content/Email marketing/Ads → AI Content Creator (assuming this maps to Matrix agent)
+  //   if (currentStack.includes('gmail-outlook')) {
+  //     agentPriorities.push('AI Content Creator');
+  //   }
     
-    // Storefront/Payments → pair Sales Director + Ops Commander
-    if (currentStack.some(tool => ['shopify-woocommerce', 'stripe-payments'].includes(tool))) {
-      if (!agentPriorities.includes('AI Sales Director')) {
-        agentPriorities.push('AI Sales Director');
-      }
-      if (!agentPriorities.includes('AI Ops Commander')) {
-        agentPriorities.push('AI Ops Commander');
-      }
-    }
+  //   // Storefront/Payments → pair Sales Director + Ops Commander
+  //   if (currentStack.some(tool => ['shopify-woocommerce', 'stripe-payments'].includes(tool))) {
+  //     if (!agentPriorities.includes('AI Sales Director')) {
+  //       agentPriorities.push('AI Sales Director');
+  //     }
+  //     if (!agentPriorities.includes('AI Ops Commander')) {
+  //       agentPriorities.push('AI Ops Commander');
+  //     }
+  //   }
     
-    // Default agents if none specified
-    if (agentPriorities.length === 0) {
-      agentPriorities.push('AI Sales Director', 'AI Content Creator', 'AI Ops Commander');
-    }
+  //   // Default agents if none specified
+  //   if (agentPriorities.length === 0) {
+  //     agentPriorities.push('AI Sales Director', 'AI Content Creator', 'AI Ops Commander');
+  //   }
     
-    return agentPriorities;
-  };
+  //   return agentPriorities;
+  // };
 
   // Determine user segment based on form responses
   useEffect(() => {
@@ -152,42 +152,42 @@ export default function ResultsPage({ formData }: ResultsPageProps) {
 
   // Segment content
   const getSegmentContent = () => {
-    const prioritizedAgents = getPrioritizedAgents(formData.currentStack || []);
+    // const prioritizedAgents = getPrioritizedAgents(formData.currentStack || []);
     
     // Create features list with prioritized agents first
-    const getAgentFeatures = () => {
-      return prioritizedAgents.slice(0, 3).map(agent => {
-        switch (agent) {
-          case 'AI Sales Director':
-            return '✓ AI Sales Director (saves 12 hrs/week)';
-          case 'AI Success Captain':
-            return '✓ AI Success Captain (saves 8 hrs/week)';
-          case 'AI Ops Commander':
-            return '✓ AI Ops Commander (saves 6 hrs/week)';
-          case 'AI Content Creator':
-            return '✓ AI Content Creator (saves 6 hrs/week)';
-          default:
-            return `✓ ${agent} (automates your workflow)`;
-        }
-      });
-    };
+    // const getAgentFeatures = () => {
+    //   return prioritizedAgents.slice(0, 3).map(agent => {
+    //     switch (agent) {
+    //       case 'AI Sales Director':
+    //         return '✓ AI Sales Director (saves 12 hrs/week)';
+    //       case 'AI Success Captain':
+    //         return '✓ AI Success Captain (saves 8 hrs/week)';
+    //       case 'AI Ops Commander':
+    //         return '✓ AI Ops Commander (saves 6 hrs/week)';
+    //       case 'AI Content Creator':
+    //         return '✓ AI Content Creator (saves 6 hrs/week)';
+    //       default:
+    //         return `✓ ${agent} (automates your workflow)`;
+    //     }
+    //   });
+    // };
     
-    const getAgentFeaturesSimple = () => {
-      return prioritizedAgents.slice(0, 3).map(agent => {
-        switch (agent) {
-          case 'AI Sales Director':
-            return '• AI Sales Director - Books meetings while you sleep';
-          case 'AI Success Captain':
-            return '• AI Success Captain - Keeps customers happy automatically';
-          case 'AI Ops Commander':
-            return '• AI Ops Commander - Handles the busywork';
-          case 'AI Content Creator':
-            return '• AI Content Creator - Posts in your voice daily';
-          default:
-            return `• ${agent} - Automates your workflow`;
-        }
-      });
-    };
+    // const getAgentFeaturesSimple = () => {
+    //   return prioritizedAgents.slice(0, 3).map(agent => {
+    //     switch (agent) {
+    //       case 'AI Sales Director':
+    //         return '• AI Sales Director - Books meetings while you sleep';
+    //       case 'AI Success Captain':
+    //         return '• AI Success Captain - Keeps customers happy automatically';
+    //       case 'AI Ops Commander':
+    //         return '• AI Ops Commander - Handles the busywork';
+    //       case 'AI Content Creator':
+    //         return '• AI Content Creator - Posts in your voice daily';
+    //       default:
+    //         return `• ${agent} - Automates your workflow`;
+    //     }
+    //   });
+    // };
     
     switch (segment) {
       case 'immediate-buyer':
