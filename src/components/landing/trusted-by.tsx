@@ -18,7 +18,7 @@ const testimonials: Testimonial[] = [
     name: "Zac Barron",
     role: "Founder",
     company: "Dexari",
-    testimonial: "My output doubled without hiring a team, thanks to Avyra's AI assistants",
+    testimonial: "Avyra transformed our brand identity in 48 hours. What would have taken weeks with freelancers.",
     avatar: "/images/user-avatar-4.png"
   },
   {
@@ -26,7 +26,7 @@ const testimonials: Testimonial[] = [
     name: "July Gratton",
     role: "Founder",
     company: "Netty Worth",
-    testimonial: "As a skeptic, I’m now convinced. Avyra came in and automated 80% of our workflow in 3 weeks.",
+    testimonial: "As a design skeptic, I'm now convinced. Premium quality that rivals top agencies at startup speed.",
     avatar: "/images/user-avatar-2.png"
   },
   {
@@ -34,7 +34,7 @@ const testimonials: Testimonial[] = [
     name: "Zahid Islam",
     role: "CEO & Founder",
     company: "Jutsu",
-    testimonial: "A total game-changer. Avyra gave me 40+ hours back every month.",
+    testimonial: "A total design game-changer. Our website conversion doubled after Avyra's redesign.",
     avatar: "/images/user-avatar-3.png"
   },
   {
@@ -42,16 +42,13 @@ const testimonials: Testimonial[] = [
     name: "Elliot Bream",
     role: "Founder",
     company: "Try Livepeer",
-    testimonial: "Revenue jumped 28% in month one. Avyra freed us to focus on growth, not admin",
+    testimonial: "From logo to landing page in one week. Avyra delivered world-class design without the agency drama.",
     avatar: "/images/user-avatar-1.png"
   }
 
 ];
 
 export default function TrustedBy() {
-  const handleVideoClick = () => {
-    // Video functionality would be implemented here
-  };
 
   return (
     <section className="bg-[#080808] relative py-16 lg:py-28">
@@ -98,7 +95,7 @@ export default function TrustedBy() {
           <div className="w-full max-w-[1200px] relative">
             <div className="flex gap-6 items-start">
 
-              {/* Left Side - Video Card (33% width) */}
+              {/* Left Side - Founder Image Card (33% width) */}
               <div style={{ width: '33%' }}>
                 <div className="bg-[#080808] rounded-2xl border border-[rgba(216,231,242,0.07)] shadow-[0px_2px_1px_0px_inset_rgba(207,231,255,0.2)] p-8 h-[420px] relative overflow-hidden">
                   {/* Background Glow */}
@@ -107,32 +104,20 @@ export default function TrustedBy() {
                       backgroundImage: "url('data:image/svg+xml;utf8,<svg viewBox=\"0 0 437 306\" xmlns=\"http://www.w3.org/2000/svg\" preserveAspectRatio=\"none\"><rect x=\"0\" y=\"0\" height=\"100%\" width=\"100%\" fill=\"url(%23grad)\" opacity=\"1\"/><defs><radialGradient id=\"grad\" gradientUnits=\"userSpaceOnUse\" cx=\"0\" cy=\"0\" r=\"10\" gradientTransform=\"matrix(21.85 0 0 15.3 409.47 24.786)\"><stop stop-color=\"rgba(184,199,217,0.5)\" offset=\"0\"/><stop stop-color=\"rgba(184,199,217,0)\" offset=\"1\"/></radialGradient></defs></svg>')"
                     }} />
 
-                  {/* Video Thumbnail */}
-                  <div className="relative w-full h-[292px] bg-gradient-to-br from-gray-800 to-gray-900 rounded-[34px] overflow-hidden">
+                  {/* Founder Image */}
+                  <div className="relative w-full h-[292px] rounded-[34px] overflow-hidden">
                     <Image
-                      src="/images/video-thumbnail.jpg"
-                      alt="Video testimonial thumbnail"
+                      src="/images/val.png"
+                      alt="Founder"
                       fill
                       className="object-cover"
                     />
-
-                    {/* Play Button */}
-                    <button
-                      onClick={handleVideoClick}
-                      className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-gradient-to-br from-orange-300 to-orange-500 rounded-full flex items-center justify-center hover:scale-105 transition-transform duration-200 shadow-lg"
-                    >
-                      <div className="w-[58px] h-[58px] flex items-center justify-center">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="ml-1">
-                          <path d="M8 5v14l11-7z" fill="currentColor" />
-                        </svg>
-                      </div>
-                    </button>
                   </div>
 
-                  {/* Video Testimonial Text */}
+                  {/* Founder Quote */}
                   <div className="absolute bottom-8 left-8 right-8">
                     <p className="text-[#d5dbe6] text-[16px] leading-[25.6px] tracking-[-0.32px] opacity-80">
-                      &quot;Avyra replaced what would have been 3 hires. Saving us 50% on operational costs!&quot;
+                      &quot;Avyra gives founders the design edge they deserve without the agency overhead.&quot;
                     </p>
                   </div>
                 </div>
@@ -189,31 +174,21 @@ export default function TrustedBy() {
       <div className="lg:hidden container mx-auto px-4">
         <div className="max-w-md mx-auto space-y-4">
 
-          {/* Video Card */}
+          {/* Founder Card */}
           <div className="bg-[#080808] rounded-2xl border border-[rgba(216,231,242,0.07)] shadow-[0px_2px_1px_0px_inset_rgba(207,231,255,0.2)] p-6 relative overflow-hidden">
-            {/* Video Thumbnail */}
-            <div className="relative w-full h-[200px] bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl overflow-hidden mb-4">
+            {/* Founder Image */}
+            <div className="relative w-full h-[200px] rounded-2xl overflow-hidden mb-4">
               <Image
-                src="/images/video-thumbnail.jpg"
-                alt="Video testimonial thumbnail"
+                src="/images/val.png"
+                alt="Founder"
                 fill
                 className="object-cover"
               />
-
-              {/* Play Button */}
-              <button
-                onClick={handleVideoClick}
-                className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-gradient-to-br from-orange-300 to-orange-500 rounded-full flex items-center justify-center hover:scale-105 transition-transform duration-200 shadow-lg"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="ml-1">
-                  <path d="M8 5v14l11-7z" fill="currentColor" />
-                </svg>
-              </button>
             </div>
 
-            {/* Video Testimonial Text */}
+            {/* Founder Quote */}
             <p className="text-[#d5dbe6] text-[16px] leading-[25.6px] tracking-[-0.32px] opacity-80">
-              &quot;I was drowning in work. AVYRA cut my tools in half and saved me 12+ hours a week.&quot;
+              &quot;We built Avyra to give founders the design edge they deserve without the agency overhead.&quot;
             </p>
           </div>
 
