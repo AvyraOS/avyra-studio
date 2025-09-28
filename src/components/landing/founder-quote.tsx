@@ -105,7 +105,7 @@ const FounderQuote = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full min-h-[632px] h-[632px] md:h-[632px] bg-[#080808] overflow-hidden"
+      className="relative w-full min-h-[632px] h-auto md:h-[632px] bg-[#080808] overflow-hidden pb-6 md:pb-0"
       id="founder-quote"
     >
       {/* Background Grid Image - spans full width on the right */}
@@ -120,7 +120,7 @@ const FounderQuote = () => {
       </div>
 
       {/* Container to center content with responsive spacing */}
-      <div className="relative w-full max-w-[1200px] h-full mx-auto flex flex-col items-center justify-center pt-48 pb-8 md:py-0">
+      <div className="relative w-full max-w-[1200px] h-full mx-auto flex flex-col items-center justify-center pt-48 pb-12 md:py-0">
 
         {/* Section Tag */}
         <div className="founder-pill mb-8 md:mb-12 flex items-center justify-center w-full">
@@ -153,7 +153,7 @@ const FounderQuote = () => {
         </div>
 
         {/* Founder Images - centered with overlap */}
-        <div className="founder-images flex items-center justify-center">
+        <div className="founder-images flex items-center justify-center mb-6 md:mb-0">
           {/* Chase Image */}
           <div className="w-16 h-16 rounded-full overflow-hidden z-10">
             <Image

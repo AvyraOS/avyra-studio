@@ -10,7 +10,7 @@ interface FAQItem {
 }
 
 const FAQ = () => {
-  const [openItem, setOpenItem] = useState<number | null>(1); // First item open by default
+  const [openItem, setOpenItem] = useState<number | null>(null); // All items closed by default
 
   const faqData: FAQItem[] = [
     {

@@ -194,8 +194,8 @@ const Hero = () => {
 
         {/* Hero content */}
         <div className="text-center opacity-0 hero-main-content">
-          {/* Hero Header with exact specs - fully responsive */}
-          <div className="flex h-[6.25rem] sm:h-[130px] md:h-[160px] lg:h-[194px] flex-col justify-center self-stretch mb-[1rem] sm:mb-6 md:mb-8">
+          {/* Hero Header with proper responsive design */}
+          <div className="flex flex-col justify-center self-stretch mb-[1rem] sm:mb-6 md:mb-8">
             <h1
               style={{
                 background: "radial-gradient(86% 99% at 50% 50%, #D5DBE6 28.39%, #04070D 100%)",
@@ -205,7 +205,7 @@ const Hero = () => {
                 color: "transparent",
                 fontFamily: "Inter"
               }}
-              className="text-center text-[2.5rem] sm:text-[3.5rem] md:text-[4.5rem] lg:text-[5rem] font-medium leading-[3rem] sm:leading-[4rem] md:leading-[5rem] lg:leading-[5.5rem] tracking-[-0.05rem] sm:tracking-[-0.07rem] md:tracking-[-0.09rem] lg:tracking-[-0.11rem] capitalize max-w-full h-full"
+              className="text-center text-[2rem] sm:text-[2.75rem] md:text-[3.5rem] lg:text-[4.5rem] xl:text-[5rem] font-medium leading-[2.25rem] sm:leading-[3rem] md:leading-[4rem] lg:leading-[5rem] xl:leading-[5.5rem] tracking-[-0.04rem] sm:tracking-[-0.055rem] md:tracking-[-0.07rem] lg:tracking-[-0.09rem] xl:tracking-[-0.11rem] capitalize max-w-full"
             >
               World Class Designs.<br />
               Delivered in 48 Hours.
@@ -216,7 +216,7 @@ const Hero = () => {
           <p
             className="w-full max-w-[20rem] sm:max-w-[400px] md:max-w-[506px] mx-auto text-[#D5DBE6] text-center text-[1rem] sm:text-sm md:text-base font-normal font-inter leading-[1.425rem] sm:leading-[22px] md:leading-[25.6px] tracking-[-0.015rem] sm:tracking-[-0.28px] md:tracking-[-0.32px] mb-[1rem] sm:mb-6 md:mb-8 sm:px-4"
           >
-            Get premium branding, websites, and product UI/UX — delivered in as little as 48 hours, without the headaches of hiring.
+            Get world-class designs, delivered in as little as 48 hours. Forget the hiring headaches.
           </p>
           {/* Button Container with Animated Border Glow */}
           <div className="relative inline-block mb-8 group">

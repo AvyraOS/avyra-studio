@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface WorkStep {
   id: number;
@@ -34,12 +35,6 @@ const workSteps: WorkStep[] = [
     title: "Receive Deliverables Fast",
     icon: "/icons/works-3-icon.svg",
     isClickable: true
-  },
-  {
-    id: 4,
-    title: "Lets Get Started",
-    icon: "/icons/right-arrow.svg",
-    isClickable: false
   }
 ];
 
@@ -171,69 +166,65 @@ export default function HowItWorks() {
                       </p>
                     </div>
 
-                    {/* Buttons */}
+                    {/* Step Buttons */}
                     <div className="space-y-3">
                       {workSteps.map((step) => {
-                        const isSelected = selectedStep === step.id && step.isClickable;
-                        const isClickable = step.isClickable;
+                        const isSelected = selectedStep === step.id;
 
                         return (
-                          <div key={step.id} className={!isClickable ? 'pt-8' : ''}>
-                            {!isClickable ? (
-                              // CTA Button - Exact same structure as footer
-                              <div className="relative inline-block group w-full">
-                                {/* Button Background Container with Glow */}
-                                <div 
-                                  className="relative z-10 p-[2px] rounded-lg h-[42px] overflow-hidden w-full"
-                                  style={{
-                                    background: "radial-gradient(50% 20.7% at 50% 100%, #ffffff 0%, rgba(198, 255, 255, 0.00) 100%)"
-                                  }}
-                                >
-                                  {/* Button (Top Layer) */}
-                                  <button 
-                                    onClick={() => setSelectedStep(step.id)}
-                                    className="relative z-50 inline-flex items-center justify-center bg-[#f8f9fa] text-[#000000] px-4 rounded-lg text-[14px] font-medium font-inter transition-all duration-300 hover:opacity-90 cursor-pointer h-[38px] w-full"
-                                  >
-                                    <span>{step.title}</span>
-                                    <svg 
-                                      className="ml-2 w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" 
-                                      fill="currentColor" 
-                                      viewBox="0 0 20 20"
-                                    >
-                                      <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                                    </svg>
-                                  </button>
-                                </div>
-                              </div>
-                            ) : (
-                              // Regular step buttons
-                              <button
-                                onClick={() => isClickable && setSelectedStep(step.id)}
-                                disabled={!isClickable}
-                                className={`w-full flex gap-2.5 h-9 items-center justify-start overflow-hidden px-4 py-2.5 rounded-lg transition-all duration-200 cursor-pointer ${isSelected
-                                    ? 'bg-[#1f1f1f]'
-                                    : 'bg-transparent hover:bg-[#1f1f1f]/50'
-                                  }`}
-                              >
-                                {/* Icon */}
-                                <div className="relative shrink-0 w-6 h-6">
-                                  <Image
-                                    src={step.icon}
-                                    alt={step.title}
-                                    width={24}
-                                    height={24}
-                                    className="w-full h-full"
-                                  />
-                                </div>
-                                {/* Text */}
-                                <div className="flex flex-col font-inter font-medium justify-center text-[#ffffff] text-[14px] text-nowrap tracking-[-0.14px] relative shrink-0 leading-[22px]">
-                                  {step.title}
-                                </div>
-                              </button>
-                            )}
-                          </div>
+                          <button
+                            key={step.id}
+                            onClick={() => setSelectedStep(step.id)}
+                            className={`w-full flex gap-2.5 h-9 items-center justify-start overflow-hidden px-4 py-2.5 rounded-lg transition-all duration-200 cursor-pointer ${isSelected
+                                ? 'bg-[#1f1f1f]'
+                                : 'bg-transparent hover:bg-[#1f1f1f]/50'
+                              }`}
+                          >
+                            {/* Icon */}
+                            <div className="relative shrink-0 w-6 h-6">
+                              <Image
+                                src={step.icon}
+                                alt={step.title}
+                                width={24}
+                                height={24}
+                                className="w-full h-full"
+                              />
+                            </div>
+                            {/* Text */}
+                            <div className="flex flex-col font-inter font-medium justify-center text-[#ffffff] text-[14px] text-nowrap tracking-[-0.14px] relative shrink-0 leading-[22px]">
+                              {step.title}
+                            </div>
+                          </button>
                         );
                       })}
+                    </div>
+
+                    {/* CTA Button */}
+                    <div className="pt-8">
+                      <div className="relative inline-block group w-full">
+                        {/* Button Background Container with Glow */}
+                        <div 
+                          className="relative z-10 p-[2px] rounded-lg h-[42px] overflow-hidden w-full"
+                          style={{
+                            background: "radial-gradient(50% 20.7% at 50% 100%, #ffffff 0%, rgba(255, 225, 198, 0.00) 100%)"
+                          }}
+                        >
+                          {/* Button (Top Layer) */}
+                          <Link 
+                            href="/calendar"
+                            className="relative z-50 inline-flex items-center justify-center bg-[#f8f9fa] text-[#000000] px-4 rounded-lg text-[14px] font-medium font-inter transition-all duration-300 hover:opacity-90 cursor-pointer h-[38px] w-full"
+                          >
+                            <span>Let&apos;s Get Started</span>
+                            <svg 
+                              className="ml-2 w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" 
+                              fill="currentColor" 
+                              viewBox="0 0 20 20"
+                            >
+                              <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
+                          </Link>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -258,18 +249,14 @@ export default function HowItWorks() {
 
           {/* 2. Selection Buttons */}
           <div className="space-y-3">
-            {workSteps.slice(0, 3).map((step) => {
-              const isSelected = selectedStep === step.id && step.isClickable;
-              const isClickable = step.isClickable;
+            {workSteps.map((step) => {
+              const isSelected = selectedStep === step.id;
 
               return (
                 <button
                   key={step.id}
-                  onClick={() => isClickable && setSelectedStep(step.id)}
-                  disabled={!isClickable}
-                  className={`w-full flex gap-2.5 h-9 items-center justify-start overflow-hidden px-4 py-2.5 rounded-lg transition-all duration-200 ${!isClickable
-                      ? 'bg-[#f8f9fa]'
-                      : isSelected
+                  onClick={() => setSelectedStep(step.id)}
+                  className={`w-full flex gap-2.5 h-9 items-center justify-start overflow-hidden px-4 py-2.5 rounded-lg transition-all duration-200 ${isSelected
                         ? 'bg-[#1f1f1f]'
                         : 'bg-transparent hover:bg-[#1f1f1f]/50'
                     }`}
@@ -289,21 +276,6 @@ export default function HowItWorks() {
                   <div className="flex flex-col font-inter font-medium justify-center text-[#ffffff] text-[14px] text-nowrap tracking-[-0.14px] relative shrink-0 leading-[22px]">
                     {step.title}
                   </div>
-
-                  {/* Arrow for CTA button */}
-                  {!isClickable && (
-                    <div className="flex gap-1.5 items-center justify-center ml-auto">
-                      <div className="relative shrink-0 w-[22px] h-[22px]">
-                        <Image
-                          src="/icons/right-arrow.svg"
-                          alt=""
-                          width={22}
-                          height={22}
-                          className="w-full h-full"
-                        />
-                      </div>
-                    </div>
-                  )}
                 </button>
               );
             })}
@@ -321,25 +293,32 @@ export default function HowItWorks() {
             />
           </div>
 
-          {/* 4. Start for Free Button */}
+          {/* 4. Let's Get Started Button */}
           <div>
-            <button className="w-full flex gap-2 items-center justify-center overflow-hidden px-4 py-3 rounded-lg transition-all duration-200 bg-[#f8f9fa]">
-              {/* Text */}
-              <div className="flex flex-col font-inter font-medium justify-center text-[#000000] text-[14px] text-nowrap tracking-[-0.14px] relative shrink-0 leading-[22px]">
-                Start for Free
+            <div className="relative inline-block group w-full">
+              {/* Button Background Container with Glow */}
+              <div 
+                className="relative z-10 p-[2px] rounded-lg h-[50px] overflow-hidden w-full"
+                style={{
+                  background: "radial-gradient(50% 20.7% at 50% 100%, #ffffff 0%, rgba(255, 225, 198, 0.00) 100%)"
+                }}
+              >
+                {/* Button (Top Layer) */}
+                <Link 
+                  href="/calendar"
+                  className="relative z-50 inline-flex items-center justify-center bg-[#f8f9fa] text-[#000000] px-4 rounded-lg text-base font-medium font-inter transition-all duration-300 hover:opacity-90 cursor-pointer h-[46px] w-full"
+                >
+                  <span>Let&apos;s Get Started</span>
+                  <svg 
+                    className="ml-2 w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" 
+                    fill="currentColor" 
+                    viewBox="0 0 20 20"
+                  >
+                    <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </Link>
               </div>
-
-              {/* Arrow */}
-              <div className="relative shrink-0 w-[22px] h-[22px]">
-                <Image
-                  src="/icons/right-arrow.svg"
-                  alt=""
-                  width={22}
-                  height={22}
-                  className="w-full h-full"
-                />
-              </div>
-            </button>
+            </div>
           </div>
 
 

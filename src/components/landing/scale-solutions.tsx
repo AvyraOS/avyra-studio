@@ -25,8 +25,14 @@ const ScaleSolutions = () => {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
+    // Track if animation has already played
+    let hasAnimated = false;
+
     // Function to animate the counting numbers
     const startCountingAnimation = () => {
+      if (hasAnimated) return; // Prevent animation from playing multiple times
+      hasAnimated = true;
+
       // Animate sales counter (3.4x)
       gsap.to(animatedValues.current, {
         sales: 3.4,
@@ -80,16 +86,10 @@ const ScaleSolutions = () => {
           scrollTrigger: {
             trigger: statsRef.current,
             start: "top 80%",
-            end: "bottom 20%",
-            toggleActions: "play none none reverse",
+            toggleActions: "play none none none",
             onEnter: () => {
-              // Start counting animation when stats come into view
+              // Start counting animation when stats come into view (only once)
               startCountingAnimation();
-            },
-            onLeaveBack: () => {
-              // Reset counters when scrolling back up
-              animatedValues.current = { sales: 0, costs: 0, revenue: 0 };
-              setDisplayValues({ sales: 0, costs: 0, revenue: 0 });
             }
           }
         }
@@ -113,8 +113,7 @@ const ScaleSolutions = () => {
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 85%",
-            end: "bottom 15%",
-            toggleActions: "play none none reverse"
+            toggleActions: "play none none none"
           }
         }
       );

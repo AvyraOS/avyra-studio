@@ -101,10 +101,10 @@ const ServiceCard = ({
 
         {/* Image Side - Right on desktop, bottom on mobile */}
         <div className="flex-shrink-0 min-[1200px]:w-[580px] xl:w-[640px] 2xl:w-[700px] flex flex-col rounded-b-[20px] min-[1200px]:rounded-b-none min-[1200px]:rounded-r-[20px] min-[1200px]:rounded-bl-none">
-          {/* Image Container with 46px padding from top, right, and bottom */}
-          <div className="w-full h-full relative flex-1 p-[46px] pr-[46px] pb-[46px] pt-[46px] pl-0 min-[1200px]:pl-[46px]">
-            {/* Image Container */}
-            <div className="w-full h-full relative min-h-[240px] min-[1200px]:h-[389px] overflow-hidden rounded-lg">
+          {/* Image Container - No padding on mobile, padding on desktop */}
+          <div className="w-full h-full relative flex-1 p-0 min-[1200px]:p-[46px] min-[1200px]:pl-[46px]">
+            {/* Image Container - No radius on mobile, radius on desktop */}
+            <div className="w-full h-full relative min-h-[240px] min-[1200px]:h-[389px] overflow-hidden rounded-none min-[1200px]:rounded-lg">
               {/* Image Element */}
               <Image
                 src={imageSrc}
