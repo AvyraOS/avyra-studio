@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 
 import IntakeForm from "@/components/landing/IntakeForm";
 
@@ -26,7 +26,9 @@ export default function IntakePage() {
   
       {/* Form Container */}
       <div className="w-full z-10 relative">
-        <IntakeForm />
+        <Suspense fallback={<div className="text-white">Loading...</div>}>
+          <IntakeForm />
+        </Suspense>
       </div>
       
    

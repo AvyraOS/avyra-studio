@@ -8,8 +8,15 @@ const ScaleSolutions = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
 
-  // State for animated counter values
-  const [animatedValues, setAnimatedValues] = useState({
+  // Ref for animated counter values (used by GSAP, doesn't trigger re-renders)
+  const animatedValues = useRef({
+    sales: 0,
+    costs: 0,
+    revenue: 0
+  });
+
+  // State for display values (triggers re-renders for UI updates)
+  const [displayValues, setDisplayValues] = useState({
     sales: 0,
     costs: 0,
     revenue: 0
@@ -21,34 +28,34 @@ const ScaleSolutions = () => {
     // Function to animate the counting numbers
     const startCountingAnimation = () => {
       // Animate sales counter (3.4x)
-      gsap.to(animatedValues, {
+      gsap.to(animatedValues.current, {
         sales: 3.4,
         duration: 2,
         ease: "power2.out",
         onUpdate: function () {
-          setAnimatedValues(prev => ({ ...prev, sales: this.targets()[0].sales }));
+          setDisplayValues(prev => ({ ...prev, sales: this.targets()[0].sales }));
         }
       });
 
       // Animate costs counter (70%)
-      gsap.to(animatedValues, {
+      gsap.to(animatedValues.current, {
         costs: 70,
         duration: 2,
         delay: 0.2,
         ease: "power2.out",
         onUpdate: function () {
-          setAnimatedValues(prev => ({ ...prev, costs: this.targets()[0].costs }));
+          setDisplayValues(prev => ({ ...prev, costs: this.targets()[0].costs }));
         }
       });
 
       // Animate revenue counter ($80M+)
-      gsap.to(animatedValues, {
+      gsap.to(animatedValues.current, {
         revenue: 80,
         duration: 2,
         delay: 0.4,
         ease: "power2.out",
         onUpdate: function () {
-          setAnimatedValues(prev => ({ ...prev, revenue: this.targets()[0].revenue }));
+          setDisplayValues(prev => ({ ...prev, revenue: this.targets()[0].revenue }));
         }
       });
     };
@@ -81,7 +88,8 @@ const ScaleSolutions = () => {
             },
             onLeaveBack: () => {
               // Reset counters when scrolling back up
-              setAnimatedValues({ sales: 0, costs: 0, revenue: 0 });
+              animatedValues.current = { sales: 0, costs: 0, revenue: 0 };
+              setDisplayValues({ sales: 0, costs: 0, revenue: 0 });
             }
           }
         }
@@ -200,7 +208,7 @@ const ScaleSolutions = () => {
                       color: "transparent"
                     }}
                   >
-                    {animatedValues.sales.toFixed(1)}x
+                    {displayValues.sales.toFixed(1)}x
                   </h3>
                   <h4
                     className="text-[18px] sm:text-[19px] md:text-[20px] font-medium font-inter leading-[28px] sm:leading-[38px] md:leading-[48px] tracking-[-0.2px]"
@@ -233,7 +241,7 @@ const ScaleSolutions = () => {
                       color: "transparent"
                     }}
                   >
-                    {Math.round(animatedValues.costs)}%
+                    {Math.round(displayValues.costs)}%
                   </h3>
                   <h4
                     className="text-[18px] sm:text-[19px] md:text-[20px] font-medium font-inter leading-[28px] sm:leading-[38px] md:leading-[48px] tracking-[-0.2px]"
@@ -266,7 +274,7 @@ const ScaleSolutions = () => {
                       color: "transparent"
                     }}
                   >
-                    ${Math.round(animatedValues.revenue)}M+
+                    ${Math.round(displayValues.revenue)}M+
                   </h3>
                   <h4
                     className="text-[18px] sm:text-[19px] md:text-[20px] font-medium font-inter leading-[28px] sm:leading-[38px] md:leading-[48px] tracking-[-0.2px]"
