@@ -124,10 +124,10 @@ const Navbar = () => {
             </div>
 
             {/* Get Started Button - Only show on large screens */}
-            <Link href="/intake" className="hidden lg:block group">
+            <Link href="/calendar" className="hidden lg:block group">
               <div className="inline-flex h-10 relative rounded-[100px] shadow-[inset_0px_0px_8px_0px_rgba(248,248,248,0.25),0px_32px_24px_-16px_rgba(0,0,0,0.40)] border-[1.5px] border-[#484848] overflow-hidden justify-center items-center p-1 transition-all duration-300">
                 <div className="inline-flex h-8 bg-gradient-to-b from-[rgba(18,18,18,0.30)] to-[rgba(18,18,18,0.30)] bg-[rgba(248,248,248,0.01)] rounded-[100px] border-[1.5px] border-[#242424] backdrop-blur-[6px] overflow-hidden items-center justify-center px-6 transition-all duration-300 group-hover:shadow-[inset_0px_0px_20px_0px_rgba(255,255,255,0.1),inset_0px_0px_12px_0px_rgba(255,255,255,0.15),inset_0px_0px_6px_0px_rgba(255,255,255,0.2)] group-hover:border-white/20">
-                  <div className="text-[#f8f8f8]/95 text-sm font-normal font-inter leading-tight transition-colors duration-300 group-hover:text-white whitespace-nowrap">Get Started</div>
+                  <div className="text-[#f8f8f8]/95 text-sm font-normal font-inter leading-tight transition-colors duration-300 group-hover:text-white whitespace-nowrap">Book Call</div>
                 </div>
               </div>
             </Link>
@@ -228,7 +228,7 @@ const Navbar = () => {
           {/* CTA Button at Bottom */}
           <div className="p-6 border-t border-white/10">
             <Link 
-              href="/intake" 
+              href="/calendar" 
               onClick={closeMobileMenu}
               className="block w-full group"
             >
@@ -242,7 +242,7 @@ const Navbar = () => {
                 >
                   {/* Button Content */}
                   <div className="w-full h-full bg-gradient-to-b from-[#89FFFF] to-[#00D7D7] text-[#000000] rounded-lg flex items-center justify-center text-base font-medium font-inter transition-all duration-300 hover:opacity-90">
-                    <span>Get Started</span>
+                    <span>Book Call</span>
                     <svg 
                       className="ml-2 w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" 
                       fill="currentColor" 

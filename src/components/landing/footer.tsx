@@ -107,10 +107,10 @@ const Footer = () => {
               >
                 {/* Button (Top Layer) */}
                 <Link 
-                  href="/pricing" 
+                  href="/calendar" 
                   className="relative z-50 inline-flex items-center justify-center bg-[#f8f9fa] text-[#000000] px-8 rounded-lg text-base font-medium font-inter transition-all duration-300 hover:opacity-90 cursor-pointer h-[46px]"
                 >
-                  <span>See Pricing</span>
+                  <span>Book My Freedom Call</span>
                   <svg 
                     className="ml-2 w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" 
                     fill="currentColor" 
