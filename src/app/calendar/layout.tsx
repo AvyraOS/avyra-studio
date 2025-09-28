@@ -1,27 +1,27 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Book Your Avyra Freedom Call | AI Automation Strategy Session',
-  description: 'Schedule a 30-minute strategy call to discover how Avyra can transform your business with AI agents that handle sales, support, and operations 24/7.',
+  title: 'Book Your Dream Discovery Call | Avyra Design Studio',
+  description: 'Ready to turn your vision into stunning reality? Let Avyra handle all your design challenges so you can focus on building your dream.',
   keywords: [
-    'AI automation',
-    'business automation',
-    'AI agents',
-    'strategy call',
-    'consultation',
-    'founder freedom',
-    'sales automation',
-    'support automation'
+    'design studio',
+    'branding',
+    'website design',
+    'UI/UX design',
+    'design consultation',
+    'founder design partner',
+    'premium design',
+    'design services'
   ],
   openGraph: {
-    title: 'Book Your Avyra Freedom Call',
-    description: 'Unlock AI agents that handle sales, support, and ops 24/7, so you can focus on building your vision.',
+    title: 'Book Your Dream Discovery Call | Avyra Design Studio',
+    description: 'Ready to turn your vision into stunning reality? Let Avyra handle all your design challenges so you can focus on building your dream.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Book Your Avyra Freedom Call',
-    description: 'Schedule a strategy call to explore AI automation for your business.',
+    title: 'Book Your Dream Discovery Call | Avyra Design Studio',
+    description: 'Ready to turn your vision into stunning reality? Let Avyra handle all your design challenges.',
   },
 };
 
