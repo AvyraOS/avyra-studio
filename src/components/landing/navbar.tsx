@@ -65,9 +65,9 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Main Navigation Bar */}
-      <nav className={`fixed top-0 left-0 right-0 z-40 transition-transform duration-300 ease-in-out lg:fixed ${
-        isVisible ? 'translate-y-0' : '-translate-y-full'
+      {/* Main Navigation Bar - Hidden on mobile, fixed on desktop */}
+      <nav className={`hidden lg:block lg:fixed lg:top-0 lg:left-0 lg:right-0 lg:z-40 lg:transition-transform lg:duration-300 lg:ease-in-out ${
+        isVisible ? 'lg:translate-y-0' : 'lg:-translate-y-full'
       }`}>
         {/* Glass Background Container */}
         <div 
