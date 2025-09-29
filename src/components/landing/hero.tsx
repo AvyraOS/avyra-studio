@@ -258,15 +258,17 @@ const Hero = () => {
 
       {/* Bottom Level: Background Gradients */}
       <div className="absolute inset-0 z-0">
-        {/* Top Gradient - native CSS version, hanging off top */}
-        <div className="TopGradientBg absolute -top-[241px] left-1/2 transform -translate-x-1/2 w-[381.01px] h-[382px] opacity-40 rounded-br-md blur-[132.70px]"
+        {/* Top Gradient - optimized for mobile */}
+        <div className="TopGradientBg absolute -top-[241px] left-1/2 transform -translate-x-1/2 w-[381.01px] h-[382px] opacity-40 rounded-br-md blur-[132.70px] will-change-transform"
           style={{
-            background: "radial-gradient(circle, #89FFFF 0%, rgba(255,255,255,0.6) 62%, rgba(255,255,255,0.1) 100%)"
+            background: "radial-gradient(circle, #89FFFF 0%, rgba(255,255,255,0.6) 62%, rgba(255,255,255,0.1) 100%)",
+            transform: "translate3d(-50%, 0, 0)"
           }} />
-        {/* Bottom Gradient - native CSS version, hanging off bottom */}
-        <div className="BottomGradientBg absolute -bottom-[241px] left-1/2 transform -translate-x-1/2 w-[481.01px] h-[342px] opacity-40 rounded-tl-md blur-[132.70px]"
+        {/* Bottom Gradient - optimized for mobile with GPU acceleration */}
+        <div className="BottomGradientBg absolute -bottom-[241px] left-1/2 opacity-40 rounded-tl-md will-change-transform md:blur-[132.70px] blur-[80px] md:w-[481.01px] md:h-[342px] w-[300px] h-[200px]"
           style={{
-            background: "radial-gradient(circle, #18E0E0 0%, #18E0E0 42%, rgba(255,255,255,0.1) 100%)"
+            background: "radial-gradient(circle, #18E0E0 0%, #18E0E0 42%, rgba(255,255,255,0.1) 100%)",
+            transform: "translate3d(-50%, 0, 0)"
           }} />
 
         {/* Client Logos Animation - At background level */}
