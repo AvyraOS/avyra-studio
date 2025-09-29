@@ -1,6 +1,6 @@
 <svg width="555" height="418" viewBox="0 0 555 418" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M0 24C0 10.7452 10.7452 0 24 0H531C544.255 0 555 10.7452 555 24V394C555 407.255 544.255 418 531 418H24C10.7452 418 0 407.255 0 394V24Z" fill="#080808"/>
 <g clip-path="url(#clip0_1282_1215)">
+<path d="M0 24C0 10.7452 10.7452 0 24 0H531C544.255 0 555 10.7452 555 24V394C555 407.255 544.255 418 531 418H24C10.7452 418 0 407.255 0 394V24Z" fill="#080808"/>
 <foreignObject x="-52" y="76" width="208" height="208"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(50px);clip-path:url(#bgblur_1_1282_1215_clip_path);height:100%;width:100%"></div></foreignObject><g filter="url(#filter0_i_1282_1215)" data-figma-bg-blur-radius="100">
 <rect x="48" y="176" width="8" height="8" rx="4" fill="#F8F8F8" fill-opacity="0.05" style="mix-blend-mode:luminosity"/>
 <rect x="48.75" y="176.75" width="6.5" height="6.5" rx="3.25" stroke="url(#paint0_linear_1282_1215)" stroke-opacity="0.25" stroke-width="1.5"/>
@@ -378,7 +378,7 @@
 <stop offset="1" stop-color="#00D7D7"/>
 </linearGradient>
 <clipPath id="clip0_1282_1215">
-<rect x="32" y="120" width="491" height="266" rx="16" fill="white"/>
+<path d="M0 24C0 10.7452 10.7452 0 24 0H531C544.255 0 555 10.7452 555 24V394C555 407.255 544.255 418 531 418H24C10.7452 418 0 407.255 0 394V24Z" fill="white"/>
 </clipPath>
 </defs>
 </svg>

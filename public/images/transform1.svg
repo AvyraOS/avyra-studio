@@ -46,12 +46,13 @@
 </linearGradient>
 <linearGradient id="paint1_linear_1282_1309" x1="126.048" y1="42.4206" x2="34.0679" y2="84.5376" gradientUnits="userSpaceOnUse">
 <stop stop-color="#ABABBA"/>
-<stop offset="1" stop-color="#18E0E0" stop-opacity="0"/>
+<stop offset="0.524038" stop-color="#2D8D94"/>
+<stop offset="1" stop-color="#1C4143"/>
 </linearGradient>
 <linearGradient id="paint2_linear_1282_1309" x1="113.814" y1="86.3238" x2="21.4428" y2="78.5378" gradientUnits="userSpaceOnUse">
-<stop stop-color="#B4B4B4" stop-opacity="0.7"/>
-<stop offset="0.395" stop-color="#18E0E0" stop-opacity="0.1"/>
-<stop offset="1" stop-color="#18E0E0" stop-opacity="0.1"/>
+<stop stop-color="#B4B4B4"/>
+<stop offset="0.395" stop-color="#082727"/>
+<stop offset="1" stop-color="#0B3A3A"/>
 </linearGradient>
 <clipPath id="clip0_1282_1309">
 <path d="M0 24C0 10.7452 10.7452 0 24 0H342.667C355.922 0 366.667 10.7452 366.667 24V321C366.667 334.255 355.921 345 342.667 345H24C10.7451 345 0 334.255 0 321V24Z" fill="white"/>
