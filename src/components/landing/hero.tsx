@@ -27,18 +27,31 @@ const Hero = () => {
     // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
 
+    // Check if mobile for targeted logging
+    const isMobile = window.innerWidth < 1024;
+    if (isMobile) {
+      console.log('🔍 MOBILE: Hero component initializing');
+    }
+
     // Hero content fade-in animation
     const heroTl = gsap.timeline();
     heroTl.to(".hero-main-content", {
       opacity: 1,
       duration: 0.8,
-      ease: "power2.out"
+      ease: "power2.out",
+      onComplete: () => {
+        if (isMobile) console.log('✅ GSAP: Hero fade animation complete');
+      }
     });
 
     // Client logos animation
     const initClientLogos = () => {
       const clientsContainer = logosRef.current?.querySelector('.clients-container');
-      if (!clientsContainer) return;
+      if (!clientsContainer) {
+        if (isMobile) console.log('⚠️ LOGOS: Container not found');
+        return;
+      }
+      if (isMobile) console.log('🎬 LOGOS: Starting client logos animation');
 
       // Set initial state of container and images
       const prepareLogos = () => {
@@ -75,7 +88,10 @@ const Hero = () => {
       // Create the continuous animation with improved smoothness
       const logoTimeline = gsap.timeline({
         repeat: -1,
-        ease: "none"
+        ease: "none",
+        onStart: () => {
+          if (isMobile) console.log('🔄 LOGOS: Timeline started');
+        }
       });
 
       logoTimeline
@@ -111,8 +127,43 @@ const Hero = () => {
 
     // Initialize logo animation with a small delay to ensure DOM is ready
     setTimeout(() => {
+      if (isMobile) console.log('⏰ LOGOS: Initializing after 100ms delay');
       initClientLogos();
     }, 100);
+
+    // Add scroll performance monitoring on mobile
+    if (isMobile) {
+      let scrollBlocked = false;
+      let lastScrollY = 0;
+      
+      const detectScrollIssues = () => {
+        const currentScrollY = window.scrollY;
+        
+        // Detect if scroll position hasn't changed (potential blocking)
+        if (Math.abs(currentScrollY - lastScrollY) < 1 && currentScrollY > 0) {
+          if (!scrollBlocked) {
+            console.log('🚫 SCROLL: Potential blocking detected at scrollY=' + currentScrollY);
+            scrollBlocked = true;
+          }
+        } else {
+          if (scrollBlocked) {
+            console.log('✅ SCROLL: Movement resumed at scrollY=' + currentScrollY);
+            scrollBlocked = false;
+          }
+        }
+        
+        lastScrollY = currentScrollY;
+      };
+      
+      const scrollMonitor = setInterval(detectScrollIssues, 100);
+      
+      // Clean up animations and monitoring on unmount
+      return () => {
+        ScrollTrigger.getAll().forEach(t => t.kill());
+        clearInterval(scrollMonitor);
+        if (isMobile) console.log('🧹 CLEANUP: Hero animations and monitoring stopped');
+      };
+    }
 
     // Clean up animations on unmount
     return () => {
@@ -258,17 +309,15 @@ const Hero = () => {
 
       {/* Bottom Level: Background Gradients */}
       <div className="absolute inset-0 z-0">
-        {/* Top Gradient - optimized for mobile */}
-        <div className="TopGradientBg absolute -top-[241px] left-1/2 transform -translate-x-1/2 w-[381.01px] h-[382px] opacity-40 rounded-br-md blur-[132.70px] will-change-transform"
+        {/* Top Gradient - native CSS version, hanging off top */}
+        <div className="TopGradientBg absolute -top-[241px] left-1/2 transform -translate-x-1/2 w-[381.01px] h-[382px] opacity-40 rounded-br-md blur-[132.70px]"
           style={{
-            background: "radial-gradient(circle, #89FFFF 0%, rgba(255,255,255,0.6) 62%, rgba(255,255,255,0.1) 100%)",
-            transform: "translate3d(-50%, 0, 0)"
+            background: "radial-gradient(circle, #89FFFF 0%, rgba(255,255,255,0.6) 62%, rgba(255,255,255,0.1) 100%)"
           }} />
-        {/* Bottom Gradient - optimized for mobile with GPU acceleration */}
-        <div className="BottomGradientBg absolute -bottom-[241px] left-1/2 opacity-40 rounded-tl-md will-change-transform md:blur-[132.70px] blur-[80px] md:w-[481.01px] md:h-[342px] w-[300px] h-[200px]"
+        {/* Bottom Gradient - native CSS version, hanging off bottom */}
+        <div className="BottomGradientBg absolute -bottom-[241px] left-1/2 transform -translate-x-1/2 w-[481.01px] h-[342px] opacity-40 rounded-tl-md blur-[132.70px]"
           style={{
-            background: "radial-gradient(circle, #18E0E0 0%, #18E0E0 42%, rgba(255,255,255,0.1) 100%)",
-            transform: "translate3d(-50%, 0, 0)"
+            background: "radial-gradient(circle, #18E0E0 0%, #18E0E0 42%, rgba(255,255,255,0.1) 100%)"
           }} />
 
         {/* Client Logos Animation - At background level */}
