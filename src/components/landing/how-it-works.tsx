@@ -151,6 +151,7 @@ export default function HowItWorks() {
                         height={426}
                         className="max-w-full max-h-full object-contain"
                         priority
+                        unoptimized
                       />
                     </div>
                   </div>
@@ -290,6 +291,7 @@ export default function HowItWorks() {
               height={426}
               className="max-w-full max-h-full object-contain"
               priority
+              unoptimized
             />
           </div>
 

@@ -19,7 +19,7 @@ const CreativeTeam = () => {
       opacity: 0,
       y: 40,
       rotationX: 15,
-      scale: 0.95
+      scale: 0.98
     });
 
     // Create smooth scroll-based animation
@@ -155,8 +155,10 @@ const CreativeTeam = () => {
                 <Image
                   src="/images/transform1.svg"
                   alt="All-In-One Creative Team"
-                  fill
-                  className="object-cover"
+                  width={400}
+                  height={400}
+                  className="w-full h-full object-cover"
+                  unoptimized
                 />
               </div>
               
@@ -178,8 +180,10 @@ const CreativeTeam = () => {
                 <Image
                   src="/images/transform2.svg"
                   alt="Award-Winning Designers"
-                  fill
-                  className="object-cover"
+                  width={400}
+                  height={400}
+                  className="w-full h-full object-cover"
+                  unoptimized
                 />
               </div>
               
@@ -201,8 +205,10 @@ const CreativeTeam = () => {
                 <Image
                   src="/images/transform3.svg"
                   alt="Predictable Pricing"
-                  fill
-                  className="object-cover"
+                  width={400}
+                  height={400}
+                  className="w-full h-full object-cover"
+                  unoptimized
                 />
               </div>
               
@@ -228,8 +234,10 @@ const CreativeTeam = () => {
                 <Image
                   src="/images/transform4.svg"
                   alt="DreamGate System"
-                  fill
-                  className="object-cover"
+                  width={555}
+                  height={418}
+                  className="w-full h-full object-cover"
+                  unoptimized
                 />
               </div>
               
@@ -251,8 +259,10 @@ const CreativeTeam = () => {
                 <Image
                   src="/images/transform5.svg"
                   alt="Web3 & AI Native"
-                  fill
-                  className="object-cover"
+                  width={555}
+                  height={418}
+                  className="w-full h-full object-cover"
+                  unoptimized
                 />
               </div>
               

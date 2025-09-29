@@ -31,13 +31,21 @@ const Navbar = () => {
       // Update scroll position for background opacity
       setScrollY(currentScrollY);
       
-      // Show navbar when scrolling up or at the top
-      if (currentScrollY < lastScrollY || currentScrollY < 10) {
+      // Check if we're on mobile (less than lg breakpoint)
+      const isMobile = window.innerWidth < 1024;
+      
+      if (isMobile) {
+        // Always show navbar on mobile
         setIsVisible(true);
-      } 
-      // Hide navbar when scrolling down (but not if mobile menu is open)
-      else if (currentScrollY > lastScrollY && currentScrollY > 100 && !mobileMenuOpen) {
-        setIsVisible(false);
+      } else {
+        // Desktop behavior: Show navbar when scrolling up or at the top
+        if (currentScrollY < lastScrollY || currentScrollY < 10) {
+          setIsVisible(true);
+        } 
+        // Hide navbar when scrolling down (but not if mobile menu is open)
+        else if (currentScrollY > lastScrollY && currentScrollY > 100 && !mobileMenuOpen) {
+          setIsVisible(false);
+        }
       }
       
       setLastScrollY(currentScrollY);
