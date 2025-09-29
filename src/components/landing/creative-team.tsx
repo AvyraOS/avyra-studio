@@ -8,6 +8,24 @@ import Image from 'next/image';
 const CreativeTeam = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
 
+  // Transform images mapping for desktop (SVG)
+  const transformImages = {
+    1: "/images/transform1.svg",
+    2: "/images/transform2.svg", 
+    3: "/images/transform3.svg",
+    4: "/images/transform4.svg",
+    5: "/images/transform5.svg"
+  };
+
+  // Transform images mapping for mobile (PNG)
+  const transformImagesMobile = {
+    1: "/images/transform1.png",
+    2: "/images/transform2.png",
+    3: "/images/transform3.png", 
+    4: "/images/transform4.png",
+    5: "/images/transform5.png"
+  };
+
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
@@ -152,14 +170,26 @@ const CreativeTeam = () => {
             <div className="relative rounded-[20px] border border-[rgba(216,231,242,0.07)] shadow-[0px_2px_1px_0px_inset_rgba(207,231,255,0.2)] aspect-square pt-[2px]">
               {/* Background Image - Inset to show border */}
               <div className="relative w-full h-full rounded-t-[18px] overflow-hidden border border-[rgba(216,231,242,0.02)] rounded-[18px]">
-                <Image
-                  src="/images/transform1.svg"
-                  alt="All-In-One Creative Team"
-                  width={400}
-                  height={400}
-                  className="w-full h-full object-cover"
-                  unoptimized
-                />
+                <>
+                  {/* Desktop SVG */}
+                  <Image
+                    src={transformImages[1]}
+                    alt="All-In-One Creative Team"
+                    width={400}
+                    height={400}
+                    className="w-full h-full object-cover hidden md:block"
+                    unoptimized
+                  />
+                  {/* Mobile PNG */}
+                  <Image
+                    src={transformImagesMobile[1]}
+                    alt="All-In-One Creative Team"
+                    width={400}
+                    height={400}
+                    className="w-full h-full object-cover block md:hidden"
+                    unoptimized
+                  />
+                </>
               </div>
               
               {/* Card Text Overlay - Top portion */}
@@ -177,20 +207,26 @@ const CreativeTeam = () => {
             <div className="relative rounded-[20px] border border-[rgba(216,231,242,0.07)] shadow-[0px_2px_1px_0px_inset_rgba(207,231,255,0.2)] aspect-square pt-[2px]">
               {/* Background Image - Inset to show border */}
               <div className="relative w-full h-full rounded-t-[18px] overflow-hidden border border-[rgba(216,231,242,0.02)] rounded-[18px]">
-                <picture>
-                  <source media="(max-width: 768px)" srcSet="/images/transform2.png" />
+                <>
+                  {/* Desktop SVG */}
                   <Image
-                    src="/images/transform2.svg"
+                    src={transformImages[2]}
                     alt="Award-Winning Designers"
-                    width={800}
-                    height={800}
-                    className="w-full h-full object-cover"
+                    width={400}
+                    height={400}
+                    className="w-full h-full object-cover hidden md:block"
                     unoptimized
-                  style={{
-                    imageRendering: 'auto'
-                  } as React.CSSProperties}
                   />
-                </picture>
+                  {/* Mobile PNG */}
+                  <Image
+                    src={transformImagesMobile[2]}
+                    alt="Award-Winning Designers"
+                    width={400}
+                    height={400}
+                    className="w-full h-full object-cover block md:hidden"
+                    unoptimized
+                  />
+                </>
               </div>
               
               {/* Card Text Overlay - Top portion */}
@@ -208,14 +244,26 @@ const CreativeTeam = () => {
             <div className="relative rounded-[20px] border border-[rgba(216,231,242,0.07)] shadow-[0px_2px_1px_0px_inset_rgba(207,231,255,0.2)] aspect-square pt-[2px]">
               {/* Background Image - Inset to show border */}
               <div className="relative w-full h-full rounded-t-[18px] overflow-hidden border border-[rgba(216,231,242,0.02)] rounded-[18px]">
-                <Image
-                  src="/images/transform3.svg"
-                  alt="Predictable Pricing"
-                  width={400}
-                  height={400}
-                  className="w-full h-full object-cover"
-                  unoptimized
-                />
+                <>
+                  {/* Desktop SVG */}
+                  <Image
+                    src={transformImages[3]}
+                    alt="Predictable Pricing"
+                    width={400}
+                    height={400}
+                    className="w-full h-full object-cover hidden md:block"
+                    unoptimized
+                  />
+                  {/* Mobile PNG */}
+                  <Image
+                    src={transformImagesMobile[3]}
+                    alt="Predictable Pricing"
+                    width={400}
+                    height={400}
+                    className="w-full h-full object-cover block md:hidden"
+                    unoptimized
+                  />
+                </>
               </div>
               
               {/* Card Text Overlay - Top portion */}
@@ -237,14 +285,26 @@ const CreativeTeam = () => {
             <div className="relative rounded-[20px] border border-[rgba(216,231,242,0.07)] shadow-[0px_2px_1px_0px_inset_rgba(207,231,255,0.2)] pt-[2px]" style={{ aspectRatio: '555/418' }}>
               {/* Background Image - Inset to show border */}
               <div className="relative w-full h-full rounded-t-[18px] overflow-hidden border border-[rgba(216,231,242,0.02)] rounded-[18px]">
-                <Image
-                  src="/images/transform4.svg"
-                  alt="DreamGate System"
-                  width={555}
-                  height={418}
-                  className="w-full h-full object-cover"
-                  unoptimized
-                />
+                <>
+                  {/* Desktop SVG */}
+                  <Image
+                    src={transformImages[4]}
+                    alt="DreamGate System"
+                    width={555}
+                    height={418}
+                    className="w-full h-full object-cover hidden md:block"
+                    unoptimized
+                  />
+                  {/* Mobile PNG */}
+                  <Image
+                    src={transformImagesMobile[4]}
+                    alt="DreamGate System"
+                    width={555}
+                    height={418}
+                    className="w-full h-full object-cover block md:hidden"
+                    unoptimized
+                  />
+                </>
               </div>
               
               {/* Card Text Overlay - Top portion */}
@@ -262,14 +322,26 @@ const CreativeTeam = () => {
             <div className="relative rounded-[20px] border border-[rgba(216,231,242,0.07)] shadow-[0px_2px_1px_0px_inset_rgba(207,231,255,0.2)] pt-[2px]" style={{ aspectRatio: '555/418' }}>
               {/* Background Image - Inset to show border */}
               <div className="relative w-full h-full rounded-t-[18px] overflow-hidden border border-[rgba(216,231,242,0.02)] rounded-[18px]">
-                <Image
-                  src="/images/transform5.svg"
-                  alt="Web3 & AI Native"
-                  width={555}
-                  height={418}
-                  className="w-full h-full object-cover"
-                  unoptimized
-                />
+                <>
+                  {/* Desktop SVG */}
+                  <Image
+                    src={transformImages[5]}
+                    alt="Web3 & AI Native"
+                    width={555}
+                    height={418}
+                    className="w-full h-full object-cover hidden md:block"
+                    unoptimized
+                  />
+                  {/* Mobile PNG */}
+                  <Image
+                    src={transformImagesMobile[5]}
+                    alt="Web3 & AI Native"
+                    width={555}
+                    height={418}
+                    className="w-full h-full object-cover block md:hidden"
+                    unoptimized
+                  />
+                </>
               </div>
               
               {/* Card Text Overlay - Top portion */}
