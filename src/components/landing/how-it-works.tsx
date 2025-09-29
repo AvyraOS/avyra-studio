@@ -59,11 +59,18 @@ const stepContent: StepContent[] = [
 export default function HowItWorks() {
   const [selectedStep, setSelectedStep] = useState<number>(1);
 
-  // Step to image mapping
+  // Step to image mapping with mobile fallback
   const stepImages = {
     1: "/images/subscribe-screen-image.svg",
     2: "/images/request-screen-image.svg",
     3: "/images/receive-screen-image.svg"
+  };
+
+  // Mobile PNG versions for better performance
+  const stepImagesMobile = {
+    1: "/images/subscribe-screen-image.png",
+    2: "/images/request-screen-image.png", 
+    3: "/images/receive-screen-image.png"
   };
 
   // Get current step content
@@ -144,15 +151,28 @@ export default function HowItWorks() {
                   {/* Left Side - Dynamic Content (55% width) */}
                   <div className="flex items-center justify-center h-full" style={{ width: '55%' }}>
                     <div className="w-full h-[400px] flex items-center justify-center bg-transparent rounded-lg overflow-hidden">
-                      <Image
-                        src={stepImages[selectedStep as keyof typeof stepImages] || stepImages[1]}
-                        alt={`Step ${selectedStep} screen`}
-                        width={638}
-                        height={426}
-                        className="max-w-full max-h-full object-contain"
-                        priority
-                        unoptimized
-                      />
+                      <>
+                        {/* Desktop SVG */}
+                        <Image
+                          src={stepImages[selectedStep as keyof typeof stepImages] || stepImages[1]}
+                          alt={`Step ${selectedStep} screen`}
+                          width={638}
+                          height={426}
+                          className="max-w-full max-h-full object-contain hidden md:block"
+                          priority
+                          unoptimized
+                        />
+                        {/* Mobile PNG */}
+                        <Image
+                          src={stepImagesMobile[selectedStep as keyof typeof stepImagesMobile] || stepImagesMobile[1]}
+                          alt={`Step ${selectedStep} screen`}
+                          width={638}
+                          height={426}
+                          className="max-w-full max-h-full object-contain block md:hidden"
+                          priority
+                          unoptimized
+                        />
+                      </>
                     </div>
                   </div>
 
@@ -284,15 +304,28 @@ export default function HowItWorks() {
 
           {/* 3. Dynamic Assets Area */}
           <div className="w-full h-[280px] flex items-center justify-center">
-            <Image
-              src={stepImages[selectedStep as keyof typeof stepImages] || stepImages[1]}
-              alt={`Step ${selectedStep} screen`}
-              width={638}
-              height={426}
-              className="max-w-full max-h-full object-contain"
-              priority
-              unoptimized
-            />
+            <>
+              {/* Desktop SVG */}
+              <Image
+                src={stepImages[selectedStep as keyof typeof stepImages] || stepImages[1]}
+                alt={`Step ${selectedStep} screen`}
+                width={638}
+                height={426}
+                className="max-w-full max-h-full object-contain hidden md:block"
+                priority
+                unoptimized
+              />
+              {/* Mobile PNG */}
+              <Image
+                src={stepImagesMobile[selectedStep as keyof typeof stepImagesMobile] || stepImagesMobile[1]}
+                alt={`Step ${selectedStep} screen`}
+                width={638}
+                height={426}
+                className="max-w-full max-h-full object-contain block md:hidden"
+                priority
+                unoptimized
+              />
+            </>
           </div>
 
           {/* 4. Let's Get Started Button */}

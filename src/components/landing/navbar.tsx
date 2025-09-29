@@ -35,8 +35,12 @@ const Navbar = () => {
       const isMobile = window.innerWidth < 1024;
       
       if (isMobile) {
-        // Always show navbar on mobile
-        setIsVisible(true);
+        // On mobile, only show navbar in the hero section to prevent scroll issues
+        if (currentScrollY < window.innerHeight * 0.8) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+        }
       } else {
         // Desktop behavior: Show navbar when scrolling up or at the top
         if (currentScrollY < lastScrollY || currentScrollY < 10) {
@@ -62,7 +66,7 @@ const Navbar = () => {
   return (
     <>
       {/* Main Navigation Bar */}
-      <nav className={`fixed top-0 left-0 right-0 z-40 transition-transform duration-300 ease-in-out ${
+      <nav className={`fixed top-0 left-0 right-0 z-40 transition-transform duration-300 ease-in-out lg:fixed ${
         isVisible ? 'translate-y-0' : '-translate-y-full'
       }`}>
         {/* Glass Background Container */}

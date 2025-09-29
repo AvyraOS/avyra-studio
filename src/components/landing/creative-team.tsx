@@ -177,14 +177,20 @@ const CreativeTeam = () => {
             <div className="relative rounded-[20px] border border-[rgba(216,231,242,0.07)] shadow-[0px_2px_1px_0px_inset_rgba(207,231,255,0.2)] aspect-square pt-[2px]">
               {/* Background Image - Inset to show border */}
               <div className="relative w-full h-full rounded-t-[18px] overflow-hidden border border-[rgba(216,231,242,0.02)] rounded-[18px]">
-                <Image
-                  src="/images/transform2.svg"
-                  alt="Award-Winning Designers"
-                  width={400}
-                  height={400}
-                  className="w-full h-full object-cover"
-                  unoptimized
-                />
+                <picture>
+                  <source media="(max-width: 768px)" srcSet="/images/transform2.png" />
+                  <Image
+                    src="/images/transform2.svg"
+                    alt="Award-Winning Designers"
+                    width={800}
+                    height={800}
+                    className="w-full h-full object-cover"
+                    unoptimized
+                  style={{
+                    imageRendering: 'auto'
+                  } as React.CSSProperties}
+                  />
+                </picture>
               </div>
               
               {/* Card Text Overlay - Top portion */}
