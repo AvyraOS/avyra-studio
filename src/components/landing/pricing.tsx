@@ -2,13 +2,20 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const Pricing = () => {
+  const router = useRouter();
+
+  const handleBookCall = () => {
+    router.push('/calendar');
+  };
+
   const plans = [
     {
       id: 'essentials',
       name: 'ESSENTIALS',
-      price: '$4,997',
+      price: '$9,997',
       period: '/month',
       buttonText: 'Start My Project',
       buttonStyle: 'secondary',
@@ -24,7 +31,7 @@ const Pricing = () => {
     {
       id: 'elite',
       name: 'ELITE',
-      price: '$9,997',
+      price: '$19,997',
       period: '/month',
       buttonText: 'Start My Project',
       buttonStyle: 'primary',
@@ -41,7 +48,7 @@ const Pricing = () => {
     {
       id: 'fullstack',
       name: 'FULL-STACK',
-      price: '$24,997',
+      price: '$44,997',
       period: '/month',
       buttonText: 'Start My Project',
       buttonStyle: 'secondary',
@@ -143,6 +150,7 @@ const Pricing = () => {
               {/* CTA Button */}
               <div className="mb-8">
                 <button
+                  onClick={handleBookCall}
                   className={`w-full h-[44px] rounded-[12px] font-inter font-medium text-[14px] tracking-[-0.28px] transition-all duration-200 ${
                     plan.popular
                       ? 'bg-gradient-to-b from-[#89ffff] to-[#00d7d7] text-[#3a3a3a] hover:shadow-lg hover:shadow-cyan-500/25'
