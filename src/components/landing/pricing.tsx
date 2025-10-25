@@ -15,7 +15,7 @@ const Pricing = () => {
     {
       id: 'essentials',
       name: 'ESSENTIALS',
-      price: '$9,997',
+      price: '$4,997',
       period: '/month',
       buttonText: 'Start My Project',
       buttonStyle: 'secondary',
@@ -31,7 +31,7 @@ const Pricing = () => {
     {
       id: 'elite',
       name: 'ELITE',
-      price: '$19,997',
+      price: '$9,997',
       period: '/month',
       buttonText: 'Start My Project',
       buttonStyle: 'primary',
@@ -48,7 +48,7 @@ const Pricing = () => {
     {
       id: 'fullstack',
       name: 'FULL-STACK',
-      price: '$44,997',
+      price: '$24,997',
       period: '/month',
       buttonText: 'Start My Project',
       buttonStyle: 'secondary',
