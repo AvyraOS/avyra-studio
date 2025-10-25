@@ -184,7 +184,7 @@ export default function Demo() {
               className="w-full h-full bg-gradient-to-b from-[#89FFFF] to-[#00D7D7] rounded-[8px] flex items-center justify-center gap-1.5 px-4 md:px-8 py-3 relative z-10 hover:from-[#9AFFFF] hover:to-[#10E7E7] transition-all duration-300"
             >
               <span className="text-[#000000] text-[16px] font-semibold font-inter tracking-[-0.16px] leading-[20px]">
-                Book my Freedom Call
+                Book my Dream Discovery Call
               </span>
               <div className="w-[22px] h-[22px]">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none">

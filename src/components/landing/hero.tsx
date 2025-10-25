@@ -451,7 +451,7 @@ const Hero = () => {
                 href="/calendar"
                 className="relative z-50 inline-flex items-center justify-center bg-gradient-to-b from-[#89FFFF] to-[#00D7D7] text-[#000000] px-8 rounded-lg text-base font-medium font-inter transition-all duration-300 hover:opacity-90 cursor-pointer h-[46px]"
               >
-                <span>Book My Freedom Call</span>
+                <span>Book My Dream Discovery Call</span>
                 <svg
                   className="ml-2 w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1"
                   fill="currentColor"
