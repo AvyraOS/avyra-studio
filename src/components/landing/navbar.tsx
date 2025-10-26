@@ -9,6 +9,7 @@ const Navbar = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [scrollY, setScrollY] = useState(0);
+  const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
 
   // Handle mobile menu toggle
   const toggleMobileMenu = () => {
@@ -20,7 +21,17 @@ const Navbar = () => {
   // Clean up body overflow when component unmounts or menu closes
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
+    setSolutionsDropdownOpen(false); // Close dropdown when mobile menu closes
     document.body.style.overflow = '';
+  };
+
+  // Handle solutions dropdown
+  const toggleSolutionsDropdown = () => {
+    setSolutionsDropdownOpen(!solutionsDropdownOpen);
+  };
+
+  const closeSolutionsDropdown = () => {
+    setSolutionsDropdownOpen(false);
   };
 
   // Handle scroll behavior for sticky navbar
@@ -49,6 +60,7 @@ const Navbar = () => {
         // Hide navbar when scrolling down (but not if mobile menu is open)
         else if (currentScrollY > lastScrollY && currentScrollY > 100 && !mobileMenuOpen) {
           setIsVisible(false);
+          setSolutionsDropdownOpen(false); // Close dropdown when navbar hides
         }
       }
       
@@ -62,6 +74,21 @@ const Navbar = () => {
       window.removeEventListener('scroll', controlNavbar);
     };
   }, [lastScrollY, mobileMenuOpen]);
+
+  // Close dropdown when clicking outside (desktop only)
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (solutionsDropdownOpen && !target.closest('.solutions-dropdown-container') && window.innerWidth >= 1024) {
+        closeSolutionsDropdown();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [solutionsDropdownOpen]);
 
   return (
     <>
@@ -102,12 +129,65 @@ const Navbar = () => {
 
             {/* Desktop Navigation Links - Centered */}
             <div className="hidden lg:flex items-center space-x-6 xl:space-x-8 absolute left-1/2 transform -translate-x-1/2">
-              <Link 
-                href="#solutions" 
-                className="text-[#d5dbe6] text-base font-normal font-inter leading-relaxed hover:text-white transition-colors duration-200 whitespace-nowrap"
-              >
-                Solutions
-              </Link>
+              {/* Solutions Dropdown */}
+              <div className="relative solutions-dropdown-container">
+                <button
+                  onClick={toggleSolutionsDropdown}
+                  className="flex items-center text-[#d5dbe6] text-base font-normal font-inter leading-relaxed hover:text-white transition-colors duration-200 whitespace-nowrap"
+                >
+                  Solutions
+                  <svg 
+                    className={`ml-1 w-4 h-4 transition-transform duration-200 ${solutionsDropdownOpen ? 'rotate-180' : ''}`}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {/* Dropdown Menu */}
+                {solutionsDropdownOpen && (
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-[271px] h-[156px] bg-[#070707] rounded-[20px] shadow-[inset_0px_2px_1px_0px_rgba(207,231,255,0.20)] overflow-hidden z-50">
+                    {/* Light overlay */}
+                    <div className="absolute inset-0 opacity-10 bg-gradient-radial from-[#b8c7d9]/50 via-[#b8c7d9]/25 to-transparent" style={{
+                      background: 'radial-gradient(at 94% 8%, rgba(184, 199, 217, 0.5) 0%, rgba(184, 199, 217, 0) 100%)'
+                    }} />
+                    
+                    {/* Border */}
+                    <div className="absolute inset-0 rounded-[20px] border border-[#d8e7f2]/5" />
+                    
+                    {/* Avyra Studio - Clickable with turquoise hover */}
+                    <Link 
+                      href="https://www.avyra.ai"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group absolute left-[30px] top-[24px] text-white/100 text-lg font-normal font-inter leading-6 hover:text-[#00D7D7] transition-colors duration-200"
+                      onClick={closeSolutionsDropdown}
+                    >
+                      {/* Hover background with turquoise tint */}
+                      <div className="absolute -left-[12px] -top-[8px] w-[235px] h-10 bg-[#00D7D7]/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                      <span className="relative z-10">Avyra AI</span>
+                    </Link>
+                    
+                    {/* Avyra OS - Not clickable */}
+                    <div className="absolute left-[30px] top-[66px] text-white/70 text-lg font-normal font-inter leading-6">
+                      Avyra OS
+                    </div>
+                    <div className="absolute left-[186px] top-[70px] px-1.5 py-[3px] bg-[#363636] rounded-[42px] flex justify-center items-center">
+                      <div className="text-white text-[8px] font-normal font-inter">Coming Soon</div>
+                    </div>
+                    
+                    {/* Avyra Command - Not clickable */}
+                    <div className="absolute left-[30px] top-[108px] text-white/70 text-lg font-normal font-inter leading-6">
+                      Avyra Command
+                    </div>
+                    <div className="absolute left-[186px] top-[112px] px-1.5 py-[3px] bg-[#363636] rounded-[42px] flex justify-center items-center">
+                      <div className="text-white text-[8px] font-normal font-inter">Coming Soon</div>
+                    </div>
+                  </div>
+                )}
+              </div>
               {/* <Link 
                 href="#results" 
                 className="text-[#d5dbe6] text-base font-normal font-inter leading-relaxed hover:text-white transition-colors duration-200 whitespace-nowrap"
@@ -199,14 +279,34 @@ const Navbar = () => {
           </div>
 
           {/* Navigation Links */}
-          <div className="flex-1 flex flex-col justify-center px-6 space-y-8">
+          <div className="flex-1 flex flex-col justify-center px-6 space-y-6">
+            {/* Solutions Section Header */}
+            <div className="text-white/40 text-sm font-medium font-inter uppercase tracking-wider">
+              Solutions
+            </div>
+            
+            {/* Avyra AI */}
             <Link 
-              href="#solutions" 
-              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#f2c6a6] transition-colors"
+              href="https://www.avyra.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
               onClick={closeMobileMenu}
             >
-              Solutions
+              Avyra AI
             </Link>
+            
+            {/* Avyra OS */}
+            <div className="flex items-center justify-between py-3 border-b border-white/5">
+              <span className="text-white/50 text-2xl font-normal font-inter">Avyra OS</span>
+              <span className="px-3 py-1 bg-[#363636] rounded-full text-white text-xs">Coming Soon</span>
+            </div>
+            
+            {/* Avyra Command */}
+            <div className="flex items-center justify-between py-3 border-b border-white/5">
+              <span className="text-white/50 text-2xl font-normal font-inter">Avyra Command</span>
+              <span className="px-3 py-1 bg-[#363636] rounded-full text-white text-xs">Coming Soon</span>
+            </div>
             {/* <Link 
               href="#results" 
               className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#f2c6a6] transition-colors"
@@ -216,21 +316,21 @@ const Navbar = () => {
             </Link> */}
             <Link 
               href="#pricing" 
-              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#f2c6a6] transition-colors"
+              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
               onClick={closeMobileMenu}
             >
               Pricing
             </Link>
             <Link 
               href="#blog" 
-              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#f2c6a6] transition-colors"
+              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
               onClick={closeMobileMenu}
             >
               Blog
             </Link>
             <Link 
               href="#community" 
-              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#f2c6a6] transition-colors"
+              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
               onClick={closeMobileMenu}
             >
               Community

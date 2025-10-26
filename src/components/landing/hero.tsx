@@ -243,31 +243,52 @@ const Hero = () => {
           </div>
 
           {/* Navigation Links */}
-          <div className="flex-1 flex flex-col justify-center px-6 space-y-8">
+          <div className="flex-1 flex flex-col justify-center px-6 space-y-6">
+            {/* Solutions Section Header */}
+            <div className="text-white/40 text-sm font-medium font-inter uppercase tracking-wider">
+              Solutions
+            </div>
+            
+            {/* Avyra AI */}
             <Link 
-              href="#solutions" 
-              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#f2c6a6] transition-colors"
+              href="https://www.avyra.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
               onClick={closeMobileMenu}
             >
-              Solutions
+              Avyra AI
             </Link>
+            
+            {/* Avyra OS */}
+            <div className="flex items-center justify-between py-3 border-b border-white/5">
+              <span className="text-white/50 text-2xl font-normal font-inter">Avyra OS</span>
+              <span className="px-3 py-1 bg-[#363636] rounded-full text-white text-xs">Coming Soon</span>
+            </div>
+            
+            {/* Avyra Command */}
+            <div className="flex items-center justify-between py-3 border-b border-white/5">
+              <span className="text-white/50 text-2xl font-normal font-inter">Avyra Command</span>
+              <span className="px-3 py-1 bg-[#363636] rounded-full text-white text-xs">Coming Soon</span>
+            </div>
+            
             <Link 
               href="#pricing" 
-              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#f2c6a6] transition-colors"
+              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
               onClick={closeMobileMenu}
             >
               Pricing
             </Link>
             <Link 
               href="#blog" 
-              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#f2c6a6] transition-colors"
+              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
               onClick={closeMobileMenu}
             >
               Blog
             </Link>
             <Link 
               href="#community" 
-              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#f2c6a6] transition-colors"
+              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
               onClick={closeMobileMenu}
             >
               Community
@@ -435,18 +456,6 @@ const Hero = () => {
                 background: "radial-gradient(50% 20.7% at 50% 100%, #C6FFFF 0%, rgba(198, 255, 255, 0.00) 100%)"
               }}
             >
-              {/* Moving glow spot - commented out for now */}
-              {/* 
-                <div 
-                  className="absolute w-[60px] h-[60px] opacity-90 group-hover:opacity-100 transition-opacity duration-300 rounded-full blur-sm"
-                  style={{
-                    background: "radial-gradient(circle, #FFE1C6 0%, #f2c6a6 30%, transparent 70%)",
-                    animation: "moveGlow 8s linear infinite"
-                  }}
-                />
-                */}
-
-              {/* Button (Top Layer) - 46px height */}
               <Link
                 href="/calendar"
                 className="relative z-50 inline-flex items-center justify-center bg-gradient-to-b from-[#89FFFF] to-[#00D7D7] text-[#000000] px-8 rounded-lg text-base font-medium font-inter transition-all duration-300 hover:opacity-90 cursor-pointer h-[46px]"
@@ -524,27 +533,6 @@ const Hero = () => {
               priority
             />
           </div>
-
-
-
-
-          {/* Development Login/Signup Buttons - Commented out for now */}
-
-          {/* <div className="flex flex-col sm:flex-row gap-3 items-center justify-center mt-4">
-              <Link 
-                href="/auth/login"
-                className="inline-flex items-center justify-center border border-white/30 text-white px-6 py-2 rounded-full text-sm font-medium font-inter transition-all duration-300 hover:bg-white/10 hover:border-white/50 w-full sm:w-auto max-w-[160px]"
-              >
-                Login
-              </Link>
-              <Link 
-                href="/auth/signup"
-                className="inline-flex items-center justify-center border border-white/30 text-white px-6 py-2 rounded-full text-sm font-medium font-inter transition-all duration-300 hover:bg-white/10 hover:border-white/50 w-full sm:w-auto max-w-[160px]"
-              >
-                Sign Up
-              </Link>
-            </div> */}
-
         </div>
       </div>
 
