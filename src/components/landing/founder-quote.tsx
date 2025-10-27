@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { isMobileDevice, getScrollTriggerConfig } from '../../../lib/mobile-utils';
 import Image from 'next/image';
 
 const FounderQuote = () => {
@@ -14,91 +15,112 @@ const FounderQuote = () => {
     const section = sectionRef.current;
     if (!section) return;
 
-    // Set initial state - more dramatic starting position for smoother reveal
-    gsap.set([".founder-pill", ".quote-part", ".founder-images"], {
+    // Check if mobile device
+    const isMobile = isMobileDevice();
+    const scrollConfig = getScrollTriggerConfig(isMobile);
+
+    // Set initial state - mobile-friendly (no upward movement on mobile)
+    const initialState = isMobile ? {
+      opacity: 0,
+      scale: 0.98
+    } : {
       opacity: 0,
       y: 40,
       rotationX: 15,
       scale: 0.95
-    });
+    };
 
-    // Create a smooth, liquid scroll-based animation
+    gsap.set([".founder-pill", ".quote-part", ".founder-images"], initialState);
+
+    // Create mobile-friendly animation (disable scrub on mobile for better scrolling)
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
-        start: "top 85%",
-        end: "top 15%",
-        scrub: 2.5, // Much smoother scrubbing - higher value = more lag/smoothness
-        anticipatePin: 1,
+        start: scrollConfig.start,
+        end: isMobile ? undefined : "top 15%",
+        scrub: isMobile ? false : 2.5, // Disable scrub on mobile to prevent scroll interference
+        anticipatePin: isMobile ? 0 : 1,
+        toggleActions: isMobile ? scrollConfig.toggleActions : undefined,
       }
     });
 
-    // Create individual animations for ultra-smooth reveals
-    tl.to(".founder-pill", {
+    // Create mobile-friendly animations
+    const animationProps = isMobile ? {
+      opacity: 1,
+      scale: 1,
+      duration: 0.8,
+      ease: "power2.out"
+    } : {
       opacity: 1,
       y: 0,
       rotationX: 0,
       scale: 1,
       duration: 2,
       ease: "power1.out"
-    })
-
-      // Staggered quote parts with much smoother, longer timing
-      .to(".quote-part", {
-        opacity: 1,
-        y: 0,
-        rotationX: 0,
-        scale: 1,
-        duration: 3,
-        stagger: {
-          amount: 4, // Longer stagger for smoother individual reveals
-          from: "start",
-          ease: "none" // Linear stagger for consistent timing
-        },
-        ease: "power1.out"
-      }, "-=1.5")
-
-      // Founder images with subtle bounce
-      .to(".founder-images", {
-        opacity: 1,
-        y: 0,
-        rotationX: 0,
-        scale: 1,
-        duration: 2,
-        ease: "power1.out"
-      }, "-=2");
-
-    // Additional smooth mouse wheel enhancement
-    let scrollVelocity = 0;
-    let lastScrollY = window.scrollY;
-
-    const updateScrollVelocity = () => {
-      const currentScrollY = window.scrollY;
-      scrollVelocity = Math.abs(currentScrollY - lastScrollY);
-      lastScrollY = currentScrollY;
-
-      // Adjust animation speed based on scroll velocity
-      if (scrollVelocity > 5) {
-        gsap.to(tl, {
-          timeScale: 1.3,
-          duration: 0.3,
-          ease: "power2.out"
-        });
-      } else {
-        gsap.to(tl, {
-          timeScale: 1,
-          duration: 0.5,
-          ease: "power2.out"
-        });
-      }
     };
 
-    // Smooth scroll velocity tracking
-    const scrollHandler = gsap.ticker.add(updateScrollVelocity);
+    const quoteAnimationProps = isMobile ? {
+      opacity: 1,
+      scale: 1,
+      duration: 0.6,
+      stagger: 0.1,
+      ease: "power2.out"
+    } : {
+      opacity: 1,
+      y: 0,
+      rotationX: 0,
+      scale: 1,
+      duration: 3,
+      stagger: {
+        amount: 4,
+        from: "start" as const,
+        ease: "none"
+      },
+      ease: "power1.out"
+    };
+
+    // Apply animations
+    tl.to(".founder-pill", animationProps)
+      .to(".quote-part", quoteAnimationProps, isMobile ? "-=0.4" : "-=1.5")
+      .to(".founder-images", animationProps, isMobile ? "-=0.2" : "-=2");
+
+    // Additional smooth mouse wheel enhancement (desktop only)
+    let updateScrollVelocity: (() => void) | null = null;
+    
+    if (!isMobile) {
+      let scrollVelocity = 0;
+      let lastScrollY = window.scrollY;
+
+      updateScrollVelocity = () => {
+        const currentScrollY = window.scrollY;
+        scrollVelocity = Math.abs(currentScrollY - lastScrollY);
+        lastScrollY = currentScrollY;
+
+        // Adjust animation speed based on scroll velocity
+        if (scrollVelocity > 5) {
+          gsap.to(tl, {
+            timeScale: 1.3,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        } else {
+          gsap.to(tl, {
+            timeScale: 1,
+            duration: 0.5,
+            ease: "power2.out"
+          });
+        }
+      };
+
+      // Smooth scroll velocity tracking (desktop only)
+      gsap.ticker.add(updateScrollVelocity);
+    }
 
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      gsap.ticker.remove(scrollHandler);
+      if (updateScrollVelocity) {
+        gsap.ticker.remove(updateScrollVelocity);
+      }
     };
   }, []);
 

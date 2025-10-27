@@ -245,9 +245,9 @@ const Hero = () => {
           {/* Navigation Links */}
           <div className="flex-1 flex flex-col justify-center px-6 space-y-6">
             {/* Solutions Section Header */}
-            <div className="text-white/40 text-sm font-medium font-inter uppercase tracking-wider">
+            {/* <div className="text-white/40 text-sm font-medium font-inter uppercase tracking-wider">
               Solutions
-            </div>
+            </div> */}
             
             {/* Avyra AI */}
             <Link 
@@ -265,13 +265,21 @@ const Hero = () => {
               <span className="text-white/50 text-2xl font-normal font-inter">Avyra OS</span>
               <span className="px-3 py-1 bg-[#363636] rounded-full text-white text-xs">Coming Soon</span>
             </div>
+
+            <Link 
+              href="#work" 
+              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
+              onClick={closeMobileMenu}
+            >
+              Work
+            </Link>
             
             {/* Avyra Command */}
-            <div className="flex items-center justify-between py-3 border-b border-white/5">
+            {/* <div className="flex items-center justify-between py-3 border-b border-white/5">
               <span className="text-white/50 text-2xl font-normal font-inter">Avyra Command</span>
               <span className="px-3 py-1 bg-[#363636] rounded-full text-white text-xs">Coming Soon</span>
             </div>
-            
+             */}
             <Link 
               href="#pricing" 
               className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"

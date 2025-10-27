@@ -194,7 +194,12 @@ const Navbar = () => {
               >
                 Results
               </Link> */}
-           
+              <Link 
+                href="#work" 
+                className="text-[#d5dbe6] text-base font-normal font-inter leading-relaxed hover:text-white transition-colors duration-200 whitespace-nowrap"
+              >
+                Work
+              </Link>
               <Link 
                 href="#pricing" 
                 className="text-[#d5dbe6] text-base font-normal font-inter leading-relaxed hover:text-white transition-colors duration-200 whitespace-nowrap"

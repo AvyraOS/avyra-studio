@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { isMobileDevice } from '../../../lib/mobile-utils';
 import Image from 'next/image';
 
 const CreativeTeam = () => {
@@ -32,15 +33,30 @@ const CreativeTeam = () => {
     const section = sectionRef.current;
     if (!section) return;
 
-    // Set initial state for animation elements
-    gsap.set([".ops-pill", ".ops-title", ".ops-subtitle", ".ops-cards"], { 
+    // Check if mobile device
+    const isMobile = isMobileDevice();
+
+    // Skip all animations on mobile - just show content immediately
+    if (isMobile) {
+      // Set all elements to visible state immediately on mobile
+      gsap.set([".ops-pill", ".ops-title", ".ops-subtitle", ".ops-cards"], {
+        opacity: 1,
+        scale: 1
+      });
+      return;
+    }
+
+    // Desktop-only animations
+
+    // Set initial state for desktop
+    gsap.set([".ops-pill", ".ops-title", ".ops-subtitle", ".ops-cards"], {
       opacity: 0,
       y: 40,
       rotationX: 15,
       scale: 0.98
     });
 
-    // Create smooth scroll-based animation
+    // Create desktop animation timeline
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
@@ -51,7 +67,7 @@ const CreativeTeam = () => {
       }
     });
 
-    // Animate elements in sequence
+    // Desktop animations
     tl.to(".ops-pill", {
       opacity: 1,
       y: 0,
@@ -60,7 +76,6 @@ const CreativeTeam = () => {
       duration: 2,
       ease: "power1.out"
     })
-    
     .to(".ops-title", {
       opacity: 1,
       y: 0,
@@ -69,7 +84,6 @@ const CreativeTeam = () => {
       duration: 2.5,
       ease: "power1.out"
     }, "-=1.5")
-    
     .to(".ops-subtitle", {
       opacity: 1,
       y: 0,
@@ -78,7 +92,6 @@ const CreativeTeam = () => {
       duration: 2,
       ease: "power1.out"
     }, "-=1.8")
-    
     .to(".ops-cards", {
       opacity: 1,
       y: 0,

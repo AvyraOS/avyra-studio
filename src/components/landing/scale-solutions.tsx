@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { isMobileDevice, getScrollTriggerConfig } from '../../../lib/mobile-utils';
 
 const ScaleSolutions = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -24,6 +25,10 @@ const ScaleSolutions = () => {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
+
+    // Check if mobile device
+    const isMobile = isMobileDevice();
+    const scrollConfig = getScrollTriggerConfig(isMobile);
 
     // Track if animation has already played
     let hasAnimated = false;
@@ -69,54 +74,77 @@ const ScaleSolutions = () => {
     // Animate stats when they come into view
     const statsElements = statsRef.current?.querySelectorAll('.stat-number');
     if (statsElements) {
-      // Create the fade/scale animation
-      gsap.fromTo(statsElements,
-        {
-          opacity: 0,
-          y: 30,
-          scale: 0.8
-        },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: statsRef.current,
-            start: "top 80%",
-            toggleActions: "play none none none",
-            onEnter: () => {
-              // Start counting animation when stats come into view (only once)
-              startCountingAnimation();
-            }
+      // Create mobile-friendly animation (no upward movement on mobile)
+      const fromProps = isMobile ? {
+        opacity: 0,
+        scale: 0.98
+      } : {
+        opacity: 0,
+        y: 30,
+        scale: 0.8
+      };
+
+      const toProps = isMobile ? {
+        opacity: 1,
+        scale: 1,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: "power2.out"
+      } : {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: "power2.out"
+      };
+
+      gsap.fromTo(statsElements, fromProps, {
+        ...toProps,
+        scrollTrigger: {
+          trigger: statsRef.current,
+          start: scrollConfig.start,
+          toggleActions: scrollConfig.toggleActions,
+          onEnter: () => {
+            // Start counting animation when stats come into view (only once)
+            startCountingAnimation();
           }
         }
-      );
+      });
     }
 
     // Animate header content
     const headerElements = sectionRef.current?.querySelectorAll('.header-content > *');
     if (headerElements) {
-      gsap.fromTo(headerElements,
-        {
-          opacity: 0,
-          y: 20
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 85%",
-            toggleActions: "play none none none"
-          }
+      // Mobile-friendly header animation (no upward movement on mobile)
+      const headerFromProps = isMobile ? {
+        opacity: 0
+      } : {
+        opacity: 0,
+        y: 20
+      };
+
+      const headerToProps = isMobile ? {
+        opacity: 1,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power2.out"
+      } : {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power2.out"
+      };
+
+      gsap.fromTo(headerElements, headerFromProps, {
+        ...headerToProps,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: scrollConfig.start,
+          toggleActions: scrollConfig.toggleActions
         }
-      );
+      });
     }
 
     return () => {
