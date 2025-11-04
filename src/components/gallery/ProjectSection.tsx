@@ -4,7 +4,7 @@ import Image from 'next/image'
 import clsx from 'clsx'
 import { ReactNode, forwardRef } from 'react'
 
-export type ProjectSectionVariant = 'overview' | 'testimonial' | 'brand-guide'
+export type ProjectSectionVariant = 'overview' | 'testimonial' | 'brand-guide' | 'software-showcase'
 
 type TestimonialProps = {
   quote: string
@@ -35,13 +35,22 @@ type ProjectSectionProps = {
   centerImage?: boolean
   testimonial?: TestimonialProps // For testimonial variant
   brandGuide?: BrandGuideProps // For brand-guide variant
+  isPriority?: boolean // Only true for first 2-3 sections above the fold
 }
 
-type PillProps = { label: string }
+type PillProps = { label: string; variant?: 'default' | 'white-border' }
 
-function ScopePill({ label }: PillProps) {
+function ScopePill({ label, variant = 'default' }: PillProps) {
+  if (variant === 'white-border') {
+    return (
+      <span className="text-white border border-white rounded-[24px] px-3.5 py-2 text-[12px] sm:px-4 sm:py-2.5 sm:text-[13px] md:px-[18px] md:py-[11px] md:text-[14px] leading-[12px] bg-transparent">
+        {label}
+      </span>
+    )
+  }
+  
   return (
-    <span className="text-white/60 border border-[#4d4f57] rounded-[24px] px-4 py-2 text-[12px] sm:px-5 sm:py-2.5 sm:text-[13px] md:px-[20px] md:py-[12px] md:text-[14px] leading-[12px]">
+    <span className="text-white/60 border border-[#4d4f57] rounded-[24px] px-3.5 py-2 text-[12px] sm:px-4 sm:py-2.5 sm:text-[13px] md:px-[18px] md:py-[11px] md:text-[14px] leading-[12px] bg-transparent">
       {label}
     </span>
   )
@@ -62,6 +71,7 @@ const ProjectSection = forwardRef<HTMLElement, ProjectSectionProps>(({
   centerImage = false,
   testimonial,
   brandGuide,
+  isPriority = false,
 }, ref) => {
   const isRight = imageSide === 'right'
 
@@ -77,10 +87,170 @@ const ProjectSection = forwardRef<HTMLElement, ProjectSectionProps>(({
             src={guideImageSrc}
             alt={guideImageAlt}
             fill
-            priority
+            priority={isPriority}
+            loading={isPriority ? undefined : 'lazy'}
+            sizes="100vw"
             className="object-contain"
           />
         )}
+      </section>
+    )
+  }
+
+  // Software Showcase Variant - Split layout with centered laptop mockup on right
+  if (variant === 'software-showcase') {
+    const showScope = pills.length > 0
+    const showTestimonial = testimonial && testimonial.quote
+    
+    return (
+      <section ref={ref} id={id} className={clsx("panel relative w-full min-h-0 sm:min-h-[600px] md:min-h-screen overflow-hidden bg-[#0d0d0d]", className)}>
+        <div className="relative mx-auto grid max-w-[1920px] grid-cols-1 lg:grid-cols-[1.3fr_1.4fr] gap-10 px-4 py-16 sm:px-6 sm:py-20 md:gap-12 md:px-8 md:py-24 lg:gap-14 lg:px-10 lg:py-32 xl:py-40">
+          {/* Text column */}
+          <div className="z-[1] flex flex-col justify-center">
+            {subtitle && (
+              <p className="font-inter font-medium text-[10px] tracking-[2px] text-white/50 uppercase sm:text-[10.5px] md:text-[11px]">
+                {subtitle}
+              </p>
+            )}
+
+            {title && (
+              <h2
+                className={clsx("font-inter font-medium leading-[1.2] tracking-[-0.03em]", subtitle ? "mt-6 sm:mt-7 md:mt-8" : "")}
+                style={{
+                  fontSize: 'clamp(28px, 6.5vw, 64px)',
+                  background: 'radial-gradient(86% 99% at 50% 50%, #D5DBE6 28.39%, #04070D 100%)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  color: 'transparent'
+                }}
+              >
+                {title}
+              </h2>
+            )}
+
+            {descriptionParagraphs.length > 0 && (
+              <div className={clsx("w-full text-[#d5dbe6] text-[14px] sm:text-[15px] md:text-[15.5px] lg:text-[16px] leading-[22px] sm:leading-[24px] md:leading-[25px] lg:leading-[25.6px] tracking-[-0.28px] sm:tracking-[-0.30px] md:tracking-[-0.31px] lg:tracking-[-0.32px] font-inter font-normal", title ? "mt-6 sm:mt-7 md:mt-8" : "")}>
+                {descriptionParagraphs.map((text, idx) => (
+                  <p key={idx} className={idx > 0 ? "mt-5 sm:mt-6" : undefined}>{text}</p>
+                ))}
+              </div>
+            )}
+
+            {/* Scope Section */}
+            {showScope && (
+              <div className="mt-12 sm:mt-14 md:mt-20 lg:mt-[100px] flex flex-wrap gap-2 sm:gap-[5px] md:gap-[6px]">
+                {pills.map((p) => (
+                  <ScopePill key={p} label={p} />
+                ))}
+              </div>
+            )}
+
+            {/* Testimonial Section */}
+            {showTestimonial && (
+              <div className={clsx("mt-12 sm:mt-14 md:mt-20 lg:mt-[100px]")}>
+                {/* Rating Stars */}
+                <div className="flex gap-0.5 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <svg
+                      key={i}
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 0L12.2451 6.90983H19.5106L13.6327 11.1803L15.8779 18.0902L10 13.8197L4.12215 18.0902L6.36729 11.1803L0.489435 6.90983H7.75486L10 0Z"
+                        fill="#FFD700"
+                      />
+                    </svg>
+                  ))}
+                </div>
+
+                {/* Quote */}
+                <p className="text-[#d5dbe6] text-[14px] sm:text-[15px] md:text-[15.5px] lg:text-[16px] leading-[22px] sm:leading-[24px] md:leading-[25px] lg:leading-[25.6px] tracking-[-0.28px] sm:tracking-[-0.30px] md:tracking-[-0.31px] lg:tracking-[-0.32px] font-inter font-normal italic mb-6 w-full">
+                  "{testimonial.quote}"
+                </p>
+
+                {/* Author Info */}
+                <div className="flex items-center gap-3">
+                  {testimonial.avatarSrc && (
+                    <div className="relative w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                      <Image
+                        src={testimonial.avatarSrc}
+                        alt={testimonial.name}
+                        fill
+                        loading="lazy"
+                        sizes="32px"
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="flex flex-col">
+                    <span className="text-white font-inter font-bold text-[14px] leading-[22px]">
+                      {testimonial.name}
+                    </span>
+                    <span className="text-white/80 font-inter font-normal text-[14px] leading-[22px]">
+                      {testimonial.role}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Optional button/link */}
+            {brandGuide?.pdfUrl && (
+              <a
+                href={brandGuide.pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 inline-block rounded-lg bg-white/10 px-6 py-3 text-sm font-medium text-white hover:bg-white/20 transition-colors"
+              >
+                View Project
+              </a>
+            )}
+          </div>
+
+          {/* Image column - Right-aligned laptop mockup, showing mostly screen */}
+          {imageSrc && (
+            <div className="hidden lg:flex relative items-start justify-end lg:order-2">
+              <div className="relative w-[1213px] h-[778px] overflow-hidden">
+                <Image
+                  src={imageSrc}
+                  alt={imageAlt || ''}
+                  fill
+                  priority={isPriority}
+                  loading={isPriority ? undefined : 'lazy'}
+                  sizes="(max-width: 1024px) 100vw, 1213px"
+                  className="object-contain"
+                  style={{ 
+                    objectPosition: '75% 13%',
+                    transform: 'scale(1.1)',
+                    transformOrigin: 'right top'
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Mobile image (hidden on lg+) */}
+          {imageSrc && (
+            <div className="relative lg:hidden mt-8 sm:mt-10 order-2">
+              <div className="relative w-full aspect-[4/3] overflow-hidden">
+                <Image
+                  src={imageSrc}
+                  alt={imageAlt || ''}
+                  fill
+                  priority={isPriority}
+                  loading={isPriority ? undefined : 'lazy'}
+                  sizes="100vw"
+                  className="object-contain"
+                />
+              </div>
+            </div>
+          )}
+        </div>
       </section>
     )
   }
@@ -107,7 +277,9 @@ const ProjectSection = forwardRef<HTMLElement, ProjectSectionProps>(({
             src={imageSrc}
             alt={imageAlt || ''}
             fill
-            priority
+            priority={isPriority}
+            loading={isPriority ? undefined : 'lazy'}
+            sizes="(max-width: 768px) 100vw, 50vw"
             className={clsx(
               "object-cover scale-[1.06] -translate-y-[1%]",
               centerImage ? "object-center" : (isRight ? "object-right" : "object-left")
@@ -141,7 +313,7 @@ const ProjectSection = forwardRef<HTMLElement, ProjectSectionProps>(({
 
           {title && (
             <h2
-              className={clsx("font-inter font-medium leading-[0.95] tracking-[-0.03em]", subtitle ? "mt-4 sm:mt-5 md:mt-6" : "")}
+              className={clsx("font-inter font-medium leading-[1.15] tracking-[-0.03em]", subtitle ? "mt-4 sm:mt-5 md:mt-6" : "")}
               style={{
                 fontSize: 'clamp(28px, 6.5vw, 64px)',
                 background: 'radial-gradient(86% 99% at 50% 50%, #D5DBE6 28.39%, #04070D 100%)',
@@ -170,7 +342,7 @@ const ProjectSection = forwardRef<HTMLElement, ProjectSectionProps>(({
                 {scopeLabel}
               </p>
 
-              <div className="mt-4 flex flex-wrap gap-2 sm:gap-[6px] md:gap-[7px]">
+              <div className="mt-4 flex flex-wrap gap-2 sm:gap-[5px] md:gap-[6px]">
                 {pills.map((p) => (
                   <ScopePill key={p} label={p} />
                 ))}
@@ -201,7 +373,7 @@ const ProjectSection = forwardRef<HTMLElement, ProjectSectionProps>(({
               </div>
 
               {/* Quote */}
-              <p className="text-[#d5dbe6] text-[14px] sm:text-[15px] md:text-[15.5px] lg:text-[16px] leading-[22px] sm:leading-[24px] md:leading-[25px] lg:leading-[25.6px] tracking-[-0.28px] sm:tracking-[-0.30px] md:tracking-[-0.31px] lg:tracking-[-0.32px] font-inter font-normal italic mb-6 max-w-[381px]">
+              <p className="text-[#d5dbe6] text-[14px] sm:text-[15px] md:text-[15.5px] lg:text-[16px] leading-[22px] sm:leading-[24px] md:leading-[25px] lg:leading-[25.6px] tracking-[-0.28px] sm:tracking-[-0.30px] md:tracking-[-0.31px] lg:tracking-[-0.32px] font-inter font-normal italic mb-6 max-w-full sm:max-w-[52ch] md:max-w-[56ch] lg:max-w-[58ch]">
                 "{testimonial.quote}"
               </p>
 
@@ -213,6 +385,8 @@ const ProjectSection = forwardRef<HTMLElement, ProjectSectionProps>(({
                       src={testimonial.avatarSrc}
                       alt={testimonial.name}
                       fill
+                      loading="lazy"
+                      sizes="32px"
                       className="object-cover"
                     />
                   </div>
@@ -234,7 +408,15 @@ const ProjectSection = forwardRef<HTMLElement, ProjectSectionProps>(({
         {imageSrc && (
           <div className={clsx("relative md:hidden mt-8 sm:mt-10", isRight ? "order-2" : "order-1")}> 
             <div className="relative h-[300px] sm:h-[400px] w-full overflow-hidden rounded-lg">
-              <Image src={imageSrc} alt={imageAlt || ''} fill className="object-cover object-center" />
+              <Image 
+                src={imageSrc} 
+                alt={imageAlt || ''} 
+                fill 
+                priority={isPriority}
+                loading={isPriority ? undefined : 'lazy'}
+                sizes="100vw"
+                className="object-cover object-center" 
+              />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-transparent to-transparent" />
             </div>
           </div>
