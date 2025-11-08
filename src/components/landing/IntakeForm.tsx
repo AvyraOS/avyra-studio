@@ -3,18 +3,24 @@
 import { useState, useEffect, KeyboardEvent, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSearchParams } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 
 // Form Field Types
 type FormData = {
-  revenue: string;
-  timeAudit: string;
-  growthBlocker: string;
-  growthBlockerOther?: string; // Follow-up for "something-else"
-  currentStack: string[];
-  currentStackOther?: string; // Follow-up for "other-tools"
+  // Text input fields
+  name: string;
+  email: string;
+  company_name: string;
+  website: string; // optional
+  project_description: string;
+  
+  // Multiple Choice Questions
+  launch_timeline: string;
+  services: string[]; // Multi-select checkboxes
+  budget: string;
+  referral_source: string;
 };
 
 export default function IntakeForm() {
@@ -22,60 +28,72 @@ export default function IntakeForm() {
   
   // Get pre-populated data from URL parameters
   const getInitialValues = () => {
-    const currentStackParam = searchParams.get('currentStack');
+    const servicesParam = searchParams.get('services');
     return {
-      revenue: searchParams.get('revenue') || '',
-      timeAudit: searchParams.get('timeAudit') || '',
-      growthBlocker: searchParams.get('growthBlocker') || '',
-      growthBlockerOther: searchParams.get('growthBlockerOther') || '',
-      currentStack: currentStackParam ? currentStackParam.split(',').filter(Boolean) : [],
-      currentStackOther: searchParams.get('currentStackOther') || ''
+      name: searchParams.get('name') || '',
+      email: searchParams.get('email') || '',
+      company_name: searchParams.get('company_name') || '',
+      website: searchParams.get('website') || '',
+      project_description: searchParams.get('project_description') || '',
+      launch_timeline: searchParams.get('launch_timeline') || '',
+      services: servicesParam ? servicesParam.split(',') : [],
+      budget: searchParams.get('budget') || '',
+      referral_source: searchParams.get('referral_source') || ''
     };
   };
-
-  // Calculate what the final step should be based on form data
-  const calculateFinalStep = (formData: FormData) => {
-    if (!formData.timeAudit || !formData.growthBlocker) {
-      return 1; // Start from welcome if incomplete
-    }
-
-    return 5; // Fixed 5 steps: welcome + timeAudit + growthBlocker + stack + revenue
-  };
-
-  const initialFormData = getInitialValues();
-  const initialStep = calculateFinalStep(initialFormData);
-  // For fresh users (no data), start with default maxSteps of 5, otherwise use calculated value
-  const initialMaxSteps = initialStep === 1 ? 5 : calculateFinalStep(initialFormData);
   
-  const [step, setStep] = useState(initialStep);
-  const [maxSteps, setMaxSteps] = useState(initialMaxSteps);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [step, setStep] = useState(1); // Always start at welcome
+  const [maxSteps] = useState(11); // welcome + 5 text inputs + 4 multiple choice + 1 submit
+  const [justNavigated, setJustNavigated] = useState(false); // Track if we just navigated
+  const [showForwardButton, setShowForwardButton] = useState(false); // Control forward button visibility
+  const [isSubmitting, setIsSubmitting] = useState(false); // Track submission state
+  const [showSuccess, setShowSuccess] = useState(false); // Track success state
   const welcomeRef = useRef<HTMLDivElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const previousValuesRef = useRef<{[key: string]: string}>({}); // Track previous values
+  
+  // Initialize form before any useEffects that depend on it
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm<FormData>({
+    mode: 'onChange',
+    defaultValues: getInitialValues()
+  });
+
+  // Watch all form values for auto-advance and navigation
+  const formValues = watch();
   
   // Focus welcome screen on initial load (only if we're actually on welcome screen)
   useEffect(() => {
     if (step === 1 && welcomeRef.current) {
       welcomeRef.current.focus();
     }
+    // Mark as just navigated whenever step changes
+    setJustNavigated(true);
+    setShowForwardButton(false); // Hide forward button during navigation
+    const timer = setTimeout(() => setJustNavigated(false), 100);
+    return () => clearTimeout(timer);
   }, [step]);
 
-  // Close dropdown when clicking outside
+  // Control forward button visibility with delay to avoid race condition with auto-advance
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    if (isDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+    const fieldName = getCurrentFieldName();
+    const hasAnswer = fieldName ? formValues[fieldName] : false;
+    
+    if (hasAnswer && !justNavigated) {
+      // Delay showing forward button until after auto-advance would complete (300ms + animation time)
+      const timer = setTimeout(() => {
+        setShowForwardButton(true);
+      }, 500); // 500ms delay (auto-advance is 300ms)
+      
+      return () => clearTimeout(timer);
+    } else {
+      setShowForwardButton(false);
     }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isDropdownOpen]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, formValues, justNavigated]);
   
   // Handle Enter key press to navigate to next step
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement | HTMLDivElement>) => {
@@ -88,78 +106,48 @@ export default function IntakeForm() {
         return;
       }
       
+      // For submit page, trigger form submission
+      if (step === maxSteps) {
+        handleSubmit(onSubmit)();
+        return;
+      }
+      
       // For question screens, validate before proceeding
       if (step < maxSteps) {
         validateAndProceed();
-      } else if (step === maxSteps) {
-        handleSubmit(onSubmit)();
       }
     }
   };
-  
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors }
-  } = useForm<FormData>({
-    mode: 'onChange',
-    defaultValues: getInitialValues()
-  });
-
-  const currentStackOptions = [
-    { id: 'slack-teams-discord', label: 'Slack / Teams / Discord (Comms)' },
-    { id: 'gmail-outlook', label: 'Gmail / Outlook (Email)' },
-    { id: 'google-drive-dropbox-onedrive', label: 'Google Drive / Dropbox / OneDrive (Files)' },
-    { id: 'notion-airtable-clickup', label: 'Notion / Airtable / ClickUp (Docs & databases)' },
-    { id: 'asana-monday-trello', label: 'Asana / Monday / Trello (Projects & tasks)' },
-    { id: 'hubspot-salesforce-pipedrive', label: 'HubSpot / Salesforce / Pipedrive (CRM & sales)' },
-    { id: 'intercom-zendesk-helpscout', label: 'Intercom / Zendesk / Help Scout (Support)' },
-    { id: 'shopify-woocommerce', label: 'Shopify / WooCommerce (Storefront / orders)' },
-    { id: 'stripe-payments', label: 'Stripe / Payments (Billing)' },
-    { id: 'zapier-make', label: 'Zapier / Make (Automation)' },
-    { id: 'other-tools', label: 'Other tool…(We integrate with 6,000+)' }
-  ];
-
-  // Determine qualification and max steps based on revenue and selections
-  const revenue = watch('revenue');
-  const growthBlocker = watch('growthBlocker');
-  const selectedStack = watch('currentStack');
-  
-  useEffect(() => {
-    // Fixed 5 steps since follow-ups are now inline
-    setMaxSteps(5); // Welcome + timeAudit + growthBlocker + stack + revenue
-  }, []);
 
   // Validate current step and proceed if valid
   const validateAndProceed = () => {
-    const currentQuestionType = getCurrentQuestionType();
+    const fieldName = getCurrentFieldName();
     
-    // Validate based on current question
-    if (currentQuestionType === 'timeAudit' && !watch('timeAudit')) {
-      return; // Validation error will show via react-hook-form
+    if (!fieldName) {
+      nextStep();
+      return;
     }
-    if (currentQuestionType === 'growthBlocker') {
-      if (!growthBlocker) {
-        return; // Validation error will show via react-hook-form
-      }
-      // If "something-else" is selected, also validate the text field
-      if (growthBlocker === 'something-else' && !watch('growthBlockerOther')) {
-        return; // Validation error will show via react-hook-form
-      }
+    
+    // Website field is optional
+    if (fieldName === 'website') {
+      nextStep();
+      return;
     }
-    if (currentQuestionType === 'revenue' && !revenue) {
-      return; // Validation error will show via react-hook-form
+    
+    // Services field (checkboxes) - at least one must be selected
+    if (fieldName === 'services') {
+      const servicesValue = watch('services');
+      if (!servicesValue || !Array.isArray(servicesValue) || servicesValue.length === 0) {
+        return; // Validation error
+      }
+      nextStep();
+      return;
     }
-    if (currentQuestionType === 'currentStack') {
-      if (!selectedStack || selectedStack.length === 0) {
+    
+    // Check if current field has a value
+    const currentValue = watch(fieldName);
+    if (!currentValue || (typeof currentValue === 'string' && !currentValue.trim())) {
         return; // Validation error will show via react-hook-form
-      }
-      // If "other-tools" is selected, also validate the text field
-      if (selectedStack.includes('other-tools') && !watch('currentStackOther')) {
-        return; // Validation error will show via react-hook-form
-      }
     }
     
     // If validation passes, proceed to next step
@@ -167,109 +155,241 @@ export default function IntakeForm() {
   };
 
   const nextStep = () => {
-    // Check if this is the final step
-    if (step === maxSteps) {
-      handleSubmit(onSubmit)();
-      return;
+    if (step < maxSteps) {
+      setStep(step + 1);
     }
-    
-    // Handle specific step transitions
-    if (getCurrentQuestionType() === 'growthBlocker') {
-      // After growth blocker question, check if we need follow-up
-      if (growthBlocker === 'something-else') {
-        // Go to growth blocker follow-up
-        setStep(step + 1);
-        return;
-      }
-    }
-    
-    // Revenue is always the last question, so submit after it
-    if (getCurrentQuestionType() === 'revenue') {
-      handleSubmit(onSubmit)();
-      return;
-    }
-    
-    // Default: move to next step
-    setStep(step + 1);
   };
 
   const prevStep = () => setStep(step - 1);
 
-  // Helper function to determine what question should be shown at current step
+  // Helper function to get the field name for current step
+  const getCurrentFieldName = (): keyof FormData | null => {
+    if (step === 1) return null; // Welcome screen
+    if (step === 2) return 'name';
+    if (step === 3) return 'email';
+    if (step === 4) return 'company_name';
+    if (step === 5) return 'website';
+    if (step === 6) return 'project_description';
+    if (step === 7) return 'launch_timeline';
+    if (step === 8) return 'services';
+    if (step === 9) return 'budget';
+    if (step === 10) return 'referral_source';
+    return null;
+  };
+
+  // Helper to determine question type
   const getCurrentQuestionType = () => {
     if (step === 1) return 'welcome';
-    if (step === 2) return 'timeAudit';
-    if (step === 3) return 'growthBlocker';
-    if (step === 4) return 'currentStack';
-    if (step === 5) return 'revenue';
-    
+    if (step >= 2 && step <= 6) return 'text';
+    if (step === 8) return 'checkbox'; // Services - multi-select
+    if (step === 7 || step === 9 || step === 10) return 'multiple'; // Single select
+    if (step === 11) return 'submit'; // Submit confirmation page
     return 'unknown';
   };
 
   const onSubmit = async (data: FormData) => {
     try {
-      // Don't submit to Asana yet - just redirect to lead capture with form data
-      const queryParams = new URLSearchParams({
-        revenue: data.revenue,
-        timeAudit: data.timeAudit,
-        growthBlocker: data.growthBlocker,
-        currentStack: data.currentStack.join(',')
+      setIsSubmitting(true);
+      
+      // Submit to API
+      const response = await fetch('/api/submit-intake', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          company_name: data.company_name,
+          website: data.website || '',
+          project_description: data.project_description,
+          launch_timeline: data.launch_timeline,
+          services: Array.isArray(data.services) ? data.services.join(',') : '',
+          budget: data.budget,
+          referral_source: data.referral_source
+        }),
       });
       
-      // Add follow-up fields if they exist
-      if (data.growthBlockerOther) {
-        queryParams.set('growthBlockerOther', data.growthBlockerOther);
-      }
-      if (data.currentStackOther) {
-        queryParams.set('currentStackOther', data.currentStackOther);
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
       }
       
-      window.location.href = `/lead-capture?${queryParams.toString()}`;
-    } catch {
-      // Redirect will happen regardless, no need for error handling here
-      console.log('Navigation completed');
+      // Show success page
+      setShowSuccess(true);
+      setIsSubmitting(false);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setIsSubmitting(false);
+      // You could add error handling UI here
     }
   };
 
-  // Animation variants for framer-motion
+  // Auto-advance for multiple choice questions - only on NEW selections
+  useEffect(() => {
+    // Don't auto-advance if we just navigated to this step
+    if (justNavigated) return;
+    
+    // Only auto-advance for single-select multiple choice questions (not checkboxes)
+    const questionType = getCurrentQuestionType();
+    if (questionType !== 'multiple') return;
+    
+    const fieldName = getCurrentFieldName();
+    if (!fieldName) return;
+    
+    const currentValue = formValues[fieldName] as string;
+    const previousValue = previousValuesRef.current[fieldName];
+    
+    // Only auto-advance if the value CHANGED (new selection)
+    if (currentValue && currentValue !== previousValue) {
+      previousValuesRef.current[fieldName] = currentValue as string;
+      
+      const timer = setTimeout(() => {
+        if (step < maxSteps) {
+          setStep(step + 1);
+        }
+      }, 300); // 300ms delay for smooth UX
+      
+      return () => clearTimeout(timer);
+    }
+    
+    // Update previous value if it exists
+    if (currentValue) {
+      previousValuesRef.current[fieldName] = currentValue;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, formValues, maxSteps, justNavigated]); // getCurrentFieldName and getCurrentQuestionType depend on step, which is already tracked
+
+  // Get question text based on step
+  const getQuestionText = () => {
+    const questions = [
+      '', // Step 1: Welcome
+      'What\'s your name?',
+      'Enter your email',
+      'Company/Project Name',
+      'Website or Social Media Link (optional)',
+      'What\'s the big idea, and what are your goals?',
+      'When do you want to launch?',
+      'Which of our services are you interested in?',
+      'What\'s your ballpark budget?',
+      'Where did you hear about us?'
+    ];
+    return questions[step - 1] || '';
+  };
+  
+  // Get question subtitle/description
+  const getQuestionSubtitle = () => {
+    if (step === 9) return 'This helps us create a proposal that fits your vision and resources.';
+    if (step === 10) return 'Who sent you our way? We\'d love to know.';
+    return '';
+  };
+  
+  // Get question title/header (for text input questions)
+  const getQuestionTitle = () => {
+    if (step === 2) return 'Let\'s start with an introduction';
+    if (step === 3) return 'Where can we reach you with next steps?';
+    if (step === 4) return 'What should we call this masterpiece in the making?';
+    if (step === 5) return 'Where can we see your brand in action?';
+    if (step === 6) return 'Tell us about your project.';
+    return '';
+  };
+
+  // Get options based on step
+  const getQuestionOptions = () => {
+    if (step === 7) {
+      return [
+        { id: 'urgent', label: 'Urgent (ASAP)' },
+        { id: '1-2-months', label: '1 - 2 months' },
+        { id: '3-6-months', label: '3 - 6 months' },
+        { id: 'flexible', label: 'Flexible, let\'s discuss' }
+      ];
+    }
+    if (step === 8) {
+      return [
+        { id: 'brand-identity', label: 'Brand Identity' },
+        { id: 'brand-strategy', label: 'Brand Strategy' },
+        { id: 'web-design', label: 'Web Design' },
+        { id: 'ui-ux-design', label: 'UI/UX Design' },
+        { id: 'marketing-assets', label: 'Marketing Assets' },
+        { id: 'event-design', label: 'Event Design' },
+        { id: 'development', label: 'Development Services' },
+        { id: 'other', label: 'Other' }
+      ];
+    }
+    if (step === 9) {
+      return [
+        { id: '2k-5k', label: '$2k - $5k' },
+        { id: '5k-10k', label: '$5k - $10k' },
+        { id: '10k-20k', label: '$10k - $20k' },
+        { id: '20k-50k', label: '$20k - $50k' },
+        { id: '50k-100k+', label: '$50k - $100k+' }
+      ];
+    }
+    if (step === 10) {
+      return [
+        { id: 'referral', label: 'Referral' },
+        { id: 'social-media', label: 'Social Media' },
+        { id: 'google-search', label: 'Google Search' },
+        { id: 'event-conference', label: 'Event or Conference' },
+        { id: 'other', label: 'Other' }
+      ];
+    }
+    return [];
+  };
+
+  // Animation variants for framer-motion - enhanced for smoother transitions
   const pageVariants = {
-    initial: { opacity: 0, x: 100 },
-    in: { opacity: 1, x: 0 },
-    out: { opacity: 0, x: -100 }
+    initial: { 
+      opacity: 0, 
+      x: 50,
+      scale: 0.95
+    },
+    in: { 
+      opacity: 1, 
+      x: 0,
+      scale: 1
+    },
+    out: { 
+      opacity: 0, 
+      x: -50,
+      scale: 0.95
+    }
   };
 
   const pageTransition = {
     type: "tween" as const,
-    ease: "anticipate" as const,
-    duration: 0.5
+    ease: "easeInOut" as const,
+    duration: 0.4
   };
 
   return (
     <div className="text-white h-screen w-screen overflow-hidden overflow-y-hidden relative flex flex-col items-center justify-center bg-[#080808]">
       
-      {/* Progress Bar */}
-      <div className="fixed top-0 left-0 w-full h-[5px] bg-white/20 z-[2000]">
+      {/* Progress Bar - hidden on success page */}
+      {!showSuccess && (
+      <div className="fixed top-0 left-0 w-full h-[5px] bg-[#00D7D7]/20 z-[2000]">
         <div 
-          className="h-full transition-all duration-300 ease-out relative progress-bar-gold" 
+          className="h-full transition-all duration-300 ease-out relative progress-bar-turquoise" 
           style={{
             width: `${Math.max(((step - 1) / (maxSteps - 1)) * 100, 0)}%`,
-            background: 'linear-gradient(90deg, #f2c6a6 0%, #FFE1C6 25%, #f2c6a6 50%, #bb835a 75%, #f2c6a6 100%)',
-            boxShadow: '0 0 10px rgba(255, 225, 198, 0.5), 0 0 20px rgba(242, 198, 166, 0.3)'
+            background: 'linear-gradient(90deg, #00D7D7 0%, #89FFFF 25%, #00E5E5 50%, #00D7D7 75%, #6DFFFF 100%)',
+            boxShadow: '0 0 15px rgba(0, 215, 215, 0.8), 0 0 25px rgba(137, 255, 255, 0.4)'
           }}
         >
           {/* Glowing tip */}
           <div 
             className="absolute top-0 right-0 w-[3px] h-full glow-tip"
             style={{
-              background: 'linear-gradient(180deg, #FFFFFF 0%, #FFE1C6 50%, #f2c6a6 100%)',
-              boxShadow: '0 0 8px rgba(255, 255, 255, 0.8), 0 0 15px rgba(255, 225, 198, 0.6)',
+              background: 'linear-gradient(180deg, #89FFFF 0%, #00E5E5 50%, #00D7D7 100%)',
+              boxShadow: '0 0 12px rgba(137, 255, 255, 0.9), 0 0 20px rgba(0, 215, 215, 0.7)',
               filter: 'blur(0.5px)'
             }}
           />
         </div>
       </div>
+      )}
       
-      {/* Exit Button - Moved to top right */}
+      {/* Exit Button - Moved to top right - hidden on success page */}
+      {!showSuccess && (
       <Link href="/" className="absolute top-[4%] right-[4%] bg-transparent border border-[#242424] rounded-full p-1.5 md:p-3 text-white text-xs md:text-lg cursor-pointer z-[2000] hover:bg-white/5 transition-colors">
         <span className="flex items-center justify-center">
           <svg 
@@ -288,10 +408,12 @@ export default function IntakeForm() {
           </svg>
         </span>
       </Link>
+      )}
       
-      {/* Back Button - Only for question screens (step > 1) */}
-      {step > 1 && (
-        <div className="absolute top-[4%] left-[4%] z-[2000]">
+      {/* Navigation Buttons - Only for question screens (step > 1) - hidden on success page */}
+      {!showSuccess && step > 1 && (
+        <div className="absolute top-[4%] left-[4%] z-[2000] flex gap-2">
+          {/* Back Button */}
           <button 
             type="button" 
             onClick={prevStep}
@@ -311,13 +433,36 @@ export default function IntakeForm() {
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
           </button>
+          
+          {/* Forward Button - only show if not on last step AND current question has an answer (with delay) */}
+          {step < maxSteps && showForwardButton && (
+            <button 
+              type="button" 
+              onClick={validateAndProceed}
+              className="bg-transparent border border-[#242424] rounded-full p-1.5 md:p-3 text-white cursor-pointer hover:bg-white/5 transition-colors flex justify-center items-center"
+            >
+              <svg 
+                width="14" 
+                height="14" 
+                className="md:w-5 md:h-5"
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          )}
         </div>
       )}
       
       {/* Form Container - centered on screen */}
       <div className="flex flex-col items-center justify-center w-full max-w-4xl mx-auto z-[1000] p-5">
         {/* Logo - only show on welcome screen */}
-        {getCurrentQuestionType() === 'welcome' && (
+        {!showSuccess && getCurrentQuestionType() === 'welcome' && (
           <Image 
             src="/images/avyra-brandmark.svg" 
             alt="Avyra" 
@@ -327,6 +472,48 @@ export default function IntakeForm() {
           />
         )}
         
+        {/* Success Page - shown after form submission */}
+        {showSuccess && (
+          <motion.div
+            className="flex flex-col items-center text-center justify-center w-full outline-none"
+            initial="initial"
+            animate="in"
+            variants={pageVariants}
+            transition={pageTransition}
+          >
+            {/* Turquoise Checkmark Icon */}
+            <div className="mb-8">
+              <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="48" stroke="#00D7D7" strokeWidth="4"/>
+                <path d="M30 50L43 63L70 36" stroke="#00D7D7" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            
+            <h1 className="text-[42px] md:text-[56px] lg:text-[64px] font-medium leading-tight tracking-[-2px] mb-6 text-white">
+              Application submitted!
+            </h1>
+            
+            <p className="text-[#B2B2B2] text-base md:text-xl font-normal mb-10 w-[90%] sm:w-[85%] md:w-[80%] max-w-2xl mx-auto leading-relaxed">
+              Thank you for your application. Our team will review it and get back to you within 1-2 business days to schedule your Dream Discovery Call.
+            </p>
+            
+            <Link 
+              href="/"
+              className="py-3 md:py-4 px-10 md:px-[51px] text-lg md:text-xl bg-white text-black border-none rounded-[46.55px] cursor-pointer hover:bg-opacity-90 hover:shadow-lg transition-all duration-300 flex items-center justify-center font-medium group"
+            >
+              Let&apos;s Start Dreaming
+              <Image 
+                src="/icons/black-arrow.svg" 
+                alt="Arrow" 
+                width={13}
+                height={13}
+                className="ml-3 transform transition-transform duration-300 group-hover:translate-x-2"
+              />
+            </Link>
+          </motion.div>
+        )}
+        
+        {!showSuccess && (
         <form onSubmit={handleSubmit(onSubmit)} className="w-full relative z-[1000] flex flex-col items-center">
           {/* Welcome Step - centered */}
           {getCurrentQuestionType() === 'welcome' && (
@@ -344,7 +531,7 @@ export default function IntakeForm() {
             >
               <h1 
                 id="welcome-header" 
-                className="text-[42px] md:text-[64px] lg:text-[80px] font-medium leading-[100%] tracking-[-2px] mb-6"
+                className="text-[42px] md:text-[64px] lg:text-[80px] font-medium leading-[110%] tracking-[-2px] mb-6"
                 style={{
                   background: "radial-gradient(86% 99% at 50% 50%, #D5DBE6 28.39%, #04070D 100%)",
                   backgroundClip: "text",
@@ -355,31 +542,41 @@ export default function IntakeForm() {
                   fontFamily: "Inter"
                 }}
               >
-               Discover your freedom in 4 simple questions
+               Welcome to Avyra
               </h1>
-              <p className="text-[#B2B2B2] text-xl md:text-2xl font-medium mb-8 md:mb-10 w-[90%] sm:w-[70%] md:w-[90%] max-w-3xl mx-auto lg:mx-0">
-              No email needed until results are ready
+                    <p className="text-[#B2B2B2] text-base md:text-xl font-normal mb-8 md:mb-10 w-[90%] sm:w-[85%] md:w-[90%] max-w-3xl mx-auto lg:mx-0 leading-relaxed">
+              At Avyra, we&apos;re more than builders. We&apos;re your strategic partner in bringing world-changing ideas to life. Apply now to explore how we can co-create an experience that transforms your brand.
               </p>
               
-              <div className="flex gap-3 welcome-buttons items-center justify-center">
-                <button 
-                  type="button" 
-                  onClick={nextStep} 
-                  className="relative z-[1000] py-3 md:py-4 px-10 md:px-[51px] text-lg md:text-xl bg-white text-black border-none rounded-[46.55px] cursor-pointer hover:bg-opacity-90 hover:shadow-lg transition-all duration-300 welcome-btn flex items-center justify-center font-medium group"
-                >
-                 Start my assessment
-                  <Image 
-                    src="/icons/black-arrow.svg" 
-                    alt="Arrow" 
-                    width={13}
-                    height={13}
-                    className="ml-3 transform transition-transform duration-300 group-hover:translate-x-2"
-                  />
-                </button>
+              <div className="flex flex-col items-center gap-4">
+                <div className="flex gap-3 welcome-buttons items-center justify-center">
+                  <button 
+                    type="button" 
+                    onClick={nextStep} 
+                    className="relative z-[1000] py-3 md:py-4 px-10 md:px-[51px] text-lg md:text-xl bg-white text-black border-none rounded-[46.55px] cursor-pointer hover:bg-opacity-90 hover:shadow-lg transition-all duration-300 welcome-btn flex items-center justify-center font-medium group"
+                  >
+                   Let&apos;s go!
+                    <Image 
+                      src="/icons/black-arrow.svg" 
+                      alt="Arrow" 
+                      width={13}
+                      height={13}
+                      className="ml-3 transform transition-transform duration-300 group-hover:translate-x-2"
+                    />
+                  </button>
+                  
+                  <span className="text-sm ml-[10px] text-[#aaa] enter-message flex items-center">
+                    Press enter <span className="mx-1 text-lg">↵</span>
+                  </span>
+                </div>
                 
-                <span className="text-sm ml-[10px] text-[#aaa] enter-message flex items-center">
-                  Press enter <span className="mx-1 text-lg">↵</span>
-                </span>
+                <div className="flex items-center gap-2 text-white/60">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                    <path d="M12 6V12L16 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                  <span className="text-sm md:text-base">Takes 2 mins</span>
+                </div>
               </div>
               
               {/* <div className="flex items-center justify-center text-sm mt-6 text-white time-message">
@@ -394,371 +591,96 @@ export default function IntakeForm() {
             </motion.div>
           )}
           
-          {/* Step 2: Revenue Qualifier - left aligned */}
-          {getCurrentQuestionType() === 'revenue' && (
-            <motion.div
-              className="flex flex-col items-start text-left w-full"
-              initial="initial"
-              animate="in"
-              exit="out"
-              variants={pageVariants}
-              transition={pageTransition}
-              onKeyDown={handleKeyDown}
-              tabIndex={0}
-            >
-                <h2 className="text-[1.5rem] leading-[32px] md:text-[32px] lg:text-[36px] md:leading-normal mb-2 font-normal question">What&apos;s your current monthly revenue?</h2>
-               <p className="text-[12px] md:text-xl text-[#aaa] mb-6 subheader">(Select one)</p>
-              
-              <div className="flex flex-col w-full gap-3">
-                {[
-                  { id: 'under-30k', label: 'Building (Under $30K)' },
-                  { id: '30k-100k', label: 'Growing ($30K–$100K)' },
-                  { id: '100k-500k', label: 'Scaling ($100K–$500K)' },
-                  { id: '500k-1m', label: 'Expanding ($500K–$1M)' },
-                  { id: '1m-plus', label: 'Enterprise ($1M+)' }
-                ].map((option) => (
-                  <label key={option.id} className="cursor-pointer">
-                    <input
-                      type="radio"
-                      value={option.id}
-                      {...register('revenue', { required: 'Please select an option' })}
-                      className="hidden hidden-radio"
-                    />
-                    <div className={`flex items-center border border-[#242424] rounded-[32px] py-2 md:py-3 px-4 md:px-6 w-full bg-transparent transition-all duration-300 hover:bg-white/5 custom-radio ${watch('revenue') === option.id ? 'bg-white/[0.03] shadow-[0px_-2px_19px_5px_rgba(255,255,255,0.06)_inset] backdrop-blur-[33.75px] checked' : ''}`}>
-                      <span className="flex-1 text-white text-base md:text-lg custom-radio-label">{option.label}</span>
-                    </div>
-                  </label>
-                ))}
-              </div>
-              
-              <div className="flex gap-3 items-center mt-6">
-                <button 
-                  type="button" 
-                  onClick={validateAndProceed} 
-                  className="py-3 px-[42px] text-lg bg-white text-black border-none rounded-[50px] cursor-pointer hover:bg-white/90 transition-all duration-300"
-                >
-                  OK
-                </button>
-                
-                <span className="text-sm ml-[10px] text-[#aaa] enter-message flex items-center">
-                  Press enter <span className="mx-1 text-lg">↵</span>
-                </span>
-              </div>
-              
-              {errors.revenue && (
-                <p className="text-[#ff4c4c] text-base mt-[10px] error-message">{errors.revenue.message}</p>
-              )}
-            </motion.div>
-          )}
-          
-          {/* Step 3: Time Audit - left aligned */}
-          {getCurrentQuestionType() === 'timeAudit' && (
-            <motion.div
-              className="flex flex-col items-start text-left w-full"
-              initial="initial"
-              animate="in"
-              exit="out"
-              variants={pageVariants}
-              transition={pageTransition}
-              onKeyDown={handleKeyDown}
-              tabIndex={0}
-            >
-               <h2 className="text-[1.5rem] leading-[32px] md:text-[32px] lg:text-[36px] md:leading-normal mb-2 font-normal question">What drains you the most right now?</h2>
-               <p className="text-[12px] md:text-xl text-[#aaa] mb-6 subheader">(Select one)</p>
-              
-              <div className="flex flex-col w-full gap-3">
-                {[
-                  { id: 'sales-lead-generation', label: 'Chasing sales & leads' },
-                  { id: 'customer-support', label: 'Customer support & success' },
-                  { id: 'content-marketing', label: 'Content & marketing grind' },
-                  { id: 'operations-admin', label: 'Admin & operations overload' },
-                  { id: 'managing-team', label: 'Managing teams & contractors' },
-                  { id: 'all-above', label: 'Everything feels overwhelming' }
-                ].map((option) => (
-                  <label key={option.id} className="cursor-pointer">
-                    <input
-                      type="radio"
-                      value={option.id}
-                      {...register('timeAudit', { required: 'Please select an option' })}
-                      className="hidden hidden-radio"
-                    />
-                    <div className={`flex items-center border border-[#242424] rounded-[32px] py-2 md:py-3 px-4 md:px-6 w-full bg-transparent transition-all duration-300 hover:bg-white/5 custom-radio ${watch('timeAudit') === option.id ? 'bg-white/[0.03] shadow-[0px_-2px_19px_5px_rgba(255,255,255,0.06)_inset] backdrop-blur-[33.75px] checked' : ''}`}>
-                      <span className="flex-1 text-white text-base md:text-lg custom-radio-label">{option.label}</span>
-                    </div>
-                  </label>
-                ))}
-              </div>
-              
-              <div className="flex gap-3 items-center mt-6">
-                <button 
-                  type="button" 
-                  onClick={validateAndProceed} 
-                  className="py-3 px-[42px] text-lg bg-white text-black border-none rounded-[50px] cursor-pointer hover:bg-white/90 transition-all duration-300"
-                >
-                  OK
-                </button>
-                
-                <span className="text-sm ml-[10px] text-[#aaa] enter-message flex items-center">
-                  Press enter <span className="mx-1 text-lg">↵</span>
-                </span>
-              </div>
-              
-              {errors.timeAudit && (
-                <p className="text-[#ff4c4c] text-base mt-[10px] error-message">{errors.timeAudit.message}</p>
-              )}
-            </motion.div>
-          )}
-          
-          {/* Step 4: Growth Blocker - left aligned */}
-          {getCurrentQuestionType() === 'growthBlocker' && (
-            <motion.div
-              className="flex flex-col items-start text-left w-full"
-              initial="initial"
-              animate="in"
-              exit="out"
-              variants={pageVariants}
-              transition={pageTransition}
-              onKeyDown={handleKeyDown}
-              tabIndex={0}
-            >
-               <h2 className="text-[1.5rem] leading-[32px] md:text-[32px] lg:text-[36px] md:leading-normal mb-2 font-normal question">What&apos;s blocking your next level?</h2>
-               <p className="text-[12px] md:text-xl text-[#aaa] mb-6 subheader">(Select one)</p>
-              
-              <div className="flex flex-col w-full gap-3">
-                  {[
-                    { id: 'not-enough-hours', label: 'Never enough hours in the day' },
-                    { id: 'cant-scale', label: 'Can\'t scale past myself' },
-                    { id: 'systems-break', label: 'Business breaks if I step away' },
-                    { id: 'team-cant-handle', label: 'Team drowning in workload' },
-                    { id: 'manual-tasks', label: 'Manual tasks kill productivity' },
-                    { id: 'im-the-bottleneck', label: 'I\'m the bottleneck (everything depends on me)', mobileLabel: 'Everything depends on me' },
-                    { id: 'something-else', label: 'Something else (specify below)' }
-                  ].map((option) => (
-                  <label key={option.id} className="cursor-pointer">
-                    <input
-                      type="radio"
-                      value={option.id}
-                      {...register('growthBlocker', { required: 'Please select an option' })}
-                      className="hidden hidden-radio"
-                    />
-                    <div className={`flex items-center border border-[#242424] rounded-[32px] py-2 md:py-3 px-4 md:px-6 w-full bg-transparent transition-all duration-300 hover:bg-white/5 custom-radio ${watch('growthBlocker') === option.id ? 'bg-white/[0.03] shadow-[0px_-2px_19px_5px_rgba(255,255,255,0.06)_inset] backdrop-blur-[33.75px] checked' : ''}`}>
-                      <span className="flex-1 text-white text-base md:text-lg custom-radio-label">
-                        <span className="md:hidden">{option.mobileLabel || option.label}</span>
-                        <span className="hidden md:inline">{option.label}</span>
-                      </span>
-                    </div>
-                  </label>
-                ))}
-              </div>
-              
-              {/* Inline text field for "something-else" option */}
+          {/* All Question Types - Single AnimatePresence for smooth transitions */}
+          <AnimatePresence mode="wait">
+            {getCurrentQuestionType() === 'multiple' && (
               <motion.div
-                initial={false}
-                animate={watch('growthBlocker') === 'something-else' ? 
-                  { opacity: 1, height: 'auto', marginTop: 16 } : 
-                  { opacity: 0, height: 0, marginTop: 0 }
-                }
-                transition={{ 
-                  duration: watch('growthBlocker') === 'something-else' ? 0.3 : 0.5,
-                  ease: "easeInOut",
-                  opacity: { duration: watch('growthBlocker') === 'something-else' ? 0.2 : 0.3 }
-                }}
-                className="w-full overflow-hidden"
+                key={`question-${step}`}
+                className="flex flex-col items-start text-left w-full"
+                initial="initial"
+                animate="in"
+                exit="out"
+                variants={pageVariants}
+                transition={pageTransition}
+                onKeyDown={handleKeyDown}
+                tabIndex={0}
               >
-                <div className="bg-[rgba(255,255,255,0.05)] px-4 py-3 rounded-[12px]">
-                  <textarea
-                    {...register('growthBlockerOther', { 
-                      required: watch('growthBlocker') === 'something-else' ? 'Please describe your challenge' : false,
-                      maxLength: { value: 200, message: 'Please keep it under 200 characters' }
-                    })}
-                    placeholder="e.g., hiring, compliance, cash flow, coordination..."
-                    className="w-full bg-transparent text-white text-[14px] font-medium tracking-[-0.16px] focus:outline-none placeholder:text-gray-400 resize-none"
-                     rows={2}
-                     maxLength={200}
-                  />
-                  <div className="text-right text-sm text-white/60 mt-2">
-                    {watch('growthBlockerOther')?.length || 0}/200 characters
-                  </div>
-                </div>
-              </motion.div>
-              
-              <div className="flex gap-3 items-center mt-6">
-                <button 
-                  type="button" 
-                  onClick={validateAndProceed} 
-                  className="py-3 px-[42px] text-lg bg-white text-black border-none rounded-[50px] cursor-pointer hover:bg-white/90 transition-all duration-300"
-                >
-                  OK
-                </button>
-                
-                <span className="text-sm ml-[10px] text-[#aaa] enter-message flex items-center">
-                  Press enter <span className="mx-1 text-lg">↵</span>
-                </span>
-              </div>
-              
-              {errors.growthBlocker && (
-                <p className="text-[#ff4c4c] text-base mt-[10px] error-message">{errors.growthBlocker.message}</p>
-              )}
-            </motion.div>
-          )}
-          
-          
-          
-          {/* Step 5: Current Stack */}
-          {getCurrentQuestionType() === 'currentStack' && (
-            <motion.div
-              className="flex flex-col items-start text-left w-full"
-              initial="initial"
-              animate="in"
-              exit="out"
-              variants={pageVariants}
-              transition={pageTransition}
-              onKeyDown={handleKeyDown}
-              tabIndex={0}
-            >
-               <h2 className="text-[1.5rem] leading-[32px] md:text-[32px] lg:text-[36px] md:leading-normal mb-2 font-normal question">What tools does your business rely on?</h2>
-               <p className="text-[12px] md:text-xl text-[#aaa] mb-6 subheader">(Check all that apply)</p>
-              
-              {/* Mobile: Custom Multi-select Dropdown */}
-              <div className="md:hidden w-full relative" ref={dropdownRef}>
-                <button
-                  type="button"
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="w-full bg-transparent border border-[#242424] rounded-[32px] py-3 px-4 text-white text-base text-left flex items-center justify-between focus:outline-none focus:border-white/20"
-                >
-                  <span className="flex-1 text-sm">
-                    {(() => {
-                      const selectedTools = watch('currentStack') || [];
-                      
-                      if (selectedTools.length === 0) return 'Select tools...';
-                      
-                      // Get selected tool names
-                      const selectedNames = selectedTools
-                        .map(id => {
-                          const tool = currentStackOptions.find(t => t.id === id);
-                          return tool ? (tool.label.includes('(') ? tool.label.split('(')[0].trim() : tool.label) : '';
-                        })
-                        .filter(Boolean);
-                      
-                      // Show truncated list
-                      if (selectedNames.length <= 2) {
-                        return selectedNames.join(', ');
-                      } else {
-                        return `${selectedNames.slice(0, 2).join(', ')} +${selectedNames.length - 2} more`;
-                      }
-                    })()}
-                  </span>
-                  <svg 
-                    className={`w-5 h-5 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-
-                {/* Dropdown Options */}
-                {isDropdownOpen && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-[#1a1a1a] border border-[#242424] rounded-[16px] py-2 z-50 max-h-[300px] overflow-y-auto">
-                    {currentStackOptions.map((tool) => {
-                      const isSelected = watch('currentStack')?.includes(tool.id);
-                      return (
-                        <div key={tool.id} className="flex items-center px-4 py-3 hover:bg-white/5 cursor-pointer min-h-[44px]" onClick={() => {
-                          const currentValues = watch('currentStack') || [];
-                          const newValues = currentValues.includes(tool.id) 
-                            ? currentValues.filter(id => id !== tool.id)
-                            : [...currentValues, tool.id];
-                          setValue('currentStack', newValues);
-                        }}>
-                          <input
-                            type="checkbox"
-                            value={tool.id}
-                            {...register('currentStack', { required: 'Please select at least one option' })}
-                            className="hidden"
-                          />
-                          <div className={`w-4 h-4 border-2 rounded mr-3 flex items-center justify-center flex-shrink-0 transition-all duration-200 ${isSelected ? 'bg-white border-white' : 'border-gray-500 bg-transparent'}`}>
-                            {isSelected && (
-                              <svg className="w-2.5 h-2.5 text-black" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            )}
-                          </div>
-                          <span className="text-white text-sm leading-5 flex-1">
-                            {tool.label.includes('(') ? tool.label.split('(')[0].trim() : tool.label}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
+              <h2 className="text-[1.5rem] leading-[32px] md:text-[32px] lg:text-[36px] md:leading-normal mb-2 font-normal question">
+                {getQuestionText()}
+              </h2>
+              <div className="flex items-baseline gap-2 mb-6">
+                {getQuestionSubtitle() && (
+                  <p className="text-[14px] md:text-lg text-[#aaa] font-normal">{getQuestionSubtitle()}</p>
                 )}
+                <p className="text-[14px] md:text-lg text-[#888] subheader">(Select one)</p>
               </div>
-
-              {/* Desktop: Checkboxes */}
-              <div className="hidden md:flex flex-col w-full gap-3">
-                {currentStackOptions.map((tool) => (
-                  <label key={tool.id} className="cursor-pointer">
+              
+              <div className="flex flex-col w-full gap-3">
+                {getQuestionOptions().map((option) => {
+                  const fieldName = getCurrentFieldName();
+                  const currentValue = fieldName ? watch(fieldName) : '';
+                  
+                  return (
+                  <label key={option.id} className="cursor-pointer">
+                    <input
+                      type="radio"
+                      value={option.id}
+                        {...register(fieldName as keyof FormData, { required: 'Please select an option' })}
+                      className="hidden hidden-radio"
+                    />
+                      <div className={`flex items-center border border-[#242424] rounded-[32px] py-2 md:py-3 px-4 md:px-6 w-full bg-transparent transition-all duration-300 hover:bg-white/5 custom-radio ${currentValue === option.id ? 'bg-white/[0.03] shadow-[0px_-2px_19px_5px_rgba(255,255,255,0.06)_inset] backdrop-blur-[33.75px] checked' : ''}`}>
+                      <span className="flex-1 text-white text-base md:text-lg custom-radio-label">{option.label}</span>
+                    </div>
+                  </label>
+                  );
+                })}
+              </div>
+              </motion.div>
+            )}
+            
+            {getCurrentQuestionType() === 'checkbox' && (
+              <motion.div
+                key={`question-${step}`}
+                className="flex flex-col items-start text-left w-full"
+                initial="initial"
+                animate="in"
+                exit="out"
+                variants={pageVariants}
+                transition={pageTransition}
+                onKeyDown={handleKeyDown}
+                tabIndex={0}
+              >
+              <h2 className="text-[1.5rem] leading-[32px] md:text-[32px] lg:text-[36px] md:leading-normal mb-2 font-normal question">
+                {getQuestionText()}
+              </h2>
+               <p className="text-[14px] md:text-lg text-[#888] mb-6 subheader">(Check all that apply)</p>
+              
+              <div className="flex flex-col w-full gap-3">
+                {getQuestionOptions().map((option) => {
+                  const fieldName = getCurrentFieldName();
+                  const currentValue = fieldName ? watch(fieldName) as string[] : [];
+                  const isChecked = Array.isArray(currentValue) && currentValue.includes(option.id);
+                  
+                  return (
+                  <label key={option.id} className="cursor-pointer">
                     <input
                       type="checkbox"
-                      value={tool.id}
-                      {...register('currentStack', { required: 'Please select at least one option' })}
+                      value={option.id}
+                        {...register('services')}
                       className="hidden hidden-checkbox"
                     />
-                    <div className={`flex items-center justify-between border border-[#242424] rounded-[32px] py-2 md:py-3 px-4 md:px-6 w-full bg-transparent transition-all duration-300 hover:bg-white/5 custom-checkbox ${watch('currentStack')?.includes(tool.id) ? 'bg-white/[0.03] shadow-[0px_-2px_19px_5px_rgba(255,255,255,0.06)_inset] backdrop-blur-[33.75px] checked' : ''}`}>
-                      <span className="flex-1 text-base md:text-lg custom-checkbox-label">
-                        {tool.label.includes('(') ? (
-                          <>
-                            <span className="text-white">{tool.label.split('(')[0].trim()}</span>
-                            <span className="text-gray-400"> ({tool.label.split('(')[1]}</span>
-                          </>
-                        ) : (
-                          <span className="text-white">{tool.label}</span>
-                        )}
-                      </span>
-                      <span className={`checkmark transition-opacity duration-200 ${watch('currentStack')?.includes(tool.id) ? 'opacity-100' : 'opacity-0'}`}>
-                        <Image 
-                          src="/icons/check.svg" 
-                          alt="Selected" 
-                          width={28} 
-                          height={28}
-                          className="text-white check-icon" 
-                        />
-                      </span>
+                      <div className={`flex items-center justify-between border border-[#242424] rounded-[32px] py-2 md:py-3 px-4 md:px-6 w-full bg-transparent transition-all duration-300 hover:bg-white/5 ${isChecked ? 'bg-white/[0.03] shadow-[0px_-2px_19px_5px_rgba(255,255,255,0.06)_inset] backdrop-blur-[33.75px] checked' : ''}`}>
+                      <span className="text-white text-base md:text-lg">{option.label}</span>
+                      {isChecked && (
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="checkmark-icon">
+                          <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      )}
                     </div>
                   </label>
-                ))}
+                  );
+                })}
               </div>
-              
-              {/* Inline text field for "other-tools" option - Desktop only */}
-              <motion.div
-                initial={false}
-                animate={watch('currentStack')?.includes('other-tools') ? 
-                  { opacity: 1, height: 'auto', marginTop: 16 } : 
-                  { opacity: 0, height: 0, marginTop: 0 }
-                }
-                transition={{ 
-                  duration: watch('currentStack')?.includes('other-tools') ? 0.3 : 0.5,
-                  ease: "easeInOut",
-                  opacity: { duration: watch('currentStack')?.includes('other-tools') ? 0.2 : 0.3 }
-                }}
-                className="w-full overflow-hidden hidden md:block"
-              >
-                <div className="bg-[rgba(255,255,255,0.05)] px-4 py-3 rounded-[12px]">
-                  <input
-                    type="text"
-                    {...register('currentStackOther', { 
-                      required: watch('currentStack')?.includes('other-tools') ? 'Please list your other tools' : false,
-                      maxLength: { value: 100, message: 'Please keep it under 100 characters' }
-                    })}
-                    placeholder="e.g., Quickbooks, Shopify, Calendly, Zoom..."
-                    className="w-full bg-transparent text-white text-[14px] font-medium tracking-[-0.16px] focus:outline-none placeholder:text-gray-400"
-                    maxLength={100}
-                  />
-                  <div className="text-right text-sm text-white/60 mt-2">
-                    {watch('currentStackOther')?.length || 0}/100 characters
-                  </div>
-                </div>
-              </motion.div>
               
               <div className="flex gap-3 items-center mt-6">
                 <button 
@@ -773,17 +695,117 @@ export default function IntakeForm() {
                   Press enter <span className="mx-1 text-lg">↵</span>
                 </span>
               </div>
-              
-              {errors.currentStack && (
-                <p className="text-[#ff4c4c] text-base mt-[10px] error-message">{errors.currentStack.message}</p>
+              </motion.div>
+            )}
+            
+            {getCurrentQuestionType() === 'text' && (
+            <motion.div
+              key={`question-${step}`}
+              className="flex flex-col items-start text-left w-full"
+              initial="initial"
+              animate="in"
+              exit="out"
+              variants={pageVariants}
+              transition={pageTransition}
+              onKeyDown={handleKeyDown}
+              tabIndex={0}
+            >
+              {/* Title/Header if exists */}
+              {getQuestionTitle() && (
+                <h1 className="text-[1.75rem] leading-[36px] md:text-[38px] lg:text-[42px] md:leading-normal mb-2 font-normal question">
+                  {getQuestionTitle()}
+                </h1>
               )}
+              
+              <h2 className="text-[15px] md:text-[18px] leading-normal mb-[42px] font-normal question text-[#aaa]">
+                {getQuestionText()}
+              </h2>
+              
+              <div className="bg-transparent border-b border-white/30 pb-2 w-full mb-6">
+                <input
+                  {...register(getCurrentFieldName() as keyof FormData, { 
+                    required: getCurrentFieldName() === 'website' ? false : 'This field is required',
+                    validate: (value) => {
+                      const fieldName = getCurrentFieldName();
+                      if (fieldName === 'email' && value) {
+                        return value.includes('@') || 'Please enter a valid email address';
+                      }
+                      return true;
+                    }
+                  })}
+                  type={getCurrentFieldName() === 'email' ? 'email' : 'text'}
+                  className="w-full bg-transparent text-white text-[18px] md:text-[20px] font-normal focus:outline-none placeholder:text-gray-600"
+                  autoFocus
+                />
+              </div>
+              
+              <div className="flex gap-3 items-center">
+                <button 
+                  type="button" 
+                  onClick={validateAndProceed} 
+                  className="py-3 px-[42px] text-lg bg-white text-black border-none rounded-[50px] cursor-pointer hover:bg-white/90 transition-all duration-300"
+                >
+                  OK
+                </button>
+                
+                <span className="text-sm ml-[10px] text-[#aaa] enter-message flex items-center">
+                  Press enter <span className="mx-1 text-lg">↵</span>
+                </span>
+              </div>
+              
+              {(() => {
+                const fieldName = getCurrentFieldName();
+                return fieldName && errors[fieldName] && (
+                  <p className="text-[#ff4c4c] text-base mt-[10px] error-message">
+                    {String(errors[fieldName]?.message || '')}
+                  </p>
+                );
+              })()}
             </motion.div>
-          )}
+            )}
+            
+            {getCurrentQuestionType() === 'submit' && (
+              <motion.div
+                key="submit-page"
+                className="flex flex-col items-center text-center justify-center w-full outline-none"
+                initial="initial"
+                animate="in"
+                exit="out"
+                variants={pageVariants}
+                transition={pageTransition}
+              >
+                <h1 className="text-[42px] md:text-[56px] lg:text-[64px] font-medium leading-tight tracking-[-2px] mb-6 text-white max-w-4xl">
+                  Thank you for sharing your goals with us. We love partnering with forward-thinking clients to create groundbreaking projects. Book your Dream Discovery Call and let&apos;s bring your vision to life!
+                </h1>
+                
+                <button
+                  type="button"
+                  onClick={handleSubmit(onSubmit)}
+                  disabled={isSubmitting}
+                  className="py-3 md:py-4 px-10 md:px-[51px] text-lg md:text-xl bg-white text-black border-none rounded-[46.55px] cursor-pointer hover:bg-opacity-90 hover:shadow-lg transition-all duration-300 flex items-center justify-center font-medium group disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit & Book'}
+                  {!isSubmitting && (
+                    <Image 
+                      src="/icons/black-arrow.svg" 
+                      alt="Arrow" 
+                      width={13}
+                      height={13}
+                      className="ml-3 transform transition-transform duration-300 group-hover:translate-x-2"
+                    />
+                  )}
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
           
+          {/* All old question sections removed - using dynamic rendering above */}
           
           {/* Final step removed - form auto-submits after last question */}
         </form>
+        )}
       </div>
+      
       
       
       {/* Custom Styles for Elements Not Easily Done with Tailwind */}
@@ -832,6 +854,22 @@ export default function IntakeForm() {
         
         .custom-radio.checked::before {
           background-color: rgba(251, 251, 251, 0.4);
+        }
+        
+        /* Checkmark icon animation */
+        .checkmark-icon {
+          animation: checkmarkFadeIn 0.2s ease-in;
+        }
+        
+        @keyframes checkmarkFadeIn {
+          from {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
         }
         
         /* Remove placeholder when valid */
@@ -895,19 +933,19 @@ export default function IntakeForm() {
         }
             
         /* Progress bar animations */
-        .progress-bar-gold {
+        .progress-bar-turquoise {
           position: relative;
           overflow: hidden;
         }
         
-        .progress-bar-gold::before {
+        .progress-bar-turquoise::before {
           content: '';
           position: absolute;
           top: 0;
           left: -100%;
           width: 100%;
           height: 100%;
-          background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+          background: linear-gradient(90deg, transparent 0%, rgba(137, 255, 255, 0.8) 50%, transparent 100%);
           animation: shimmer 2s infinite;
         }
         
