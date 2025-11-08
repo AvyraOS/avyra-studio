@@ -162,14 +162,14 @@ ${data.project_description}
   }
 }
 
-// Submit to Beehive
+// Submit to Beehiv
 async function submitToBeehive(email: string, name: string, companyName: string) {
-  const BEEHIVE_API_KEY = process.env.BEEHIVE_API_KEY;
-  const BEEHIVE_PUBLICATION_ID = process.env.BEEHIVE_PUBLICATION_ID;
+  const BEEHIV_API_KEY = process.env.BEEHIV_API_KEY;
+  const BEEHIV_PUBLICATION_ID = process.env.BEEHIV_PUBLICATION_ID;
   
-  if (!BEEHIVE_API_KEY || !BEEHIVE_PUBLICATION_ID) {
-    console.error('Beehive API credentials not configured');
-    return { success: false, error: 'Beehive not configured' };
+  if (!BEEHIV_API_KEY || !BEEHIV_PUBLICATION_ID) {
+    console.error('Beehiv API credentials not configured');
+    return { success: false, error: 'Beehiv not configured' };
   }
   
   try {
@@ -178,10 +178,10 @@ async function submitToBeehive(email: string, name: string, companyName: string)
     const firstName = nameParts[0] || '';
     const lastName = nameParts.slice(1).join(' ') || '';
     
-    const response = await fetch(`https://api.beehiiv.com/v2/publications/${BEEHIVE_PUBLICATION_ID}/subscriptions`, {
+    const response = await fetch(`https://api.beehiiv.com/v2/publications/${BEEHIV_PUBLICATION_ID}/subscriptions`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${BEEHIVE_API_KEY}`,
+        'Authorization': `Bearer ${BEEHIV_API_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -211,7 +211,7 @@ async function submitToBeehive(email: string, name: string, companyName: string)
     
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('Beehive API Error:', errorData);
+      console.error('Beehiv API Error:', errorData);
       return { success: false, error: errorData };
     }
     
@@ -219,7 +219,7 @@ async function submitToBeehive(email: string, name: string, companyName: string)
     return { success: true, data: result };
     
   } catch (error) {
-    console.error('Beehive submission error:', error);
+    console.error('Beehiv submission error:', error);
     return { success: false, error };
   }
 }
@@ -245,7 +245,7 @@ export async function POST(request: NextRequest) {
     
     // Log results
     console.log('ClickUp Result:', clickupResult.success ? 'Success' : 'Failed');
-    console.log('Beehive Result:', beehiveResult.success ? 'Success' : 'Failed');
+    console.log('Beehiv Result:', beehiveResult.success ? 'Success' : 'Failed');
     
     // Return success even if one service fails (graceful degradation)
     return NextResponse.json({
