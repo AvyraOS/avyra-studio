@@ -196,6 +196,27 @@ const FounderQuote = () => {
               className="w-full h-full object-cover object-top"
             />
           </div>
+          {/* Sou Image - overlaps by 12px */}
+          <div className="w-16 h-16 -ml-3 z-30 flex items-center justify-center">
+            <div
+              className="rounded-full"
+              style={{
+                boxShadow: '0 0 0 2px ##08090a', // 2px border outside the image
+                display: 'flex',
+                width: '64px',
+                height: '64px',
+                overflow: 'hidden',
+              }}
+            >
+              <Image
+                src="/images/sou.png"
+                alt="Sou"
+                width={64}
+                height={64}
+                className="w-full h-full object-cover object-top"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>
