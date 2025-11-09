@@ -252,15 +252,36 @@ const Navbar = () => {
               >
                 Portfolio
               </Link>
-              <Link 
+              <a 
                 href="#pricing" 
-                className="text-[#d5dbe6] text-base font-normal font-inter leading-relaxed hover:text-white transition-colors duration-200 whitespace-nowrap"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const pricingSection = document.getElementById('pricing');
+                  if (pricingSection) {
+                    // Find the pill element (the first div with the gradient dot inside)
+                    const pillElement = pricingSection.querySelector('.bg-\\[\\#1b1c20\\]');
+                    const targetElement = pillElement || pricingSection;
+                    
+                    const rect = targetElement.getBoundingClientRect();
+                    const offsetTop = rect.top + window.pageYOffset;
+                    const viewportHeight = window.innerHeight;
+                    const scrollTo = offsetTop - (viewportHeight * 0.01); // 5% from top
+                    
+                    window.scrollTo({
+                      top: scrollTo,
+                      behavior: 'smooth'
+                    });
+                  }
+                }}
+                className="text-[#d5dbe6] text-base font-normal font-inter leading-relaxed hover:text-white transition-colors duration-200 whitespace-nowrap cursor-pointer"
               >
                 Pricing
-              </Link>
+              </a>
             
               <Link 
-                href="#community" 
+                href="https://www.skool.com/avyra-5957/about?ref=62d9cf87b0794ed0aee7b54a40d9f199" 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-[#d5dbe6] text-base font-normal font-inter leading-relaxed hover:text-white transition-colors duration-200 whitespace-nowrap"
               >
                 Community
@@ -268,10 +289,10 @@ const Navbar = () => {
             </div>
 
             {/* Get Started Button - Only show on large screens */}
-            <Link href="/calendar" className="hidden lg:block group">
+            <Link href="/intake" className="hidden lg:block group">
               <div className="inline-flex h-10 relative rounded-[100px] shadow-[inset_0px_0px_8px_0px_rgba(248,248,248,0.25),0px_32px_24px_-16px_rgba(0,0,0,0.40)] border-[1.5px] border-[#484848] overflow-hidden justify-center items-center p-1 transition-all duration-300">
-                <div className="inline-flex h-8 bg-gradient-to-b from-[rgba(18,18,18,0.30)] to-[rgba(18,18,18,0.30)] bg-[rgba(248,248,248,0.01)] rounded-[100px] border-[1.5px] border-[#242424] backdrop-blur-[6px] overflow-hidden items-center justify-center px-6 transition-all duration-300 group-hover:shadow-[inset_0px_0px_20px_0px_rgba(255,255,255,0.1),inset_0px_0px_12px_0px_rgba(255,255,255,0.15),inset_0px_0px_6px_0px_rgba(255,255,255,0.2)] group-hover:border-white/20">
-                  <div className="text-[#f8f8f8]/95 text-sm font-normal font-inter leading-tight transition-colors duration-300 group-hover:text-white whitespace-nowrap">Book Call</div>
+                <div className="inline-flex h-8 bg-gradient-to-b from-[rgba(18,18,18,0.30)] to-[rgba(18,18,18,0.30)] bg-[rgba(248,248,248,0.01)] rounded-[100px] border-[1.5px] border-[#242424] backdrop-blur-[6px] overflow-hidden items-center justify-center px-6 transition-all duration-300 group-hover:shadow-[inset_0px_0px_20px_0px_rgba(137,255,255,0.2),inset_0px_0px_12px_0px_rgba(0,215,215,0.25),inset_0px_0px_6px_0px_rgba(137,255,255,0.3)] group-hover:border-[#00D7D7]/30">
+                  <div className="text-[#f8f8f8]/95 text-sm font-normal font-inter leading-tight transition-colors duration-300 group-hover:text-[#89FFFF] whitespace-nowrap">Get Started</div>
                 </div>
               </div>
             </Link>
@@ -364,17 +385,40 @@ const Navbar = () => {
             </Link>
             
             {/* Pricing */}
-            <Link 
+            <a 
               href="#pricing" 
-              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
-              onClick={closeMobileMenu}
+              onClick={(e) => {
+                e.preventDefault();
+                closeMobileMenu();
+                setTimeout(() => {
+                  const pricingSection = document.getElementById('pricing');
+                  if (pricingSection) {
+                    // Find the pill element (the first div with the gradient dot inside)
+                    const pillElement = pricingSection.querySelector('.bg-\\[\\#1b1c20\\]');
+                    const targetElement = pillElement || pricingSection;
+                    
+                    const rect = targetElement.getBoundingClientRect();
+                    const offsetTop = rect.top + window.pageYOffset;
+                    const viewportHeight = window.innerHeight;
+                    const scrollTo = offsetTop - (viewportHeight * 0.01); // 5% from top
+                    
+                    window.scrollTo({
+                      top: scrollTo,
+                      behavior: 'smooth'
+                    });
+                  }
+                }, 300); // Wait for mobile menu to close
+              }}
+              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors cursor-pointer"
             >
               Pricing
-            </Link>
+            </a>
           
             {/* Community */}
             <Link 
-              href="#community" 
+              href="https://www.skool.com/avyra-5957/about?ref=62d9cf87b0794ed0aee7b54a40d9f199" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
               onClick={closeMobileMenu}
             >
@@ -385,7 +429,7 @@ const Navbar = () => {
           {/* CTA Button at Bottom */}
           <div className="p-6 border-t border-white/10">
             <Link 
-              href="/calendar" 
+              href="/intake" 
               onClick={closeMobileMenu}
               className="block w-full group"
             >
@@ -399,7 +443,7 @@ const Navbar = () => {
                 >
                   {/* Button Content */}
                   <div className="w-full h-full bg-gradient-to-b from-[#89FFFF] to-[#00D7D7] text-[#000000] rounded-lg flex items-center justify-center text-base font-medium font-inter transition-all duration-300 hover:opacity-90">
-                    <span>Book Call</span>
+                    <span>Get Started</span>
                     <svg 
                       className="ml-2 w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" 
                       fill="currentColor" 

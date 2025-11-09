@@ -154,7 +154,7 @@ const Hero = () => {
 
       {/* Top Pill - Separate layer behind gradient */}
       <div className="absolute top-[88px] md:top-[17vh] left-1/2 transform -translate-x-1/2 z-10 text-center px-4 w-full">
-        <div className="flex justify-center">
+        <div className="mb-10 md:mb-6 flex justify-center">
           <div className="inline-flex items-center gap-2 px-4 py-1 md:py-2 rounded-[24px] bg-[#1b1c20] h-[1.875rem] md:h-auto">
             {/* Gradient dot */}
             <div className="w-[6.9px] h-[6.9px] rounded-full bg-gradient-to-b from-[#89FFFF] to-[#00D7D7]"></div>
@@ -174,7 +174,7 @@ const Hero = () => {
       </div>
 
       {/* Main Content Layer - positioned with better spacing below pill */}
-      <div className="relative z-30 text-center px-4 w-full max-w-[1440px] mx-auto pt-[66px] md:pt-[80px]">
+      <div className="relative z-30 text-center px-4 w-full max-w-[1440px] mx-auto pt-[66px] md:pt-[120px]">
 
         {/* Hero content */}
         <div className="text-center opacity-0 hero-main-content">
@@ -203,7 +203,7 @@ const Hero = () => {
             Get world-class designs, delivered in as little as 48 hours. Forget the hiring headaches.
           </p>
           {/* Button Container with Animated Border Glow */}
-          <div className="relative inline-block mb-8 group">
+          <div className="relative inline-block mb-6 md:mb-8 group">
             {/* Button Glow (Bottom Layer) - larger to show glow effect */}
             <Image
               src="/images/button-glow.png"
@@ -224,7 +224,7 @@ const Hero = () => {
                 href="/intake"
                 className="relative z-50 inline-flex items-center justify-center bg-gradient-to-b from-[#89FFFF] to-[#00D7D7] text-[#000000] px-8 rounded-lg text-base font-medium font-inter transition-all duration-300 hover:opacity-90 cursor-pointer h-[46px]"
               >
-                <span>Get Started</span>
+                <span>Start Building Your Company</span>
                 <svg
                   className="ml-2 w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1"
                   fill="currentColor"
@@ -234,6 +234,36 @@ const Hero = () => {
                 </svg>
               </Link>
             </div>
+          
+          </div>
+
+          {/* View Pricing Link */}
+          <div className="mt-0">
+            <a 
+              href="#pricing"
+              onClick={(e) => {
+                e.preventDefault();
+                const pricingSection = document.getElementById('pricing');
+                if (pricingSection) {
+                  // Find the pill element (the first div with the gradient dot inside)
+                  const pillElement = pricingSection.querySelector('.bg-\\[\\#1b1c20\\]');
+                  const targetElement = pillElement || pricingSection;
+                  
+                  const rect = targetElement.getBoundingClientRect();
+                  const offsetTop = rect.top + window.pageYOffset;
+                  const viewportHeight = window.innerHeight;
+                  const scrollTo = offsetTop - (viewportHeight * 0.01); // 5% from top
+                  
+                  window.scrollTo({
+                    top: scrollTo,
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+              className="text-[#d5dbe6] text-sm md:text-base font-normal font-inter leading-relaxed hover:text-[#89FFFF] transition-colors duration-200 cursor-pointer opacity-60 md:opacity-100"
+            >
+              View Plans & Pricing
+            </a>
           </div>
 
           <style jsx>{`
@@ -289,7 +319,7 @@ const Hero = () => {
           {/* Hero Video with Custom Cursor */}
           <div 
             ref={videoContainerRef}
-            className="mt-6 md:mt-[64px]"
+            className="mt-8 md:mt-[64px]"
           >
             {/* Mobile video (square) */}
             <div 

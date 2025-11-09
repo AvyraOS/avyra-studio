@@ -235,7 +235,7 @@ export default function HowItWorks() {
                             href="/calendar"
                             className="relative z-50 inline-flex items-center justify-center bg-[#f8f9fa] text-[#000000] px-4 rounded-lg text-[14px] font-medium font-inter transition-all duration-300 hover:opacity-90 cursor-pointer h-[38px] w-full"
                           >
-                            <span>Let&apos;s Get Started</span>
+                            <span>Let&apos;s Start Building</span>
                             <svg 
                               className="ml-2 w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" 
                               fill="currentColor" 
@@ -343,7 +343,7 @@ export default function HowItWorks() {
                   href="/calendar"
                   className="relative z-50 inline-flex items-center justify-center bg-[#f8f9fa] text-[#000000] px-4 rounded-lg text-base font-medium font-inter transition-all duration-300 hover:opacity-90 cursor-pointer h-[46px] w-full"
                 >
-                  <span>Let&apos;s Get Started</span>
+                  <span>Let&apos;s Start Building</span>
                   <svg 
                     className="ml-2 w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" 
                     fill="currentColor" 

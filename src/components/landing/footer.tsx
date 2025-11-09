@@ -8,6 +8,7 @@ const Footer = () => {
   const [email, setEmail] = useState('');
   const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   // Email validation function
   const isValidEmail = (email: string) => {
@@ -23,15 +24,39 @@ const Footer = () => {
     if (!email || !agreedToPrivacy) return;
     
     setIsSubmitting(true);
-    // Handle newsletter submission here
-    console.log('Newsletter signup:', { email, agreedToPrivacy });
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/subscribe-newsletter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error('Newsletter subscription failed:', data.error);
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Success!
+      console.log('Successfully subscribed to newsletter');
       setIsSubmitting(false);
-      setEmail('');
-      setAgreedToPrivacy(false);
-    }, 1000);
+      setIsSuccess(true);
+      
+      // Reset form after showing success for 2 seconds
+      setTimeout(() => {
+        setEmail('');
+        setAgreedToPrivacy(false);
+        setIsSuccess(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Newsletter submission error:', error);
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -107,10 +132,10 @@ const Footer = () => {
               >
                 {/* Button (Top Layer) */}
                 <Link 
-                  href="/calendar" 
+                  href="/intake" 
                   className="relative z-50 inline-flex items-center justify-center bg-[#f8f9fa] text-[#000000] px-8 rounded-lg text-base font-medium font-inter transition-all duration-300 hover:opacity-90 cursor-pointer h-[46px]"
                 >
-                  <span>Book My Dream Discovery Call</span>
+                  <span>Start Building Your Company</span>
                   <svg 
                     className="ml-2 w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" 
                     fill="currentColor" 
@@ -223,9 +248,9 @@ const Footer = () => {
           </div>
 
           {/* Right Side - Desktop: Newsletter | Mobile: Newsletter first, then social */}
-          <div className="flex flex-col items-center lg:items-end max-w-md w-full lg:order-2">
+          <div className="flex flex-col items-center lg:items-start max-w-md w-full lg:order-2">
             {/* Newsletter Description */}
-            <div className="text-center lg:text-right mb-6">
+            <div className="text-center lg:text-left mb-6">
               <p className="text-[#d5dbe6] text-[12px] sm:text-[15px] lg:text-[16px] leading-[22px] sm:leading-[28px] lg:leading-[33.6px] tracking-[-0.28px]">
                 Get <span className="font-bold">weekly</span> insights on design & development strategies
               </p>
@@ -234,68 +259,91 @@ const Footer = () => {
             {/* Newsletter Form */}
             <form onSubmit={handleSubmit} className="space-y-4 w-full">
               {/* Email Input */}
-              <div className="relative">
-                <div className="bg-[rgba(255,255,255,0.05)] rounded-xl p-1 transition-all duration-300 focus-within:bg-[rgba(255,255,255,0.08)]">
-                  <div className="bg-[#080808] rounded-[10px] relative flex items-center">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="What's your email?"
-                      className="flex-1 bg-transparent text-white text-[14px] font-medium px-[22px] py-[19px] placeholder-white outline-none focus:outline-none focus:ring-0 focus:border-0 focus:placeholder-opacity-70 transition-all duration-300 border-0 email-input-no-autofill"
-                      required
-                      style={{ 
-                        boxShadow: 'none !important',
-                        outline: 'none !important',
-                        border: 'none !important',
-                        WebkitAppearance: 'none',
-                        MozAppearance: 'textfield',
-                        WebkitTapHighlightColor: 'transparent',
-                        // Autocomplete styling overrides
-                        WebkitTextFillColor: 'white !important',
-                        caretColor: 'white'
-                      } as React.CSSProperties}
-                      onFocus={(e) => {
-                        const target = e.target as HTMLInputElement;
-                        target.style.outline = 'none';
-                        target.style.border = 'none';
-                        target.style.boxShadow = 'none';
-                      }}
-                      onClick={(e) => {
-                        const target = e.target as HTMLInputElement;
-                        target.style.outline = 'none';
-                        target.style.border = 'none';
-                        target.style.boxShadow = 'none';
-                      }}
-                      onBlur={(e) => {
-                        const target = e.target as HTMLInputElement;
-                        target.style.outline = 'none';
-                        target.style.border = 'none';
-                        target.style.boxShadow = 'none';
-                      }}
-                      autoComplete="email"
-                    />
-                    <button
-                      type="submit"
-                      disabled={!isFormValid || isSubmitting}
-                      className={`rounded-[9px] w-[42px] h-[42px] mr-[9px] flex items-center justify-center transition-all duration-300 ${
-                        isFormValid && !isSubmitting
-                          ? 'bg-gradient-to-b from-[#89FFFF] to-[#00D7D7] hover:opacity-90 cursor-pointer shadow-md'
-                          : 'bg-[rgba(217,217,217,0.05)] hover:bg-[#e9ecef] disabled:opacity-50 disabled:cursor-not-allowed'
-                      }`}
-                    >
-                      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <div className="relative h-[60px]">
+                {isSuccess ? (
+                  /* Success Message */
+                  <div 
+                    className="absolute inset-0 bg-gradient-to-b from-[#89FFFF]/10 to-[#00D7D7]/10 rounded-xl p-[0.5px] transition-all duration-300 animate-slideInFade"
+                  >
+                    <div className="bg-[#080808] rounded-[10px] relative flex items-center justify-center px-[22px] h-full">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="mr-2 flex-shrink-0">
                         <path 
-                          fillRule="evenodd" 
-                          clipRule="evenodd" 
-                          d="M10.293 5.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 12H4a1 1 0 110-2h10.586l-4.293-4.293a1 1 0 010-1.414z" 
-                          fill={isFormValid && !isSubmitting ? "#000000" : "#666666"}
-                          className="transition-colors duration-300"
+                          d="M3 10L8 15L17 6" 
+                          stroke="#89FFFF" 
+                          strokeWidth="2" 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round"
                         />
                       </svg>
-                    </button>
+                      <span className="text-[#89FFFF] text-[14px] font-medium">
+                        Subscribed! Check your email for confirmation.
+                      </span>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  /* Email Input Form */
+                  <div className="absolute inset-0 bg-[rgba(255,255,255,0.05)] rounded-xl p-1 transition-all duration-300 focus-within:bg-[rgba(255,255,255,0.08)]">
+                    <div className="bg-[#080808] rounded-[10px] relative flex items-center h-full">
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="What's your email?"
+                        className="flex-1 bg-transparent text-white text-[14px] font-medium px-[22px] py-[19px] placeholder-white outline-none focus:outline-none focus:ring-0 focus:border-0 focus:placeholder-opacity-70 transition-all duration-300 border-0 email-input-no-autofill"
+                        required
+                        style={{ 
+                          boxShadow: 'none !important',
+                          outline: 'none !important',
+                          border: 'none !important',
+                          WebkitAppearance: 'none',
+                          MozAppearance: 'textfield',
+                          WebkitTapHighlightColor: 'transparent',
+                          // Autocomplete styling overrides
+                          WebkitTextFillColor: 'white !important',
+                          caretColor: 'white'
+                        } as React.CSSProperties}
+                        onFocus={(e) => {
+                          const target = e.target as HTMLInputElement;
+                          target.style.outline = 'none';
+                          target.style.border = 'none';
+                          target.style.boxShadow = 'none';
+                        }}
+                        onClick={(e) => {
+                          const target = e.target as HTMLInputElement;
+                          target.style.outline = 'none';
+                          target.style.border = 'none';
+                          target.style.boxShadow = 'none';
+                        }}
+                        onBlur={(e) => {
+                          const target = e.target as HTMLInputElement;
+                          target.style.outline = 'none';
+                          target.style.border = 'none';
+                          target.style.boxShadow = 'none';
+                        }}
+                        autoComplete="email"
+                      />
+                      <button
+                        type="submit"
+                        disabled={!isFormValid || isSubmitting}
+                        className={`rounded-[9px] w-[42px] h-[42px] mr-[9px] flex items-center justify-center transition-all duration-300 ${
+                          isFormValid && !isSubmitting
+                            ? 'bg-gradient-to-b from-[#89FFFF] to-[#00D7D7] hover:opacity-90 cursor-pointer shadow-md'
+                            : 'bg-[rgba(217,217,217,0.05)] disabled:opacity-50 disabled:cursor-not-allowed'
+                        }`}
+                      >
+                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                          <path 
+                            fillRule="evenodd" 
+                            clipRule="evenodd" 
+                            d="M10.293 5.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 12H4a1 1 0 110-2h10.586l-4.293-4.293a1 1 0 010-1.414z" 
+                            fill={isFormValid && !isSubmitting ? "#000000" : "#666666"}
+                            className="transition-colors duration-300"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Privacy Checkbox */}
@@ -428,6 +476,21 @@ const Footer = () => {
 
       {/* Custom CSS to prevent all autofill/autocomplete styling */}
       <style jsx>{`
+        @keyframes slideInFade {
+          0% {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-slideInFade {
+          animation: slideInFade 0.4s ease-out forwards;
+        }
+
         .email-input-no-autofill:-webkit-autofill,
         .email-input-no-autofill:-webkit-autofill:hover,
         .email-input-no-autofill:-webkit-autofill:focus,
