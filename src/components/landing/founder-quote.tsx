@@ -197,7 +197,7 @@ const FounderQuote = () => {
             />
           </div>
           {/* Sou Image - overlaps by 12px */}
-          <div className="w-16 h-16 -ml-3 z-30 flex items-center justify-center">
+          {/* <div className="w-16 h-16 -ml-3 z-30 flex items-center justify-center">
             <div
               className="rounded-full"
               style={{
@@ -216,7 +216,7 @@ const FounderQuote = () => {
                 className="w-full h-full object-cover object-top"
               />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>
