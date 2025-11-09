@@ -16,7 +16,6 @@ const Hero = () => {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [maxVideoWidth, setMaxVideoWidth] = useState('100vw');
-  const [heroHeight, setHeroHeight] = useState('130vh');
   const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
@@ -80,11 +79,6 @@ const Hero = () => {
         // Interpolate from 90vw to 100vw for edge-to-edge feel
         const newWidth = 90 + (scrollProgress * 10);
         setMaxVideoWidth(`${newWidth}vw`);
-        
-        // Grow hero height proportionally to accommodate larger video
-        // Base: 130vh, grows to ~145vh
-        const newHeight = 130 + (scrollProgress * 15);
-        setHeroHeight(`${newHeight}vh`);
       }
     };
 
@@ -134,9 +128,8 @@ const Hero = () => {
 
   return (
     <section 
-      className="relative bg-[#080808] flex flex-col justify-center items-center overflow-hidden md:transition-all md:duration-300" 
+      className="relative min-h-screen bg-[#080808] pt-20 md:py-32" 
       id="home"
-      style={{ height: heroHeight }}
     >
       {/* Bottom Level: Background Gradients */}
       <div className="absolute inset-0 z-0">
@@ -161,8 +154,8 @@ const Hero = () => {
 
       {/* Top Pill - Separate layer behind gradient */}
       <div className="absolute top-[88px] md:top-[17vh] left-1/2 transform -translate-x-1/2 z-10 text-center px-4 w-full">
-        <div className="mb-3 sm:mb-4 md:mb-6 flex justify-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-[24px] bg-[#1b1c20]">
+        <div className="flex justify-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1 md:py-2 rounded-[24px] bg-[#1b1c20] h-[1.875rem] md:h-auto">
             {/* Gradient dot */}
             <div className="w-[6.9px] h-[6.9px] rounded-full bg-gradient-to-b from-[#89FFFF] to-[#00D7D7]"></div>
             <span
@@ -181,7 +174,7 @@ const Hero = () => {
       </div>
 
       {/* Main Content Layer - positioned with better spacing below pill */}
-      <div className="absolute top-[138px] md:top-[calc(16vh+70px)] left-1/2 transform -translate-x-1/2 z-30 text-center px-4 w-full max-w-[1440px]">
+      <div className="relative z-30 text-center px-4 w-full max-w-[1440px] mx-auto pt-[66px] md:pt-[80px]">
 
         {/* Hero content */}
         <div className="text-center opacity-0 hero-main-content">
@@ -296,7 +289,7 @@ const Hero = () => {
           {/* Hero Video with Custom Cursor */}
           <div 
             ref={videoContainerRef}
-            className="mt-12 md:mt-[64px]"
+            className="mt-6 md:mt-[64px]"
           >
             {/* Mobile video (square) */}
             <div 
@@ -336,7 +329,7 @@ const Hero = () => {
 
             {/* Desktop video */}
             <div 
-              className="hidden md:block overflow-hidden md:transition-all md:duration-300 relative"
+              className="hidden md:block md:transition-all md:duration-300 relative rounded-lg overflow-hidden"
               style={{ 
                 width: maxVideoWidth,
                 cursor: isHovering ? 'none' : 'auto',
@@ -350,7 +343,7 @@ const Hero = () => {
             >
               <video 
                 ref={desktopVideoRef}
-                className="w-full h-auto rounded-lg"
+                className="w-full h-auto block"
                 autoPlay
                 muted={isMuted}
                 loop
