@@ -92,9 +92,9 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Main Navigation Bar - Hidden on mobile, fixed on desktop */}
-      <nav className={`hidden lg:block lg:fixed lg:top-0 lg:left-0 lg:right-0 lg:z-40 lg:transition-transform lg:duration-300 lg:ease-in-out ${
-        isVisible ? 'lg:translate-y-0' : 'lg:-translate-y-full'
+      {/* Main Navigation Bar - Fixed on all screen sizes */}
+      <nav className={`fixed top-0 left-0 right-0 z-40 transition-transform duration-300 ease-in-out ${
+        isVisible ? 'translate-y-0' : '-translate-y-full'
       }`}>
         {/* Glass Background Container */}
         <div 
@@ -148,43 +148,95 @@ const Navbar = () => {
 
                 {/* Dropdown Menu */}
                 {solutionsDropdownOpen && (
-                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-[271px] h-[156px] bg-[#070707] rounded-[20px] shadow-[inset_0px_2px_1px_0px_rgba(207,231,255,0.20)] overflow-hidden z-50">
-                    {/* Light overlay */}
-                    <div className="absolute inset-0 opacity-10 bg-gradient-radial from-[#b8c7d9]/50 via-[#b8c7d9]/25 to-transparent" style={{
-                      background: 'radial-gradient(at 94% 8%, rgba(184, 199, 217, 0.5) 0%, rgba(184, 199, 217, 0) 100%)'
-                    }} />
-                    
-                    {/* Border */}
-                    <div className="absolute inset-0 rounded-[20px] border border-[#d8e7f2]/5" />
-                    
-                    {/* Avyra Studio - Clickable with turquoise hover */}
-                    <Link 
-                      href="https://www.avyra.ai"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group absolute left-[30px] top-[24px] text-white/100 text-lg font-normal font-inter leading-6 hover:text-[#00D7D7] transition-colors duration-200"
-                      onClick={closeSolutionsDropdown}
-                    >
-                      {/* Hover background with turquoise tint */}
-                      <div className="absolute -left-[12px] -top-[8px] w-[235px] h-10 bg-[#00D7D7]/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                      <span className="relative z-10">Avyra AI</span>
-                    </Link>
-                    
-                    {/* Avyra OS - Not clickable */}
-                    <div className="absolute left-[30px] top-[66px] text-white/70 text-lg font-normal font-inter leading-6">
-                      Avyra OS
-                    </div>
-                    <div className="absolute left-[186px] top-[70px] px-1.5 py-[3px] bg-[#363636] rounded-[42px] flex justify-center items-center">
-                      <div className="text-white text-[8px] font-normal font-inter">Coming Soon</div>
-                    </div>
-                    
-                    {/* Avyra Command - Not clickable */}
-                    <div className="absolute left-[30px] top-[108px] text-white/70 text-lg font-normal font-inter leading-6">
-                      Avyra Command
-                    </div>
-                    <div className="absolute left-[186px] top-[112px] px-1.5 py-[3px] bg-[#363636] rounded-[42px] flex justify-center items-center">
-                      <div className="text-white text-[8px] font-normal font-inter">Coming Soon</div>
-                    </div>
+                  <div className="absolute top-full left-[-48px] mt-4 w-[325px] h-[279px] bg-[rgba(8,8,8,0.85)] backdrop-blur-xl rounded-[24px] border border-[#46474e] z-50 flex">
+                    {/* Left Column - Solutions */}
+                    <div className="flex-1 px-8 py-8 flex flex-col gap-4">
+                      <p className="text-[#d9d9d9] text-[12px] font-medium font-inter tracking-[0.5px] uppercase">
+                        Solutions
+                      </p>
+                      
+                      <div className="flex flex-col gap-5">
+                        {/* AI Automations */}
+                        <Link 
+                          href="https://www.avyra.ai"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex flex-col gap-0.5"
+                          onClick={closeSolutionsDropdown}
+                        >
+                          <div className="flex items-center gap-4 h-6">
+                            <div className="w-5 h-5 relative flex-shrink-0">
+                              <Image 
+                                src="/icons/ai-solutions.svg" 
+                                alt="AI Automations"
+                                width={20}
+                                height={20}
+                              />
+                            </div>
+                            <p className="text-[#c6c6c6] text-[16px] font-medium font-inter leading-6 group-hover:text-white transition-colors duration-200">
+                              AI Automations
+                            </p>
+                          </div>
+                          <div className="pl-9">
+                            <p className="text-[#4a4a4a] text-[14px] font-normal font-inter leading-6 group-hover:text-[#a2a2a2] transition-colors duration-200">
+                              Automate your business
+                            </p>
+                          </div>
+                        </Link>
+
+                        {/* Avyra OS */}
+                        <Link 
+                          href="https://www.avyraos.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex flex-col gap-0.5"
+                          onClick={closeSolutionsDropdown}
+                        >
+                          <div className="flex items-center gap-4 h-6">
+                            <div className="w-5 h-5 relative flex-shrink-0">
+                              <Image 
+                                src="/icons/studio-solutions.svg" 
+                                alt="Avyra OS"
+                                width={20}
+                                height={20}
+                              />
+                            </div>
+                            <p className="text-[#c7c7c7] text-[16px] font-medium font-inter leading-6 group-hover:text-white transition-colors duration-200">
+                              Avyra OS
+                            </p>
+                          </div>
+                          <div className="pl-9">
+                            <p className="text-[#4a4a4a] text-[14px] font-normal font-inter leading-6 group-hover:text-[#a2a2a2] transition-colors duration-200">
+                              Access the Systems
+                            </p>
+                          </div>
+                        </Link>
+
+                        {/* SaaS Product - Coming Soon */}
+                        <div className="flex flex-col gap-0.5 opacity-60">
+                          <div className="flex items-center gap-4 h-6">
+                            <div className="w-5 h-5 relative flex-shrink-0">
+                              <Image 
+                                src="/icons/saas-solutions.svg" 
+                                alt="SaaS Product"
+                                width={20}
+                                height={20}
+                              />
+                            </div>
+                            <p className="text-[#c5c5c5] text-[16px] font-medium font-inter leading-6">
+                              SaaS Product{' '}
+                              <span className="text-[9px] text-[rgba(197,197,197,0.4)]">(Coming Soon)</span>
+                            </p>
+                          </div>
+                          <div className="pl-9">
+                            <p className="text-[#4a4a4a] text-[14px] font-normal font-inter leading-6">
+                              Measure business health
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div> 
+                   
                   </div>
                 )}
               </div>
@@ -195,10 +247,10 @@ const Navbar = () => {
                 Results
               </Link> */}
               <Link 
-                href="#work" 
+                href="/portfolio" 
                 className="text-[#d5dbe6] text-base font-normal font-inter leading-relaxed hover:text-white transition-colors duration-200 whitespace-nowrap"
               >
-                Work
+                Portfolio
               </Link>
               <Link 
                 href="#pricing" 
@@ -206,12 +258,7 @@ const Navbar = () => {
               >
                 Pricing
               </Link>
-              <Link 
-                href="#blog" 
-                className="text-[#d5dbe6] text-base font-normal font-inter leading-relaxed hover:text-white transition-colors duration-200 whitespace-nowrap"
-              >
-                Blog
-              </Link>
+            
               <Link 
                 href="#community" 
                 className="text-[#d5dbe6] text-base font-normal font-inter leading-relaxed hover:text-white transition-colors duration-200 whitespace-nowrap"
@@ -231,7 +278,7 @@ const Navbar = () => {
 
             {/* Mobile Menu Hamburger Button - Show on medium and smaller screens */}
             <button 
-              className="lg:hidden w-6 h-6 flex flex-col justify-center space-y-1 z-50 relative"
+              className="lg:hidden w-6 h-6 flex flex-col justify-center space-y-1 z-50 relative focus:outline-none"
               onClick={toggleMobileMenu}
               aria-label="Toggle menu"
             >
@@ -285,11 +332,6 @@ const Navbar = () => {
 
           {/* Navigation Links */}
           <div className="flex-1 flex flex-col justify-center px-6 space-y-6">
-            {/* Solutions Section Header */}
-            <div className="text-white/40 text-sm font-medium font-inter uppercase tracking-wider">
-              Solutions
-            </div>
-            
             {/* Avyra AI */}
             <Link 
               href="https://www.avyra.ai"
@@ -302,23 +344,26 @@ const Navbar = () => {
             </Link>
             
             {/* Avyra OS */}
-            <div className="flex items-center justify-between py-3 border-b border-white/5">
-              <span className="text-white/50 text-2xl font-normal font-inter">Avyra OS</span>
-              <span className="px-3 py-1 bg-[#363636] rounded-full text-white text-xs">Coming Soon</span>
-            </div>
-            
-            {/* Avyra Command */}
-            <div className="flex items-center justify-between py-3 border-b border-white/5">
-              <span className="text-white/50 text-2xl font-normal font-inter">Avyra Command</span>
-              <span className="px-3 py-1 bg-[#363636] rounded-full text-white text-xs">Coming Soon</span>
-            </div>
-            {/* <Link 
-              href="#results" 
-              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#f2c6a6] transition-colors"
+            <Link 
+              href="https://www.avyraos.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
               onClick={closeMobileMenu}
             >
-              Results
-            </Link> */}
+              Avyra OS
+            </Link>
+            
+            {/* Portfolio */}
+            <Link 
+              href="/portfolio" 
+              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
+              onClick={closeMobileMenu}
+            >
+              Portfolio
+            </Link>
+            
+            {/* Pricing */}
             <Link 
               href="#pricing" 
               className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
@@ -326,13 +371,8 @@ const Navbar = () => {
             >
               Pricing
             </Link>
-            <Link 
-              href="#blog" 
-              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
-              onClick={closeMobileMenu}
-            >
-              Blog
-            </Link>
+          
+            {/* Community */}
             <Link 
               href="#community" 
               className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"

@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
+import { gsap } from 'gsap';
 
 // Form Field Types
 type FormData = {
@@ -48,15 +49,21 @@ export default function IntakeForm() {
   const [showForwardButton, setShowForwardButton] = useState(false); // Control forward button visibility
   const [isSubmitting, setIsSubmitting] = useState(false); // Track submission state
   const [showSuccess, setShowSuccess] = useState(false); // Track success state
+  const [validationError, setValidationError] = useState<string>(''); // Manual validation error
   const welcomeRef = useRef<HTMLDivElement>(null);
+  const submitHeadingRef = useRef<HTMLHeadingElement>(null);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const successCheckmarkRef = useRef<HTMLDivElement>(null);
+  const successHeadingRef = useRef<HTMLHeadingElement>(null);
+  const successParagraphRef = useRef<HTMLParagraphElement>(null);
+  const successButtonRef = useRef<HTMLAnchorElement>(null);
   const previousValuesRef = useRef<{[key: string]: string}>({}); // Track previous values
   
   // Initialize form before any useEffects that depend on it
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors }
+    watch
   } = useForm<FormData>({
     mode: 'onChange',
     defaultValues: getInitialValues()
@@ -66,10 +73,176 @@ export default function IntakeForm() {
   const formValues = watch();
   
   // Focus welcome screen on initial load (only if we're actually on welcome screen)
+  // Animate success page when it appears
+  useEffect(() => {
+    if (showSuccess && successCheckmarkRef.current && successHeadingRef.current && successParagraphRef.current && successButtonRef.current) {
+      const checkmark = successCheckmarkRef.current;
+      const heading = successHeadingRef.current;
+      const paragraph = successParagraphRef.current;
+      const button = successButtonRef.current;
+      
+      // Set everything to invisible initially
+      gsap.set([checkmark, heading, paragraph, button], { opacity: 0 });
+      
+      // Animation sequence
+      const tl = gsap.timeline({ delay: 0.2 });
+      
+      // 1. Checkmark: scale up with bounce
+      tl.fromTo(checkmark,
+        { opacity: 0, scale: 0 },
+        { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.7)' }
+      );
+      
+      // 2. Heading: fade in word by word
+      const headingText = heading.textContent || '';
+      const headingWords = headingText.split(' ').filter(word => word.trim());
+      heading.innerHTML = headingWords.map(word => `<span class="word" style="display: inline-block;">${word}</span>`).join(' ');
+      
+      const headingWordElements = heading.querySelectorAll('.word');
+      gsap.set(heading, { opacity: 1 });
+      
+      tl.fromTo(headingWordElements,
+        { opacity: 0, y: 10 },
+        { 
+          opacity: 1, 
+          y: 0, 
+          duration: 0.5, 
+          stagger: 0.08,
+          ease: 'power2.out'
+        },
+        '-=0.3' // Overlap with checkmark
+      );
+      
+      // 3. Paragraph: fade in smoothly
+      tl.fromTo(paragraph,
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.7, ease: 'sine.out' },
+        '-=0.2'
+      );
+      
+      // 4. Button: slide up and fade in
+      tl.fromTo(button,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.7, ease: 'sine.out' },
+        '-=0.4'
+      );
+    }
+  }, [showSuccess]);
+
   useEffect(() => {
     if (step === 1 && welcomeRef.current) {
       welcomeRef.current.focus();
     }
+    
+    // Animate submit page heading when we reach it
+    if (step === 11) {
+      let attempts = 0;
+      const maxAttempts = 20;
+      
+      const tryAnimate = () => {
+        attempts++;
+        const heading = submitHeadingRef.current;
+        const button = submitButtonRef.current;
+        
+        if (!heading || !button) {
+          console.log(`Attempt ${attempts}: Refs not available yet`);
+          if (attempts < maxAttempts) {
+            setTimeout(tryAnimate, 50); // Retry every 50ms
+          }
+          return;
+        }
+        
+        console.log('Starting GSAP animation');
+        
+        // Kill any existing animations
+        gsap.killTweensOf([heading, button]);
+        
+        const text = heading.textContent || '';
+        const words = text.split(' ').filter(word => word.trim());
+        
+        console.log(`Found ${words.length} words`);
+        
+        // Temporarily change h1 to white text for clean animation
+        heading.style.background = 'none';
+        heading.style.webkitBackgroundClip = 'unset';
+        heading.style.backgroundClip = 'unset';
+        heading.style.webkitTextFillColor = '#D5DBE6';
+        heading.style.color = '#D5DBE6';
+        
+        // Make heading container visible first
+        gsap.set(heading, { opacity: 1 });
+        
+        // Wrap each word in a span
+        heading.innerHTML = words.map(word => `<span class="word" style="display: inline-block;">${word}</span>`).join(' ');
+        
+        // Animate words in with diagonal wave (top-left to bottom-right)
+        const wordElements = heading.querySelectorAll('.word');
+        
+        // Set initial state for button (ensure it's completely hidden)
+        gsap.set(button, { opacity: 0, y: 20, visibility: 'visible', willChange: 'transform, opacity' });
+        
+        // Calculate diagonal distance for each word from top-left
+        const wordPositions = Array.from(wordElements).map((word, index) => {
+          const rect = word.getBoundingClientRect();
+          const containerRect = heading.getBoundingClientRect();
+          const relativeX = rect.left - containerRect.left;
+          const relativeY = rect.top - containerRect.top;
+          // Diagonal distance from top-left (x + y gives diagonal sweep)
+          return { element: word, distance: relativeX + relativeY, index };
+        });
+        
+        // Sort by diagonal distance
+        wordPositions.sort((a, b) => a.distance - b.distance);
+        
+        // Animate each word based on its diagonal position with smooth overlap
+        wordPositions.forEach((item, sortedIndex) => {
+          gsap.fromTo(item.element,
+            {
+              opacity: 0,
+              y: 8,
+              scale: 0.96
+            },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 1.2, // Even longer duration for ultra-smooth fade
+              ease: 'sine.out', // Smoother, more gradual easing
+              delay: 0.1 + (sortedIndex * 0.035) // Slightly slower stagger for more graceful wave
+            }
+          );
+        });
+        
+        console.log('Words animation complete');
+        
+        // Calculate when last word finishes: initial delay + (number of words * stagger) + animation duration
+        const lastWordFinishes = 0.1 + (wordPositions.length * 0.035) + 1.2;
+        
+        // Animate button smoothly right after last word starts (overlap slightly for flow)
+        gsap.fromTo(button,
+          {
+            opacity: 0,
+            y: 20
+          },
+          {
+            opacity: 1, 
+            y: 0, 
+            duration: 0.9,
+            ease: 'sine.out', // Match the word easing for consistency
+            delay: lastWordFinishes - 0.4, // Start 0.4s before last word finishes
+            onComplete: () => {
+              gsap.set(button, { clearProps: 'willChange' }); // Clean up for performance
+              console.log('Button animation complete');
+            }
+          }
+        );
+      };
+      
+      // Start trying after AnimatePresence exit animation completes
+      const timer = setTimeout(tryAnimate, 400);
+      return () => clearTimeout(timer);
+    }
+    
     // Mark as just navigated whenever step changes
     setJustNavigated(true);
     setShowForwardButton(false); // Hide forward button during navigation
@@ -123,6 +296,9 @@ export default function IntakeForm() {
   const validateAndProceed = () => {
     const fieldName = getCurrentFieldName();
     
+    // Clear previous errors
+    setValidationError('');
+    
     if (!fieldName) {
       nextStep();
       return;
@@ -138,7 +314,8 @@ export default function IntakeForm() {
     if (fieldName === 'services') {
       const servicesValue = watch('services');
       if (!servicesValue || !Array.isArray(servicesValue) || servicesValue.length === 0) {
-        return; // Validation error
+        setValidationError('Please select at least one service');
+        return;
       }
       nextStep();
       return;
@@ -146,8 +323,19 @@ export default function IntakeForm() {
     
     // Check if current field has a value
     const currentValue = watch(fieldName);
-    if (!currentValue || (typeof currentValue === 'string' && !currentValue.trim())) {
-        return; // Validation error will show via react-hook-form
+    const valueString = typeof currentValue === 'string' ? currentValue : '';
+    
+    if (!valueString || !valueString.trim()) {
+        setValidationError('This field is required');
+        return;
+    }
+    
+    // Validate email format
+    if (fieldName === 'email') {
+      if (!valueString.includes('@') || !valueString.includes('.')) {
+        setValidationError('Please enter a valid email address');
+        return;
+      }
     }
     
     // If validation passes, proceed to next step
@@ -156,11 +344,15 @@ export default function IntakeForm() {
 
   const nextStep = () => {
     if (step < maxSteps) {
+      setValidationError(''); // Clear error on step change
       setStep(step + 1);
     }
   };
 
-  const prevStep = () => setStep(step - 1);
+  const prevStep = () => {
+    setValidationError(''); // Clear error on step change
+    setStep(step - 1);
+  };
 
   // Helper function to get the field name for current step
   const getCurrentFieldName = (): keyof FormData | null => {
@@ -476,30 +668,39 @@ export default function IntakeForm() {
         {showSuccess && (
           <motion.div
             className="flex flex-col items-center text-center justify-center w-full outline-none"
-            initial="initial"
-            animate="in"
-            variants={pageVariants}
-            transition={pageTransition}
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0 }}
           >
             {/* Turquoise Checkmark Icon */}
-            <div className="mb-8">
+            <div ref={successCheckmarkRef} className="mb-8" style={{ opacity: 0 }}>
               <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="50" cy="50" r="48" stroke="#00D7D7" strokeWidth="4"/>
                 <path d="M30 50L43 63L70 36" stroke="#00D7D7" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
             
-            <h1 className="text-[42px] md:text-[56px] lg:text-[64px] font-medium leading-tight tracking-[-2px] mb-6 text-white">
+            <h1 
+              ref={successHeadingRef}
+              className="text-[42px] md:text-[56px] lg:text-[64px] font-medium leading-tight tracking-[-2px] mb-6 text-white"
+              style={{ opacity: 0 }}
+            >
               Application submitted!
             </h1>
             
-            <p className="text-[#B2B2B2] text-base md:text-xl font-normal mb-10 w-[90%] sm:w-[85%] md:w-[80%] max-w-2xl mx-auto leading-relaxed">
+            <p 
+              ref={successParagraphRef}
+              className="text-[#B2B2B2] text-base md:text-xl font-normal mb-10 w-[90%] sm:w-[85%] md:w-[80%] max-w-2xl mx-auto leading-relaxed"
+              style={{ opacity: 0 }}
+            >
               Thank you for your application. Our team will review it and get back to you within 1-2 business days to schedule your Dream Discovery Call.
             </p>
             
             <Link 
-              href="/"
-              className="py-3 md:py-4 px-10 md:px-[51px] text-lg md:text-xl bg-white text-black border-none rounded-[46.55px] cursor-pointer hover:bg-opacity-90 hover:shadow-lg transition-all duration-300 flex items-center justify-center font-medium group"
+              ref={successButtonRef}
+              href="/portfolio"
+              className="py-3 md:py-4 px-10 md:px-[51px] text-lg md:text-xl bg-white text-black border-none rounded-[46.55px] cursor-pointer hover:bg-opacity-90 hover:shadow-lg flex items-center justify-center font-medium group"
+              style={{ opacity: 0 }}
             >
               Let&apos;s Start Dreaming
               <Image 
@@ -695,6 +896,15 @@ export default function IntakeForm() {
                   Press enter <span className="mx-1 text-lg">↵</span>
                 </span>
               </div>
+              
+              {/* Error message with fixed height so it doesn't shift content */}
+              <div className="h-[32px] mt-[10px]">
+                {validationError && (
+                  <p className="text-[#ff4c4c] text-base error-message animate-fade-in">
+                    {validationError}
+                  </p>
+                )}
+              </div>
               </motion.div>
             )}
             
@@ -723,19 +933,19 @@ export default function IntakeForm() {
               
               <div className="bg-transparent border-b border-white/30 pb-2 w-full mb-6">
                 <input
-                  {...register(getCurrentFieldName() as keyof FormData, { 
-                    required: getCurrentFieldName() === 'website' ? false : 'This field is required',
-                    validate: (value) => {
-                      const fieldName = getCurrentFieldName();
-                      if (fieldName === 'email' && value) {
-                        return value.includes('@') || 'Please enter a valid email address';
-                      }
-                      return true;
-                    }
-                  })}
+                  {...register(getCurrentFieldName() as keyof FormData)}
                   type={getCurrentFieldName() === 'email' ? 'email' : 'text'}
                   className="w-full bg-transparent text-white text-[18px] md:text-[20px] font-normal focus:outline-none placeholder:text-gray-600"
                   autoFocus
+                  onChange={(e) => {
+                    const fieldName = getCurrentFieldName();
+                    if (fieldName) {
+                      register(fieldName).onChange(e);
+                      if (validationError) {
+                        setValidationError('');
+                      }
+                    }
+                  }}
                 />
               </div>
               
@@ -753,36 +963,49 @@ export default function IntakeForm() {
                 </span>
               </div>
               
-              {(() => {
-                const fieldName = getCurrentFieldName();
-                return fieldName && errors[fieldName] && (
-                  <p className="text-[#ff4c4c] text-base mt-[10px] error-message">
-                    {String(errors[fieldName]?.message || '')}
+              {/* Error message with fixed height so it doesn't shift content */}
+              <div className="h-[32px] mt-[10px]">
+                {validationError && (
+                  <p className="text-[#ff4c4c] text-base error-message animate-fade-in">
+                    {validationError}
                   </p>
-                );
-              })()}
+                )}
+              </div>
             </motion.div>
             )}
-            
             {getCurrentQuestionType() === 'submit' && (
               <motion.div
                 key="submit-page"
                 className="flex flex-col items-center text-center justify-center w-full outline-none"
-                initial="initial"
-                animate="in"
-                exit="out"
-                variants={pageVariants}
-                transition={pageTransition}
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 1 }}
+                transition={{ duration: 0 }}
               >
-                <h1 className="text-[42px] md:text-[56px] lg:text-[64px] font-medium leading-tight tracking-[-2px] mb-6 text-white max-w-4xl">
+                <h1 
+                  ref={submitHeadingRef}
+                  className="text-[28px] md:text-[36px] lg:text-[42px] font-medium leading-[130%] tracking-[-1px] mb-8 max-w-5xl px-4"
+                  style={{
+                    background: "radial-gradient(86% 99% at 50% 50%, #D5DBE6 28.39%, #04070D 100%)",
+                    backgroundClip: "text",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    color: "transparent",
+                    textAlign: "center",
+                    fontFamily: "Inter",
+                    opacity: 0
+                  }}
+                >
                   Thank you for sharing your goals with us. We love partnering with forward-thinking clients to create groundbreaking projects. Book your Dream Discovery Call and let&apos;s bring your vision to life!
                 </h1>
                 
                 <button
+                  ref={submitButtonRef}
                   type="button"
                   onClick={handleSubmit(onSubmit)}
                   disabled={isSubmitting}
-                  className="py-3 md:py-4 px-10 md:px-[51px] text-lg md:text-xl bg-white text-black border-none rounded-[46.55px] cursor-pointer hover:bg-opacity-90 hover:shadow-lg transition-all duration-300 flex items-center justify-center font-medium group disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ opacity: 0, transform: 'translateY(20px)' }}
+                  className="py-3 md:py-4 px-10 md:px-[51px] text-lg md:text-xl bg-white text-black border-none rounded-[46.55px] cursor-pointer hover:bg-opacity-90 hover:shadow-lg flex items-center justify-center font-medium group disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'Submitting...' : 'Submit & Book'}
                   {!isSubmitting && (
@@ -869,6 +1092,22 @@ export default function IntakeForm() {
           to {
             opacity: 1;
             transform: scale(1);
+          }
+        }
+        
+        /* Error message fade in animation */
+        .animate-fade-in {
+          animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(-5px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
           }
         }
         
