@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
 import Image from 'next/image';
 
 interface Testimonial {
@@ -49,6 +51,94 @@ const testimonials: Testimonial[] = [
 ];
 
 export default function TrustedBy() {
+  const logosRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Client logos animation
+    const initClientLogos = () => {
+      const clientsContainer = logosRef.current?.querySelector('.clients-container');
+      if (!clientsContainer) {
+        return;
+      }
+
+      // Set initial state of container and images
+      const prepareLogos = () => {
+        // Ensure the container is wide enough
+        gsap.set(clientsContainer, { width: '400%', height: '100%' });
+
+        // Update logo positions
+        const updateLogoPositions = () => {
+          const logos = clientsContainer.querySelectorAll('img');
+          logos.forEach(logo => {
+            // Make sure all logos have consistent styling
+            gsap.set(logo, {
+              height: '100%',
+              position: 'absolute',
+              left: 0,
+              marginRight: '42px',
+              paddingRight: '42px'
+            });
+          });
+
+          // Position the first logo starting from right edge
+          gsap.set("#clientLogos1", { x: "0%" });
+
+          // Position the second logo right after the first one (seamless)
+          gsap.set("#clientLogos2", { x: "100%" });
+        };
+
+        // Initial setup
+        updateLogoPositions();
+      };
+
+      prepareLogos();
+
+      // Create the continuous animation with improved smoothness
+      const logoTimeline = gsap.timeline({
+        repeat: -1,
+        ease: "none"
+      });
+
+      logoTimeline
+        .to("#clientLogos1", {
+          x: "-100%",
+          duration: 40,
+          ease: "linear",
+          force3D: true
+        })
+        .to("#clientLogos2", {
+          x: "0%",
+          duration: 40,
+          ease: "linear",
+          force3D: true
+        }, "<") // Start at the same time
+        .to("#clientLogos1", {
+          x: "100%",
+          duration: 0
+        })
+        .to("#clientLogos2", {
+          x: "-100%",
+          duration: 40,
+          ease: "linear",
+          force3D: true
+        })
+        .to("#clientLogos1", {
+          x: "0%",
+          duration: 40,
+          ease: "linear",
+          force3D: true
+        }, "<");
+    };
+
+    // Initialize logo animation with a small delay to ensure DOM is ready
+    setTimeout(() => {
+      initClientLogos();
+    }, 100);
+
+    return () => {
+      // Cleanup on unmount
+    };
+  }, []);
 
   return (
     <section className="bg-[#080808] relative py-16 lg:py-28">
@@ -231,6 +321,38 @@ export default function TrustedBy() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Client Logos Animation */}
+      <div className="w-full flex justify-center relative mt-16">
+        {/* Solid background blockers on left and right */}
+        <div className="absolute left-0 top-0 w-[15%] h-[50px] sm:h-[65px] md:h-[80px] bg-[#080808] z-[20]"></div>
+        <div className="absolute right-0 top-0 w-[15%] h-[50px] sm:h-[65px] md:h-[80px] bg-[#080808] z-[20]"></div>
+
+        <div ref={logosRef} className="w-[85%] relative overflow-hidden opacity-80">
+          <div className="clients overflow-hidden w-full h-[50px] sm:h-[65px] md:h-[80px] relative flex justify-center items-center before:content-[''] before:absolute before:top-0 before:left-0 before:w-[20%] before:h-full before:z-[10] before:pointer-events-none before:bg-gradient-to-r before:from-[#080808] before:from-0% before:via-[#080808] before:via-70% before:to-transparent before:to-100% after:content-[''] after:absolute after:top-0 after:right-0 after:w-[20%] after:h-full after:z-[10] after:pointer-events-none after:bg-gradient-to-l after:from-[#080808] after:from-0% after:via-[#080808] after:via-70% after:to-transparent after:to-100%">
+            <div className="clients-container relative w-full h-full overflow-hidden flex items-center">
+              <Image
+                src="/icons/client_logos.svg"
+                alt="Client logos"
+                width={2000}
+                height={100}
+                id="clientLogos1"
+                className="client-logos h-full absolute will-change-transform left-0 mr-[42px] pr-[42px] max-w-none opacity-70"
+                priority
+              />
+              <Image
+                src="/icons/client_logos.svg"
+                alt="Client logos"
+                width={2000}
+                height={100}
+                id="clientLogos2"
+                className="client-logos h-full absolute will-change-transform left-0 mr-[42px] pr-[42px] max-w-none opacity-70"
+                priority
+              />
+            </div>
           </div>
         </div>
       </div>
