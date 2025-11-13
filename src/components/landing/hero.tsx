@@ -7,20 +7,45 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const Hero = () => {
-  const logosRef = useRef<HTMLDivElement>(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
+  const mobileVideoRef = useRef<HTMLVideoElement>(null);
+  const desktopVideoRef = useRef<HTMLVideoElement>(null);
+  const modalVideoRef = useRef<HTMLVideoElement>(null);
 
-  // Handle mobile menu toggle
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-    // Prevent scrolling when menu is open
-    document.body.style.overflow = !mobileMenuOpen ? 'hidden' : '';
+  const [isHovering, setIsHovering] = useState(false);
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [maxVideoWidth, setMaxVideoWidth] = useState('100vw');
+  const [isMuted, setIsMuted] = useState(true);
+
+  useEffect(() => {
+    // Set initial width based on screen size
+    if (window.innerWidth >= 768) {
+      setMaxVideoWidth('90vw');
+    } else {
+      setMaxVideoWidth('100vw');
+    }
+  }, []);
+
+  const handleMouseEnter = () => setIsHovering(true);
+  const handleMouseLeave = () => setIsHovering(false);
+  
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setCursorPosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
   };
 
-  // Clean up body overflow when component unmounts or menu closes
-  const closeMobileMenu = () => {
-    setMobileMenuOpen(false);
-    document.body.style.overflow = '';
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+  
+  const toggleSound = () => {
+    setIsMuted(!isMuted);
+    if (desktopVideoRef.current) {
+      desktopVideoRef.current.muted = !isMuted;
+    }
   };
 
   useEffect(() => {
@@ -44,92 +69,20 @@ const Hero = () => {
       }
     });
 
-    // Client logos animation
-    const initClientLogos = () => {
-      const clientsContainer = logosRef.current?.querySelector('.clients-container');
-      if (!clientsContainer) {
-        if (isMobile) console.log('⚠️ LOGOS: Container not found');
-        return;
+    // Video width animation on scroll (desktop only)
+    const handleScroll = () => {
+      if (window.innerWidth >= 768) { // Only on desktop
+        const scrollY = window.scrollY;
+        const baseHeroHeight = window.innerHeight * 1.3; // 130vh
+        const scrollProgress = Math.min(scrollY / (baseHeroHeight * 0.5), 1); // Grow over first 50% of hero section
+        
+        // Interpolate from 90vw to 100vw for edge-to-edge feel
+        const newWidth = 90 + (scrollProgress * 10);
+        setMaxVideoWidth(`${newWidth}vw`);
       }
-      if (isMobile) console.log('🎬 LOGOS: Starting client logos animation');
-
-      // Set initial state of container and images
-      const prepareLogos = () => {
-        // Ensure the container is wide enough
-        gsap.set(clientsContainer, { width: '400%', height: '100%' });
-
-        // Update logo positions
-        const updateLogoPositions = () => {
-          const logos = clientsContainer.querySelectorAll('img');
-          logos.forEach(logo => {
-            // Make sure all logos have consistent styling
-            gsap.set(logo, {
-              height: '100%',
-              position: 'absolute',
-              left: 0,
-              marginRight: '42px',
-              paddingRight: '42px'
-            });
-          });
-
-          // Position the first logo starting from right edge
-          gsap.set("#clientLogos1", { x: "0%" });
-
-          // Position the second logo right after the first one (seamless)
-          gsap.set("#clientLogos2", { x: "100%" });
-        };
-
-        // Initial setup
-        updateLogoPositions();
-      };
-
-      prepareLogos();
-
-      // Create the continuous animation with improved smoothness
-      const logoTimeline = gsap.timeline({
-        repeat: -1,
-        ease: "none",
-        onStart: () => {
-          if (isMobile) console.log('🔄 LOGOS: Timeline started');
-        }
-      });
-
-      logoTimeline
-        .to("#clientLogos1", {
-          x: "-100%",
-          duration: 40,
-          ease: "linear",
-          force3D: true
-        })
-        .to("#clientLogos2", {
-          x: "0%",
-          duration: 40,
-          ease: "linear",
-          force3D: true
-        }, "<") // Start at the same time
-        .to("#clientLogos1", {
-          x: "100%",
-          duration: 0
-        })
-        .to("#clientLogos2", {
-          x: "-100%",
-          duration: 40,
-          ease: "linear",
-          force3D: true
-        })
-        .to("#clientLogos1", {
-          x: "0%",
-          duration: 40,
-          ease: "linear",
-          force3D: true
-        }, "<");
     };
 
-    // Initialize logo animation with a small delay to ensure DOM is ready
-    setTimeout(() => {
-      if (isMobile) console.log('⏰ LOGOS: Initializing after 100ms delay');
-      initClientLogos();
-    }, 100);
+    window.addEventListener('scroll', handleScroll);
 
     // Add scroll performance monitoring on mobile
     if (isMobile) {
@@ -161,6 +114,7 @@ const Hero = () => {
       return () => {
         ScrollTrigger.getAll().forEach(t => t.kill());
         clearInterval(scrollMonitor);
+        window.removeEventListener('scroll', handleScroll);
         if (isMobile) console.log('🧹 CLEANUP: Hero animations and monitoring stopped');
       };
     }
@@ -168,174 +122,15 @@ const Hero = () => {
     // Clean up animations on unmount
     return () => {
       ScrollTrigger.getAll().forEach(t => t.kill());
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   return (
-    <section className="relative h-[130vh] md:h-[1558px] bg-[#080808] flex flex-col justify-center items-center overflow-hidden" id="home">
-      {/* Mobile Navigation Bar - Integrated into Hero */}
-      <nav className="lg:hidden absolute top-0 left-0 right-0 z-40">
-        <div className="w-full h-[70px] mx-auto">
-          <div className="h-full flex items-center justify-between px-4 sm:px-6">
-            {/* Logo */}
-            <Link href="/" className="flex items-center">
-              <Image 
-                src="/images/avyra-brandmark.svg" 
-                alt="Avyra Logo" 
-                width={32}
-                height={32}
-                className="h-8 w-8"
-              />
-            </Link>
-
-            {/* Mobile Menu Hamburger Button */}
-            <button 
-              className="w-6 h-6 flex flex-col justify-center space-y-1 z-50 relative"
-              onClick={toggleMobileMenu}
-              aria-label="Toggle menu"
-            >
-              <span className={`block w-full h-0.5 bg-white transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-1' : ''}`}></span>
-              <span className={`block w-full h-0.5 bg-white transition-all duration-300 ${mobileMenuOpen ? 'opacity-0' : ''}`}></span>
-              <span className={`block w-full h-0.5 bg-white transition-all duration-300 ${mobileMenuOpen ? '-rotate-45 -translate-y-1' : ''}`}></span>
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Mobile Menu Overlay - Backdrop */}
-      <div 
-        className={`lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-30 transition-all duration-300 ${
-          mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
-        onClick={closeMobileMenu}
-      />
-
-      {/* Mobile Menu Slide Panel */}
-      <div 
-        className={`lg:hidden fixed top-0 right-0 h-full w-full bg-[#0F0F0F] z-40 transition-transform duration-300 ease-in-out ${
-          mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        {/* Mobile Menu Content */}
-        <div className="flex flex-col h-full">
-          
-          {/* Header with Logo and Close */}
-          <div className="flex items-center justify-between p-6 border-b border-white/10">
-            <Link href="/" onClick={closeMobileMenu}>
-              <Image 
-                src="/images/avyra-nav-logo.svg" 
-                alt="Avyra Logo" 
-                width={120}
-                height={32}
-                className="h-8 w-auto"
-              />
-            </Link>
-            <button 
-              onClick={closeMobileMenu}
-              className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors"
-              aria-label="Close menu"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-          </div>
-
-          {/* Navigation Links */}
-          <div className="flex-1 flex flex-col justify-center px-6 space-y-6">
-            {/* Solutions Section Header */}
-            {/* <div className="text-white/40 text-sm font-medium font-inter uppercase tracking-wider">
-              Solutions
-            </div> */}
-            
-            {/* Avyra AI */}
-            <Link 
-              href="https://www.avyra.ai"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
-              onClick={closeMobileMenu}
-            >
-              Avyra AI
-            </Link>
-            
-            {/* Avyra OS */}
-            <div className="flex items-center justify-between py-3 border-b border-white/5">
-              <span className="text-white/50 text-2xl font-normal font-inter">Avyra OS</span>
-              <span className="px-3 py-1 bg-[#363636] rounded-full text-white text-xs">Coming Soon</span>
-            </div>
-
-            <Link 
-              href="#work" 
-              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
-              onClick={closeMobileMenu}
-            >
-              Work
-            </Link>
-            
-            {/* Avyra Command */}
-            {/* <div className="flex items-center justify-between py-3 border-b border-white/5">
-              <span className="text-white/50 text-2xl font-normal font-inter">Avyra Command</span>
-              <span className="px-3 py-1 bg-[#363636] rounded-full text-white text-xs">Coming Soon</span>
-            </div>
-             */}
-            <Link 
-              href="#pricing" 
-              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
-              onClick={closeMobileMenu}
-            >
-              Pricing
-            </Link>
-            <Link 
-              href="#blog" 
-              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
-              onClick={closeMobileMenu}
-            >
-              Blog
-            </Link>
-            <Link 
-              href="#community" 
-              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
-              onClick={closeMobileMenu}
-            >
-              Community
-            </Link>
-          </div>
-
-          {/* CTA Button at Bottom */}
-          <div className="p-6 border-t border-white/10">
-            <Link 
-              href="/calendar" 
-              onClick={closeMobileMenu}
-              className="block w-full group"
-            >
-              <div className="relative w-full h-12 rounded-lg overflow-hidden">
-                {/* Button Background with Glow */}
-                <div 
-                  className="absolute inset-0 p-[2px] rounded-lg"
-                  style={{
-                    background: "radial-gradient(50% 20.7% at 50% 100%, #C6FFFF 0%, rgba(198, 255, 255, 0.00) 100%)"
-                  }}
-                >
-                  {/* Button Content */}
-                  <div className="w-full h-full bg-gradient-to-b from-[#89FFFF] to-[#00D7D7] text-[#000000] rounded-lg flex items-center justify-center text-base font-medium font-inter transition-all duration-300 hover:opacity-90">
-                    <span>Book Call</span>
-                    <svg 
-                      className="ml-2 w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" 
-                      fill="currentColor" 
-                      viewBox="0 0 20 20"
-                    >
-                      <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </div>
-      </div>
-
+    <section 
+      className="relative min-h-screen bg-[#080808] pt-20 md:py-32" 
+      id="home"
+    >
       {/* Bottom Level: Background Gradients */}
       <div className="absolute inset-0 z-0">
         {/* Top Gradient - native CSS version, hanging off top */}
@@ -343,45 +138,6 @@ const Hero = () => {
           style={{
             background: "radial-gradient(circle, #89FFFF 0%, rgba(255,255,255,0.6) 62%, rgba(255,255,255,0.1) 100%)"
           }} />
-        {/* Bottom Gradient - native CSS version, hanging off bottom */}
-        <div className="BottomGradientBg absolute -bottom-[241px] left-1/2 transform -translate-x-1/2 w-[481.01px] h-[342px] opacity-40 rounded-tl-md blur-[132.70px]"
-          style={{
-            background: "radial-gradient(circle, #18E0E0 0%, #18E0E0 42%, rgba(255,255,255,0.1) 100%)"
-          }} />
-
-        {/* Client Logos Animation - At background level */}
-        <div className="absolute bottom-[80px] md:bottom-[110px] left-1/2 transform -translate-x-1/2 w-full -z-10">
-          <div className="w-full flex justify-center relative">
-            {/* Solid background blockers on left and right */}
-            <div className="absolute left-0 top-0 w-[15%] h-[50px] sm:h-[65px] md:h-[80px] bg-[#080808] z-[20]"></div>
-            <div className="absolute right-0 top-0 w-[15%] h-[50px] sm:h-[65px] md:h-[80px] bg-[#080808] z-[20]"></div>
-
-            <div ref={logosRef} className="w-[85%] relative overflow-hidden opacity-80">
-              <div className="clients overflow-hidden w-full h-[50px] sm:h-[65px] md:h-[80px] relative flex justify-center items-center before:content-[''] before:absolute before:top-0 before:left-0 before:w-[20%] before:h-full before:z-[10] before:pointer-events-none before:bg-gradient-to-r before:from-[#080808] before:from-0% before:via-[#080808] before:via-70% before:to-transparent before:to-100% after:content-[''] after:absolute after:top-0 after:right-0 after:w-[20%] after:h-full after:z-[10] after:pointer-events-none after:bg-gradient-to-l after:from-[#080808] after:from-0% after:via-[#080808] after:via-70% after:to-transparent after:to-100%">
-                <div className="clients-container relative w-full h-full overflow-hidden flex items-center">
-                  <Image
-                    src="/icons/client_logos.svg"
-                    alt="Client logos"
-                    width={2000}
-                    height={100}
-                    id="clientLogos1"
-                    className="client-logos h-full absolute will-change-transform left-0 mr-[42px] pr-[42px] max-w-none opacity-70"
-                    priority
-                  />
-                  <Image
-                    src="/icons/client_logos.svg"
-                    alt="Client logos"
-                    width={2000}
-                    height={100}
-                    id="clientLogos2"
-                    className="client-logos h-full absolute will-change-transform left-0 mr-[42px] pr-[42px] max-w-none opacity-70"
-                    priority
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Hero Top Gradient - Above content including pill, below CTAs/Nav */}
@@ -398,8 +154,8 @@ const Hero = () => {
 
       {/* Top Pill - Separate layer behind gradient */}
       <div className="absolute top-[88px] md:top-[17vh] left-1/2 transform -translate-x-1/2 z-10 text-center px-4 w-full">
-        <div className="mb-3 sm:mb-4 md:mb-6 flex justify-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-[24px] bg-[#1b1c20]">
+        <div className="mb-10 md:mb-6 flex justify-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1 md:py-2 rounded-[24px] bg-[#1b1c20] h-[1.875rem] md:h-auto">
             {/* Gradient dot */}
             <div className="w-[6.9px] h-[6.9px] rounded-full bg-gradient-to-b from-[#89FFFF] to-[#00D7D7]"></div>
             <span
@@ -418,7 +174,7 @@ const Hero = () => {
       </div>
 
       {/* Main Content Layer - positioned with better spacing below pill */}
-      <div className="absolute top-[138px] md:top-[calc(16vh+70px)] left-1/2 transform -translate-x-1/2 z-30 text-center px-4 w-full max-w-[1440px]">
+      <div className="relative z-30 text-center px-4 w-full max-w-[1440px] mx-auto pt-[66px] md:pt-[120px]">
 
         {/* Hero content */}
         <div className="text-center opacity-0 hero-main-content">
@@ -447,7 +203,7 @@ const Hero = () => {
             Get world-class designs, delivered in as little as 48 hours. Forget the hiring headaches.
           </p>
           {/* Button Container with Animated Border Glow */}
-          <div className="relative inline-block mb-8 group">
+          <div className="relative inline-block mb-6 md:mb-8 group">
             {/* Button Glow (Bottom Layer) - larger to show glow effect */}
             <Image
               src="/images/button-glow.png"
@@ -465,10 +221,10 @@ const Hero = () => {
               }}
             >
               <Link
-                href="/calendar"
+                href="/intake"
                 className="relative z-50 inline-flex items-center justify-center bg-gradient-to-b from-[#89FFFF] to-[#00D7D7] text-[#000000] px-8 rounded-lg text-base font-medium font-inter transition-all duration-300 hover:opacity-90 cursor-pointer h-[46px]"
               >
-                <span>Book My Dream Discovery Call</span>
+                <span>Start Building Your Company</span>
                 <svg
                   className="ml-2 w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1"
                   fill="currentColor"
@@ -478,6 +234,36 @@ const Hero = () => {
                 </svg>
               </Link>
             </div>
+          
+          </div>
+
+          {/* View Pricing Link */}
+          <div className="mt-0">
+            <a 
+              href="#pricing"
+              onClick={(e) => {
+                e.preventDefault();
+                const pricingSection = document.getElementById('pricing');
+                if (pricingSection) {
+                  // Find the pill element (the first div with the gradient dot inside)
+                  const pillElement = pricingSection.querySelector('.bg-\\[\\#1b1c20\\]');
+                  const targetElement = pillElement || pricingSection;
+                  
+                  const rect = targetElement.getBoundingClientRect();
+                  const offsetTop = rect.top + window.pageYOffset;
+                  const viewportHeight = window.innerHeight;
+                  const scrollTo = offsetTop - (viewportHeight * 0.01); // 5% from top
+                  
+                  window.scrollTo({
+                    top: scrollTo,
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+              className="text-[#d5dbe6] text-sm md:text-base font-normal font-inter leading-relaxed hover:text-[#89FFFF] transition-colors duration-200 cursor-pointer opacity-60 md:opacity-100"
+            >
+              View Plans & Pricing
+            </a>
           </div>
 
           <style jsx>{`
@@ -530,26 +316,161 @@ const Hero = () => {
               }
             `}</style>
 
-          {/* Hero Image Frame - responsive spacing below CTA button */}
-          <div className="w-full relative mt-6 md:mt-[64px]">
-            <Image
-              src="/images/hero-image.png"
-              alt="Hero dashboard interface"
-              width={1600}
-              height={900}
-              className="w-full h-[400px] md:h-auto object-cover md:object-contain rounded-lg"
-              priority
-            />
+          {/* Hero Video with Custom Cursor */}
+          <div 
+            ref={videoContainerRef}
+            className="mt-8 md:mt-[64px]"
+          >
+            {/* Mobile video (square) */}
+            <div 
+              className="md:hidden block w-screen relative left-1/2 -translate-x-1/2"
+              onClick={openModal}
+            >
+              <div className="relative w-full pb-[100vw]"> {/* Creates a square aspect ratio touching edges */}
+                <video 
+                  ref={mobileVideoRef}
+                  className="absolute top-0 left-0 w-full h-full object-cover"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                >
+                  <source src="/videos/avyra-studio.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                
+                {/* Simple play button for mobile */}
+                <div 
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#333333] bg-opacity-70 rounded-full w-14 h-14 flex items-center justify-center z-10 shadow-md"
+                  onClick={openModal}
+                >
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="20" 
+                    height="20" 
+                    viewBox="0 0 24 24" 
+                    fill="white" 
+                  >
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop video */}
+            <div 
+              className="hidden md:block md:transition-all md:duration-300 relative rounded-lg overflow-hidden"
+              style={{ 
+                width: maxVideoWidth,
+                cursor: isHovering ? 'none' : 'auto',
+                position: 'relative',
+                left: '50%',
+                transform: 'translateX(-50%)'
+              }}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onMouseMove={handleMouseMove}
+            >
+              <video 
+                ref={desktopVideoRef}
+                className="w-full h-auto block"
+                autoPlay
+                muted={isMuted}
+                loop
+                playsInline
+                onClick={toggleSound}
+              >
+                <source src="/videos/avyra-studio.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+
+              {/* Cursor-following Sound Button (desktop only) */}
+              {isHovering && (
+                <div 
+                  className="absolute pointer-events-none bg-white text-black py-2 px-4 rounded-full flex items-center z-10 transform -translate-x-1/2 -translate-y-1/2 drop-shadow-md"
+                  style={{ 
+                    left: `${cursorPosition.x}px`, 
+                    top: `${cursorPosition.y}px`,
+                    transition: 'transform 0.05s ease'
+                  }}
+                >
+                  {isMuted ? (
+                    <>
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        width="16" 
+                        height="16" 
+                        viewBox="0 0 24 24" 
+                        fill="currentColor" 
+                        className="mr-2"
+                      >
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                      </svg>
+                      Play Sound
+                    </>
+                  ) : (
+                    <>
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        width="16" 
+                        height="16" 
+                        viewBox="0 0 24 24" 
+                        fill="currentColor" 
+                        className="mr-2"
+                      >
+                        <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                      </svg>
+                      Mute
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* Invisible click overlay to ensure button works - desktop only */}
+              {isHovering && (
+                <div 
+                  className="absolute inset-0 z-20"
+                  onClick={toggleSound}
+                  style={{ cursor: 'none' }}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Social Proof Text - Fixed positioning to maintain consistent distance from bottom */}
-      <div className="absolute bottom-[190px] md:bottom-[210px] left-1/2 transform -translate-x-1/2 z-30 text-center w-full max-w-[1440px]">
-        <p className="text-[#D5DBE6] text-sm md:text-base font-normal font-inter opacity-60">
-          Loved by 100+ companies
-        </p>
-      </div>
+      {/* Maximized Video Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-95 p-4">
+          <div className="relative w-full h-full flex items-center justify-center">
+            {/* Close button */}
+            <button 
+              onClick={closeModal}
+              className="absolute top-4 right-4 text-white p-2 z-10 hover:text-gray-300 transition-colors"
+              aria-label="Close modal"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+            
+            {/* Video player with controls - expanded to fit viewport while maintaining aspect ratio */}
+            <div className="w-full h-full max-h-[90vh] flex items-center">
+              <video
+                ref={modalVideoRef}
+                className="w-full h-auto max-h-full mx-auto"
+                controls
+                autoPlay
+                playsInline
+              >
+                <source src="/videos/avyra-studio.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
