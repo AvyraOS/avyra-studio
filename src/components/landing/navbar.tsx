@@ -353,6 +353,18 @@ const Navbar = () => {
 
           {/* Navigation Links */}
           <div className="flex-1 flex flex-col justify-center px-6 space-y-6">
+            <Link 
+              href="/work" 
+              className="text-white text-2xl font-normal font-inter py-3 border-b border-white/5 hover:text-[#00D7D7] transition-colors"
+              onClick={closeMobileMenu}
+            >
+              Work
+            </Link>
+            {/* Solutions Section Header */}
+            <div className="text-white/40 text-sm font-medium font-inter uppercase tracking-wider">
+              Solutions
+            </div>
+            
             {/* Avyra AI */}
             <Link 
               href="https://www.avyra.ai"
